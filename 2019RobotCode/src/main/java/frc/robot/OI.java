@@ -7,8 +7,12 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.XboxController;
+
 /**
  * Add your docs here.
  */
 public class OI {
+    public XboxController driver = new XboxController(0);
+    public XboxController gunner = new XboxController(1);
 }

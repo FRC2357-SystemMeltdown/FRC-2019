@@ -7,15 +7,19 @@
 
 package frc.robot.Commands;
 
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
-import frc.robot.Susbsystems.DriveSub;
 
 public class SplitArcadeDriveCommand extends Command {
+
+  
+
   public SplitArcadeDriveCommand() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    requires(Robot.);
+    requires(Robot.DRIVE_SUB);
+    
   }
 
   // Called just before this Command runs the first time
@@ -26,6 +30,7 @@ public class SplitArcadeDriveCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    Robot.DRIVE_SUB.drive(Robot.OI.driver.getX(Hand.kRight), Robot.OI.driver.getY(Hand.kLeft));
   }
 
   // Make this return true when this Command no longer needs to run execute()

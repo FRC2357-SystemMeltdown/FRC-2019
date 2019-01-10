@@ -11,4 +11,8 @@ package frc.robot;
  * Add your docs here.
  */
 public class RobotMap {
+    public static final int LEFT_DRIVE = 1;
+    public static final int LEFT_DRIVE_SLAVE = 2;
+    public static final int RIGHT_DRIVE = 3;
+    public static final int RIGHT_DRIVE_SLAVE = 4;
 }

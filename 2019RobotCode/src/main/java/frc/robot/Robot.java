@@ -36,6 +36,7 @@ public class Robot extends TimedRobot {
    public static final CargoSub CARGO_SUB = new CargoSub();
    public static final HatchSub HATCH_SUB = new HatchSub();
    public static final ClimberSub CLIMBER_SUB = new ClimberSub();
+   public static final OI OI = new OI();
 
   @Override
   public void robotInit() {
