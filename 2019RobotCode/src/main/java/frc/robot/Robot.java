@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.robot.Susbsystems.CargoSub;
 import frc.robot.Susbsystems.ClimberSub;
 //import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -38,8 +39,13 @@ public class Robot extends TimedRobot {
    public static final ClimberSub CLIMBER_SUB = new ClimberSub();
    public static final OI OI = new OI();
 
+   public Robot(){
+     System.out.println("Robot instantialized");
+   }
+
   @Override
   public void robotInit() {
+    System.out.println("robotInit");
   }
 
   /**
@@ -52,6 +58,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    Scheduler.getInstance().run();
   }
 
   /**
