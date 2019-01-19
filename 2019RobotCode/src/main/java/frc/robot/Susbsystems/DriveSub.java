@@ -43,8 +43,8 @@ public class DriveSub extends Subsystem {
     setDefaultCommand(new SplitArcadeDriveCommand());
   }
 
-  public void drive(double x, double y){
-    drive.arcadeDrive(x, y);
+  public void drive(double spd, double trn){
+    drive.arcadeDrive(spd, trn);
   }
 
 }

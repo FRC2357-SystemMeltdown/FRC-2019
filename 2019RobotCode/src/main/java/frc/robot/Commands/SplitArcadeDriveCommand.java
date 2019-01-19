@@ -19,19 +19,17 @@ public class SplitArcadeDriveCommand extends Command {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     requires(Robot.DRIVE_SUB);
-    System.out.println("Drive Command");
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    System.out.println("Drive Command Init");
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.DRIVE_SUB.drive(Robot.OI.driver.getX(Hand.kRight), Robot.OI.driver.getY(Hand.kLeft));
+    Robot.DRIVE_SUB.drive(Robot.OI.driver.getY(Hand.kLeft), Robot.OI.driver.getX(Hand.kRight));
 
   }
 
