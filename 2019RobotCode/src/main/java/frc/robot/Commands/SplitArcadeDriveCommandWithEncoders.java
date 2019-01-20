@@ -10,11 +10,8 @@ package frc.robot.Commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class SplitArcadeDriveCommand extends Command {
-
-  
-
-  public SplitArcadeDriveCommand() {
+public class SplitArcadeDriveCommandWithEncoders extends Command {
+  public SplitArcadeDriveCommandWithEncoders() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     requires(Robot.DRIVE_SUB);
@@ -28,8 +25,7 @@ public class SplitArcadeDriveCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.DRIVE_SUB.drive(Robot.DRIVE_SUB.limit(Robot.OI.getSpd() + Robot.OI.getTrn()),
-     Robot.DRIVE_SUB.limit(Robot.OI.getSpd() - Robot.OI.getTrn()));
+    Robot.DRIVE_SUB.driveWithEncoders(Robot.OI.getSpd() + Robot.OI.getTrn(), Robot.OI.getSpd() - Robot.OI.getTrn());
   }
 
   // Make this return true when this Command no longer needs to run execute()

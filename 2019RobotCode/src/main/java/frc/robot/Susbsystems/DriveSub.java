@@ -9,6 +9,9 @@ package frc.robot.Susbsystems;
 
 import frc.robot.RobotMap;
 import frc.robot.Commands.SplitArcadeDriveCommand;
+import frc.robot.Other.EncoderBuffer;
+
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -30,10 +33,17 @@ public class DriveSub extends Subsystem {
   public SpeedControllerGroup right = new SpeedControllerGroup(rightMaster, rightSlave);
   public DifferentialDrive drive = new DifferentialDrive(right, left);
 
+  public int leftEncoderClicks = 0;
+  public int rightEncoderClicks = 0;
+  public EncoderBuffer leftRingBuff = new EncoderBuffer(50);
+  public EncoderBuffer rightRingBuff = new EncoderBuffer(50);
+  public double maxVel;
+
   public DriveSub(){
     //leftSlave.setInverted(true);
     //rightSlave.setInverted(true);
-    System.out.println("DriveSub instantialized");
+    leftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    rightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
   }
 
   @Override
@@ -43,8 +53,33 @@ public class DriveSub extends Subsystem {
     setDefaultCommand(new SplitArcadeDriveCommand());
   }
 
-  public void drive(double spd, double trn){
-    drive.arcadeDrive(spd, trn);
+  public void drive(double left, double right){
+    drive.tankDrive(left, right);
+  }
+
+  public void driveWithEncoders(double left, double right){
+    leftRingBuff.update(leftMaster);
+    rightRingBuff.update(rightMaster);
+
+    double leftMax = leftRingBuff.getMaxVel();
+    double rightMax = rightRingBuff.getMaxVel();
+
+    if(leftMax > rightMax){
+      maxVel = rightMax;
+    }else{
+      maxVel = leftMax;
+    }
+
+    drive.tankDrive(left * (leftMax / maxVel), right * (rightMax / maxVel));
+  }
+
+  public double limit(double x){
+    if(x > 1.0){
+      return 1.0;
+    }else if(x < -1.0){
+      return -1.0;
+    }
+    return x;
   }
 
 }
