@@ -4,18 +4,14 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 public class EncoderBuffer{
 
-    private int index;
-    private double[][] buffer;
-
-    public EncoderBuffer(int lengthX){
-        buffer = new double[lengthX][2];
-        index = 0;
-    }
+    private int index = 0;
+    private double[][] buffer = new double[50][2];
 
     public void update(WPI_TalonSRX talon){
         buffer[index][0] = talon.getSelectedSensorVelocity() / 1000;
         buffer[index][1] = talon.get();
         index++;
+        if(index == 50) index = 0;
     }
 
     public double getMaxVel(){
@@ -29,6 +25,7 @@ public class EncoderBuffer{
             validInputCount++;
           }
         }
+        if(validInputCount == 0) return 1.0;
         return avgPercSpd / validInputCount;
     }
 }

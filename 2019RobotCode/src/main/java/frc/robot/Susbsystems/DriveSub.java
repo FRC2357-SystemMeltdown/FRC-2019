@@ -8,11 +8,14 @@
 package frc.robot.Susbsystems;
 
 import frc.robot.RobotMap;
-import frc.robot.Commands.SplitArcadeDriveCommand;
+// import frc.robot.Commands.SplitArcadeDriveCommand;
+import frc.robot.Commands.SplitArcadeDriveCommandWithEncoders;
 import frc.robot.Other.EncoderBuffer;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.sensors.PigeonIMU;
+
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -33,10 +36,13 @@ public class DriveSub extends Subsystem {
   public SpeedControllerGroup right = new SpeedControllerGroup(rightMaster, rightSlave);
   public DifferentialDrive drive = new DifferentialDrive(right, left);
 
+  public PigeonIMU gyro = new PigeonIMU(6);
+  public double[] gyroArray = new double[3];
+
   public int leftEncoderClicks = 0;
   public int rightEncoderClicks = 0;
-  public EncoderBuffer leftRingBuff = new EncoderBuffer(50);
-  public EncoderBuffer rightRingBuff = new EncoderBuffer(50);
+  public EncoderBuffer leftRingBuff = new EncoderBuffer();
+  public EncoderBuffer rightRingBuff = new EncoderBuffer();
   public double maxVel;
 
   public DriveSub(){
@@ -50,7 +56,7 @@ public class DriveSub extends Subsystem {
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
-    setDefaultCommand(new SplitArcadeDriveCommand());
+    setDefaultCommand(new SplitArcadeDriveCommandWithEncoders());
   }
 
   public void drive(double left, double right){
@@ -80,6 +86,11 @@ public class DriveSub extends Subsystem {
       return -1.0;
     }
     return x;
+  }
+
+  public double getYaw(){
+    gyro.getYawPitchRoll(gyroArray);
+    return gyroArray[0];
   }
 
 }
