@@ -7,7 +7,6 @@
 
 package frc.robot.Commands;
 
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
@@ -29,7 +28,7 @@ public class SplitArcadeDriveCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.DRIVE_SUB.drive(Robot.OI.driver.getY(Hand.kLeft), Robot.OI.driver.getX(Hand.kRight));
+    Robot.DRIVE_SUB.drive(Robot.OI.getSpeed(), Robot.OI.getTurn());
 
   }
 

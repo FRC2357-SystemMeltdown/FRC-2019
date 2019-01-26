@@ -33,7 +33,6 @@ public class DriveSub extends Subsystem {
   public DriveSub(){
     //leftSlave.setInverted(true);
     //rightSlave.setInverted(true);
-    System.out.println("DriveSub instantialized");
   }
 
   @Override
@@ -43,8 +42,10 @@ public class DriveSub extends Subsystem {
     setDefaultCommand(new SplitArcadeDriveCommand());
   }
 
-  public void drive(double spd, double trn){
-    drive.arcadeDrive(spd, trn);
+  public void drive(double speed, double turn){
+    double left = speed + turn;
+    double right = speed - turn;
+    drive.tankDrive(left, right);
   }
 
 }

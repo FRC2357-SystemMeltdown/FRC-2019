@@ -40,12 +40,10 @@ public class Robot extends TimedRobot {
    public static final OI OI = new OI();
 
    public Robot(){
-     System.out.println("Robot instantialized");
    }
 
   @Override
   public void robotInit() {
-    System.out.println("robotInit");
   }
 
   /**
