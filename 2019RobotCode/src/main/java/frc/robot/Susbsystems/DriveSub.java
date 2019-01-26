@@ -10,6 +10,8 @@ package frc.robot.Susbsystems;
 import frc.robot.RobotMap;
 import frc.robot.Commands.SplitArcadeDriveCommand;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.sensors.PigeonIMU;
+
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -30,6 +32,9 @@ public class DriveSub extends Subsystem {
   public SpeedControllerGroup right = new SpeedControllerGroup(rightMaster, rightSlave);
   public DifferentialDrive drive = new DifferentialDrive(right, left);
 
+  public PigeonIMU gyro = new PigeonIMU(6);
+  public double[] yawPitchRoll = new double[3];
+
   public DriveSub(){
     //leftSlave.setInverted(true);
     //rightSlave.setInverted(true);
@@ -45,6 +50,13 @@ public class DriveSub extends Subsystem {
 
   public void drive(double spd, double trn){
     drive.arcadeDrive(spd, trn);
+  }
+
+  public double getYaw(){
+    gyro.getYawPitchRoll(yawPitchRoll);
+    if(yawPitchRoll[0] >= 180) yawPitchRoll[0] -= 360;
+    if(yawPitchRoll[0] <= -180) yawPitchRoll[0] += 360;
+    return yawPitchRoll[0];
   }
 
 }
