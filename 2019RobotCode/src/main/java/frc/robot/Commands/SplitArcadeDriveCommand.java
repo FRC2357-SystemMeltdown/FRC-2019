@@ -28,8 +28,10 @@ public class SplitArcadeDriveCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.DRIVE_SUB.drive(Robot.DRIVE_SUB.limit(Robot.OI.getSpd() + Robot.OI.getTrn()),
-     Robot.DRIVE_SUB.limit(Robot.OI.getSpd() - Robot.OI.getTrn()));
+    double left = Robot.DRIVE_SUB.limit(Robot.OI.getSpeed() + Robot.OI.getTurn());
+    double right = Robot.DRIVE_SUB.limit(Robot.OI.getSpeed() - Robot.OI.getTurn());
+
+    Robot.DRIVE_SUB.drive(left, right);
   }
 
   // Make this return true when this Command no longer needs to run execute()

@@ -25,7 +25,10 @@ public class SplitArcadeDriveCommandWithEncoders extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.DRIVE_SUB.driveWithEncoders(Robot.OI.getSpd() + Robot.OI.getTrn(), Robot.OI.getSpd() - Robot.OI.getTrn());
+    double left = Robot.DRIVE_SUB.limit(Robot.OI.getSpeed() + Robot.OI.getTurn());
+    double right = Robot.DRIVE_SUB.limit(Robot.OI.getSpeed() - Robot.OI.getTurn());
+    
+    Robot.DRIVE_SUB.driveWithEncoders(left, right);
   }
 
   // Make this return true when this Command no longer needs to run execute()

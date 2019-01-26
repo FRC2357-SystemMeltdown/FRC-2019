@@ -17,11 +17,11 @@ public class OI {
     public XboxController driver = new XboxController(0);
     public XboxController gunner = new XboxController(1);
 
-    public double getTrn(){
+    public double getTurn(){
         return driver.getX(Hand.kRight);
     }
 
-    public double getSpd(){
+    public double getSpeed(){
         return driver.getY(Hand.kLeft);
     }
 }
