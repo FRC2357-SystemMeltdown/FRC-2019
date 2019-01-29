@@ -10,13 +10,14 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Susbsystems.CargoSub;
-import frc.robot.Susbsystems.ClimberSub;
+import frc.robot.Subsystems.CargoSub;
+import frc.robot.Subsystems.ClimberSub;
 //import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Susbsystems.DriveSub;
-import frc.robot.Susbsystems.ArmSub;
-import frc.robot.Susbsystems.HatchSub;
+import frc.robot.Subsystems.DriveSub;
+import frc.robot.Subsystems.ArmSub;
+import frc.robot.Subsystems.HatchSub;
+import frc.robot.Subsystems.VisionSub;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -38,6 +39,7 @@ public class Robot extends TimedRobot {
    public static final CargoSub CARGO_SUB = new CargoSub();
    public static final HatchSub HATCH_SUB = new HatchSub();
    public static final ClimberSub CLIMBER_SUB = new ClimberSub();
+   public static final VisionSub VISION_SUB = new VisionSub();
    public static final OI OI = new OI();
 
    public Robot(){
@@ -96,6 +98,8 @@ public class Robot extends TimedRobot {
     Scheduler.getInstance().run();
 
     SmartDashboard.putNumber("Gyro Yaw", DRIVE_SUB.getYaw());
+    SmartDashboard.putNumber("Limelight X Angle", VISION_SUB.getTargetXAngle());
+    SmartDashboard.putNumber("Limelight Area", VISION_SUB.getTargetArea());
   }
 
   /**

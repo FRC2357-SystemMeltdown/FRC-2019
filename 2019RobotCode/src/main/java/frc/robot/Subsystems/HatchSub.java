@@ -5,14 +5,14 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.Susbsystems;
+package frc.robot.Subsystems;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  * Add your docs here.
  */
-public class ClimberSub extends Subsystem {
+public class HatchSub extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
