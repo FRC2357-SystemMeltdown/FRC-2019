@@ -56,7 +56,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    Scheduler.getInstance().run();
+    // Scheduler.getInstance().run();
   }
 
   /**
@@ -73,6 +73,10 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
+  }
+
+  @Override
+  public void teleopInit() {
   }
 
   /**
