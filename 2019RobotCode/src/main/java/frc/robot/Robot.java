@@ -40,12 +40,10 @@ public class Robot extends TimedRobot {
    public static final OI OI = new OI();
 
    public Robot(){
-     System.out.println("Robot instantialized");
    }
 
   @Override
   public void robotInit() {
-    System.out.println("robotInit");
   }
 
   /**
@@ -58,7 +56,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    Scheduler.getInstance().run();
+    // Scheduler.getInstance().run();
   }
 
   /**
@@ -75,6 +73,10 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
+  }
+
+  @Override
+  public void teleopInit() {
   }
 
   /**

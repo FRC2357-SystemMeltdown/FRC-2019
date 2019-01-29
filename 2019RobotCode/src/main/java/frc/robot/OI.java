@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 /**
  * Add your docs here.
@@ -15,4 +16,12 @@ import edu.wpi.first.wpilibj.XboxController;
 public class OI {
     public XboxController driver = new XboxController(0);
     public XboxController gunner = new XboxController(1);
+
+    public double getTurn(){
+        return driver.getX(Hand.kRight);
+    }
+
+    public double getSpeed(){
+        return driver.getY(Hand.kLeft);
+    }
 }

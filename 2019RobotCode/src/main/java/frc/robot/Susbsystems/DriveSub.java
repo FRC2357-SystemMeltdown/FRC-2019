@@ -22,18 +22,17 @@ public class DriveSub extends Subsystem {
   // here. Call these from Commands.
 
 
-  public WPI_TalonSRX leftMaster = new WPI_TalonSRX(RobotMap.LEFT_DRIVE);
-  public WPI_TalonSRX leftSlave = new WPI_TalonSRX(RobotMap.LEFT_DRIVE_SLAVE);
+  public WPI_TalonSRX leftMaster = new WPI_TalonSRX(RobotMap.LEFT_DRIVE_CAN_ID);
+  public WPI_TalonSRX leftSlave = new WPI_TalonSRX(RobotMap.LEFT_DRIVE_SLAVE_CAN_ID);
   public SpeedControllerGroup left = new SpeedControllerGroup(leftMaster, leftSlave);
-  public WPI_TalonSRX rightMaster = new WPI_TalonSRX(RobotMap.RIGHT_DRIVE);
-  public WPI_TalonSRX rightSlave = new WPI_TalonSRX(RobotMap.RIGHT_DRIVE_SLAVE);
+  public WPI_TalonSRX rightMaster = new WPI_TalonSRX(RobotMap.RIGHT_DRIVE_CAN_ID);
+  public WPI_TalonSRX rightSlave = new WPI_TalonSRX(RobotMap.RIGHT_DRIVE_SLAVE_CAN_ID);
   public SpeedControllerGroup right = new SpeedControllerGroup(rightMaster, rightSlave);
   public DifferentialDrive drive = new DifferentialDrive(right, left);
 
   public DriveSub(){
     //leftSlave.setInverted(true);
     //rightSlave.setInverted(true);
-    System.out.println("DriveSub instantialized");
   }
 
   @Override
@@ -43,8 +42,10 @@ public class DriveSub extends Subsystem {
     setDefaultCommand(new SplitArcadeDriveCommand());
   }
 
-  public void drive(double spd, double trn){
-    drive.arcadeDrive(spd, trn);
+  public void drive(double speed, double turn){
+    double left = speed + turn;
+    double right = speed - turn;
+    drive.tankDrive(left, right);
   }
 
 }
