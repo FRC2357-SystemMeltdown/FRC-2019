@@ -19,9 +19,9 @@ public class VisionSub extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  public NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-  public NetworkTableEntry tx = table.getEntry("tx");
-  public NetworkTableEntry ta = table.getEntry("ta");
+  private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+  private NetworkTableEntry tx = table.getEntry("tx");
+  private NetworkTableEntry ta = table.getEntry("ta");
 
   @Override
   public void initDefaultCommand() {
