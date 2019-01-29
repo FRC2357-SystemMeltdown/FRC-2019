@@ -32,8 +32,8 @@ public class DriveSub extends Subsystem {
   public SpeedControllerGroup right = new SpeedControllerGroup(rightMaster, rightSlave);
   public DifferentialDrive drive = new DifferentialDrive(right, left);
 
-  public PigeonIMU gyro = new PigeonIMU(6);
-  public double[] yawPitchRoll = new double[3];
+  private PigeonIMU gyro = new PigeonIMU(6);
+  private double[] yawPitchRoll = new double[3];
 
   public DriveSub(){
     //leftSlave.setInverted(true);
@@ -54,8 +54,12 @@ public class DriveSub extends Subsystem {
 
   public double getYaw(){
     gyro.getYawPitchRoll(yawPitchRoll);
-    if(yawPitchRoll[0] >= 180) yawPitchRoll[0] -= 360;
-    if(yawPitchRoll[0] <= -180) yawPitchRoll[0] += 360;
+    if(yawPitchRoll[0] >= 180){
+      yawPitchRoll[0] -= 360;
+    }
+    if(yawPitchRoll[0] <= -180){
+      yawPitchRoll[0] += 360;
+    }
     return yawPitchRoll[0];
   }
 
