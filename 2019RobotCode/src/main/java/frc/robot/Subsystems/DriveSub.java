@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.Susbsystems;
+package frc.robot.Subsystems;
 
 import frc.robot.RobotMap;
 import frc.robot.Commands.SplitArcadeDriveCommand;
