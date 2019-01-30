@@ -7,6 +7,7 @@
 
 package frc.robot.Subsystems;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -16,9 +17,13 @@ public class ArmSub extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
+  public AnalogInput potentiometer = new AnalogInput(0);
+
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
   }
+
+
 }
