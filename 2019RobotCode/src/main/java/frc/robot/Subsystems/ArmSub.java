@@ -25,5 +25,9 @@ public class ArmSub extends Subsystem {
     // setDefaultCommand(new MySpecialCommand());
   }
 
+  public double getPotentiometerAngle(){
+    double angle = potentiometer.getValue() * (270/4096);
+    return angle;
+  }
 
 }

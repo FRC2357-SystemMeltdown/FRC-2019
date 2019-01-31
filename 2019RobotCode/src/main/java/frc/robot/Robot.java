@@ -100,7 +100,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Gyro Yaw", DRIVE_SUB.getYaw());
     SmartDashboard.putNumber("Limelight X Angle", VISION_SUB.getTargetXAngle());
     SmartDashboard.putNumber("Limelight Area", VISION_SUB.getTargetArea());
-    SmartDashboard.putNumber("Potentiometer Value", ARM_SUB.potentiometer.getValue());
+    SmartDashboard.putNumber("Potentiometer Value", ARM_SUB.getPotentiometerAngle());
   }
 
   /**
