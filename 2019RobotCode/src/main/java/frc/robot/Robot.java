@@ -42,6 +42,8 @@ public class Robot extends TimedRobot {
    public static final VisionSub VISION_SUB = new VisionSub();
    public static final OI OI = new OI();
 
+   public static boolean isAutonomous;
+
    public Robot(){
    }
 
@@ -80,6 +82,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    isAutonomous = false;
   }
 
   /**
@@ -101,6 +104,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Limelight X Angle", VISION_SUB.getTargetXAngle());
     SmartDashboard.putNumber("Limelight Area", VISION_SUB.getTargetArea());
     SmartDashboard.putNumber("Potentiometer Value", ARM_SUB.getPotentiometerAngle());
+    SmartDashboard.putBoolean("Autonomous Active", isAutonomous);
   }
 
   /**
