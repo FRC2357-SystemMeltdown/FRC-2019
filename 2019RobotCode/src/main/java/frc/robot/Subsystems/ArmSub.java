@@ -9,6 +9,8 @@ package frc.robot.Subsystems;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.RobotMap;
+import edu.wpi.first.wpilibj.PWM;
 
 /**
  * Add your docs here.
@@ -17,7 +19,9 @@ public class ArmSub extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  public AnalogInput potentiometer = new AnalogInput(0);
+  private AnalogInput potentiometer = new AnalogInput(0);
+  private PWM leftSpark = new PWM(RobotMap.LEFT_ARM_PWM_PORT);
+  private PWM rightSpark = new PWM(RobotMap.RIGHT_ARM_PWM_PORT);
 
   @Override
   public void initDefaultCommand() {
@@ -28,6 +32,13 @@ public class ArmSub extends Subsystem {
   public double getPotentiometerAngle(){
     double angle = potentiometer.getValue() * (270/4096);
     return angle;
+  }
+
+  public void moveArmManual(double input){
+    int leftRawPWMValue = (int)Math.ceil((input + 1) * 255 / 2);
+    int rightRawPWMValue = -leftRawPWMValue;
+    leftSpark.setRaw(leftRawPWMValue);
+    rightSpark.setRaw(rightRawPWMValue);
   }
 
 }
