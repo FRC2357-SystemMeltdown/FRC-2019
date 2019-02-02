@@ -15,4 +15,5 @@ public class RobotMap {
     public static final int LEFT_DRIVE_SLAVE_CAN_ID = 3;
     public static final int RIGHT_DRIVE_CAN_ID = 1;
     public static final int RIGHT_DRIVE_SLAVE_CAN_ID = 2;
+    public static final int CARGO_INTAKE_CAN_ID = 7;
 }
