@@ -24,4 +24,9 @@ public class OI {
     public double getSpeed(){
         return driver.getY(Hand.kLeft);
     }
+
+    public double getArmSpeed(){
+        double speed = gunner.getRawAxis(2) - gunner.getRawAxis(3);
+        return speed;
+    }
 }

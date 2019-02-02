@@ -10,6 +10,7 @@ package frc.robot.Subsystems;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
+import frc.robot.Commands.MoveArmCommand;
 import edu.wpi.first.wpilibj.PWM;
 
 /**
@@ -27,6 +28,7 @@ public class ArmSub extends Subsystem {
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
+    setDefaultCommand(new MoveArmCommand());
   }
 
   public double getPotentiometerAngle(){
