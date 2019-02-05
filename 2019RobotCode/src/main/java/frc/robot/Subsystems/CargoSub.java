@@ -7,7 +7,11 @@
 
 package frc.robot.Subsystems;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.RobotMap;
+
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 /**
  * Add your docs here.
@@ -16,9 +20,24 @@ public class CargoSub extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
+  private WPI_VictorSPX intake = new WPI_VictorSPX(RobotMap.CARGO_INTAKE_CAN_ID);
+  private DigitalInput limitSwitch = new DigitalInput(0);
+
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
+  }
+
+  public void intakeIn(){
+    intake.set(-0.7);
+  }
+
+  public void intakeOut(){
+    intake.set(0.7);
+  }
+
+  public void intakeStop(){
+    intake.set(0);
   }
 }
