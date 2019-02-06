@@ -24,15 +24,15 @@ public class DriveSub extends Subsystem {
   // here. Call these from Commands.
 
 
-  public WPI_TalonSRX leftMaster = new WPI_TalonSRX(RobotMap.LEFT_DRIVE_CAN_ID);
-  public WPI_TalonSRX leftSlave = new WPI_TalonSRX(RobotMap.LEFT_DRIVE_SLAVE_CAN_ID);
+  public WPI_TalonSRX leftMaster = new WPI_TalonSRX(RobotMap.CAN_ID_LEFT_DRIVE);
+  public WPI_TalonSRX leftSlave = new WPI_TalonSRX(RobotMap.CAN_ID_LEFT_DRIVE_SLAVE);
   public SpeedControllerGroup left = new SpeedControllerGroup(leftMaster, leftSlave);
-  public WPI_TalonSRX rightMaster = new WPI_TalonSRX(RobotMap.RIGHT_DRIVE_CAN_ID);
-  public WPI_TalonSRX rightSlave = new WPI_TalonSRX(RobotMap.RIGHT_DRIVE_SLAVE_CAN_ID);
+  public WPI_TalonSRX rightMaster = new WPI_TalonSRX(RobotMap.CAN_ID_RIGHT_DRIVE);
+  public WPI_TalonSRX rightSlave = new WPI_TalonSRX(RobotMap.CAN_ID_RIGHT_DRIVE_SLAVE);
   public SpeedControllerGroup right = new SpeedControllerGroup(rightMaster, rightSlave);
   public DifferentialDrive drive = new DifferentialDrive(right, left);
 
-  private PigeonIMU gyro = new PigeonIMU(RobotMap.PIGEON_IMU_CAN_ID);
+  private PigeonIMU gyro = new PigeonIMU(RobotMap.CAN_ID_PIGEON_IMU);
   private double[] yawPitchRoll = new double[3];
 
   public DriveSub(){
@@ -55,13 +55,13 @@ public class DriveSub extends Subsystem {
 
   public double getYaw(){
     gyro.getYawPitchRoll(yawPitchRoll);
-    if(yawPitchRoll[RobotMap.YAWPITCHROLL_YAW] >= 180){
-      yawPitchRoll[RobotMap.YAWPITCHROLL_YAW] -= 360;
+    if(yawPitchRoll[RobotMap.GYRO_AXIS_YAW] >= 180){
+      yawPitchRoll[RobotMap.GYRO_AXIS_YAW] -= 360;
     }
-    if(yawPitchRoll[RobotMap.YAWPITCHROLL_YAW] <= -180){
-      yawPitchRoll[RobotMap.YAWPITCHROLL_YAW] += 360;
+    if(yawPitchRoll[RobotMap.GYRO_AXIS_YAW] <= -180){
+      yawPitchRoll[RobotMap.GYRO_AXIS_YAW] += 360;
     }
-    return yawPitchRoll[RobotMap.YAWPITCHROLL_YAW];
+    return yawPitchRoll[RobotMap.GYRO_AXIS_YAW];
   }
 
 }

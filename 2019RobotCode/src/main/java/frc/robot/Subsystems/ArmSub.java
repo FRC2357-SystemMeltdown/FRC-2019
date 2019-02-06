@@ -20,9 +20,9 @@ public class ArmSub extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  private AnalogInput potentiometer = new AnalogInput(RobotMap.ARM_POTENTIOMETER_ANALOG_PORT);
-  private PWM leftSpark = new PWM(RobotMap.LEFT_ARM_PWM_PORT);
-  private PWM rightSpark = new PWM(RobotMap.RIGHT_ARM_PWM_PORT);
+  private AnalogInput potentiometer = new AnalogInput(RobotMap.ANALOG_PORT_ARM_POTENTIOMETER);
+  private PWM leftSpark = new PWM(RobotMap.PWM_PORT_LEFT_ARM);
+  private PWM rightSpark = new PWM(RobotMap.PWM_PORT_RIGHT_ARM);
 
   @Override
   public void initDefaultCommand() {
