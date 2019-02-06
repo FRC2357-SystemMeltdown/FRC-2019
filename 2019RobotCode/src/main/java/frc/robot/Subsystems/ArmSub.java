@@ -20,9 +20,9 @@ public class ArmSub extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  private AnalogInput potentiometer = new AnalogInput(0);
-  private PWM leftSpark = new PWM(RobotMap.LEFT_ARM_PWM_PORT);
-  private PWM rightSpark = new PWM(RobotMap.RIGHT_ARM_PWM_PORT);
+  private AnalogInput potentiometer = new AnalogInput(RobotMap.ANALOG_PORT_ARM_POTENTIOMETER);
+  private PWM leftSpark = new PWM(RobotMap.PWM_PORT_LEFT_ARM);
+  private PWM rightSpark = new PWM(RobotMap.PWM_PORT_RIGHT_ARM);
 
   @Override
   public void initDefaultCommand() {
@@ -31,12 +31,13 @@ public class ArmSub extends Subsystem {
     setDefaultCommand(new MoveArmCommand());
   }
 
-  public double getPotentiometerAngle(){
-    double angle = potentiometer.getValue() * (270/4096);
+  public double getPotentiometerAngle() {
+    double factor = RobotMap.ARM_MAX_ANGLE / RobotMap.ARM_POTENTIOMETER_MAX;
+    double angle = potentiometer.getValue() * factor;
     return angle;
   }
 
-  public void moveArmManual(double input){
+  public void moveArmManual(double input) {
     int leftRawPWMValue = (int)Math.ceil((input + 1) * 255 / 2);
     int rightRawPWMValue = -leftRawPWMValue;
     leftSpark.setRaw(leftRawPWMValue);

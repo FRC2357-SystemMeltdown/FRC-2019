@@ -20,8 +20,8 @@ public class CargoSub extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  private WPI_VictorSPX intake = new WPI_VictorSPX(RobotMap.CARGO_INTAKE_CAN_ID);
-  private DigitalInput limitSwitch = new DigitalInput(0);
+  private WPI_VictorSPX intake = new WPI_VictorSPX(RobotMap.CAN_ID_CARGO_INTAKE);
+  private DigitalInput limitSwitch = new DigitalInput(RobotMap.CAN_ID_CARGO_INTAKE);
 
   @Override
   public void initDefaultCommand() {
