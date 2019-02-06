@@ -50,4 +50,5 @@ public class RobotMap {
   // Hatch
 
   // Vision
+  public static final double VISION_DEFAULT_RETURN_VALUE = 0.0;
 }

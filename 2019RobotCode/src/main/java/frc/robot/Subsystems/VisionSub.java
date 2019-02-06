@@ -11,6 +11,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.RobotMap;
 
 /**
  * Add your docs here.
@@ -30,10 +31,10 @@ public class VisionSub extends Subsystem {
   }
 
   public double getTargetXAngle(){
-    return tx.getDouble(0.0);
+    return tx.getDouble(RobotMap.VISION_DEFAULT_RETURN_VALUE);
   }
 
   public double getTargetArea(){
-    return ta.getDouble(0.0);
+    return ta.getDouble(RobotMap.VISION_DEFAULT_RETURN_VALUE);
   }
 }
