@@ -21,7 +21,7 @@ public class CargoSub extends Subsystem {
   // here. Call these from Commands.
 
   private WPI_VictorSPX intake = new WPI_VictorSPX(RobotMap.CARGO_INTAKE_CAN_ID);
-  private DigitalInput limitSwitch = new DigitalInput(0);
+  private DigitalInput limitSwitch = new DigitalInput(RobotMap.CARGO_INTAKE_CAN_ID);
 
   @Override
   public void initDefaultCommand() {

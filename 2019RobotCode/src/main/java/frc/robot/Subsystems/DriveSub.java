@@ -32,7 +32,7 @@ public class DriveSub extends Subsystem {
   public SpeedControllerGroup right = new SpeedControllerGroup(rightMaster, rightSlave);
   public DifferentialDrive drive = new DifferentialDrive(right, left);
 
-  private PigeonIMU gyro = new PigeonIMU(6);
+  private PigeonIMU gyro = new PigeonIMU(RobotMap.PIGEON_IMU_CAN_ID);
   private double[] yawPitchRoll = new double[3];
 
   public DriveSub(){
@@ -55,13 +55,13 @@ public class DriveSub extends Subsystem {
 
   public double getYaw(){
     gyro.getYawPitchRoll(yawPitchRoll);
-    if(yawPitchRoll[0] >= 180){
-      yawPitchRoll[0] -= 360;
+    if(yawPitchRoll[RobotMap.YAWPITCHROLL_YAW] >= 180){
+      yawPitchRoll[RobotMap.YAWPITCHROLL_YAW] -= 360;
     }
-    if(yawPitchRoll[0] <= -180){
-      yawPitchRoll[0] += 360;
+    if(yawPitchRoll[RobotMap.YAWPITCHROLL_YAW] <= -180){
+      yawPitchRoll[RobotMap.YAWPITCHROLL_YAW] += 360;
     }
-    return yawPitchRoll[0];
+    return yawPitchRoll[RobotMap.YAWPITCHROLL_YAW];
   }
 
 }
