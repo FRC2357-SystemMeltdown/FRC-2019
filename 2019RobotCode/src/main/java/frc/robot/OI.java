@@ -6,7 +6,10 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot;
 
+import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.overlays.ProportionalDrive;
+import frc.robot.overlays.DriverFailSafe;
+import frc.robot.overlays.GunnerFailSafe;
 import frc.robot.overlays.DriverOverlay;
 import frc.robot.overlays.GunnerOverlay;
 
@@ -17,8 +20,19 @@ public class OI {
   public static final int CONTROLLER_ID_DRIVER = 0;
   public static final int CONTROLLER_ID_GUNNER = 1;
 
+  private XboxController driverController;
+  private XboxController gunnerController;
+
   private DriverOverlay driverOverlay;
   private GunnerOverlay gunnerOverlay;
+
+  public OI() {
+    this.driverController = new XboxController(CONTROLLER_ID_DRIVER);
+    this.gunnerController = new XboxController(CONTROLLER_ID_GUNNER);
+
+    this.driverOverlay = new DriverFailSafe(driverController);
+    this.gunnerOverlay = new GunnerFailSafe(gunnerController);
+  }
 
   public double getProportionalTurn(){
     double turn = 0;
