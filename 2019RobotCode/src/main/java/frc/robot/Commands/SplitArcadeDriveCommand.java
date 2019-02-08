@@ -4,7 +4,6 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
-
 package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -12,11 +11,7 @@ import frc.robot.Robot;
 
 public class SplitArcadeDriveCommand extends Command {
 
-  
-
   public SplitArcadeDriveCommand() {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
     requires(Robot.DRIVE_SUB);
   }
 
@@ -28,8 +23,10 @@ public class SplitArcadeDriveCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.DRIVE_SUB.drive(Robot.OI.getSpeed(), Robot.OI.getTurn());
+    double turn = Robot.OI.getProportionalTurn();
+    double speed = Robot.OI.getProportionalSpeed();
 
+    Robot.DRIVE_SUB.drive(speed, turn);
   }
 
   // Make this return true when this Command no longer needs to run execute()
