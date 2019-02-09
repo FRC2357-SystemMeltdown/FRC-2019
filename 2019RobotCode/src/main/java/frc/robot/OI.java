@@ -8,8 +8,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.overlays.ProportionalDrive;
+import frc.robot.overlays.VelocityDrive;
 import frc.robot.overlays.DriverFailSafe;
 import frc.robot.overlays.GunnerFailSafe;
+import frc.robot.Other.Utility;
 import frc.robot.overlays.ControlOverlay;
 
 /**
@@ -43,8 +45,7 @@ public class OI {
       turn += ((ProportionalDrive) gunnerOverlay).getTurn();
     }
 
-    turn = Math.max(-1.0, turn);
-    turn = Math.min(1.0, turn);
+    turn = Utility.clamp(turn, -1.0, 1.0);
 
     return turn;
   }
@@ -59,9 +60,38 @@ public class OI {
       speed += ((ProportionalDrive) gunnerOverlay).getSpeed();
     }
 
-    speed = Math.max(-1.0, speed);
-    speed = Math.min(1.0, speed);
+    speed = Utility.clamp(speed, -1.0, 1.0);
 
+    return speed;
+  }
+
+  public double getGyroBasedTurn() {
+    double turn = 0.0;
+
+    if(driverOverlay instanceof VelocityDrive) {
+      turn += ((VelocityDrive) driverOverlay).getTurnDegreesPerSecond();
+    }
+    if(gunnerOverlay instanceof VelocityDrive) {
+      turn += ((VelocityDrive) gunnerOverlay).getTurnDegreesPerSecond();
+    }
+
+    turn = Utility.clamp(turn, -RobotMap.MAX_TURN_RATE_DEGREES_PER_SECOND, RobotMap.MAX_TURN_RATE_DEGREES_PER_SECOND);
+    
+    return turn;
+  }
+
+  public double getEncoderBasedSpeed() {
+    double speed = 0.0;
+
+    if(driverOverlay instanceof VelocityDrive) {
+      speed += ((VelocityDrive) driverOverlay).getSpeedInchesPerSecond();
+    }
+    if(gunnerOverlay instanceof VelocityDrive) {
+      speed += ((VelocityDrive) gunnerOverlay).getSpeedInchesPerSecond();
+    }
+
+    speed = Utility.clamp(speed, -RobotMap.MAX_VELOCITY_INCHES_PER_SECOND, RobotMap.MAX_VELOCITY_INCHES_PER_SECOND);
+    
     return speed;
   }
 

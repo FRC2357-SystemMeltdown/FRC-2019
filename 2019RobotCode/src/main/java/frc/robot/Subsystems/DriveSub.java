@@ -8,7 +8,9 @@
 package frc.robot.Subsystems;
 
 import frc.robot.RobotMap;
-import frc.robot.Commands.SplitArcadeDriveCommand;
+import frc.robot.Commands.ProportionalDriveCommand;
+
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
@@ -23,7 +25,6 @@ public class DriveSub extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-
   public WPI_TalonSRX leftMaster = new WPI_TalonSRX(RobotMap.CAN_ID_LEFT_DRIVE);
   public WPI_TalonSRX leftSlave = new WPI_TalonSRX(RobotMap.CAN_ID_LEFT_DRIVE_SLAVE);
   public SpeedControllerGroup left = new SpeedControllerGroup(leftMaster, leftSlave);
@@ -32,25 +33,39 @@ public class DriveSub extends Subsystem {
   public SpeedControllerGroup right = new SpeedControllerGroup(rightMaster, rightSlave);
   public DifferentialDrive drive = new DifferentialDrive(right, left);
 
-  private PigeonIMU gyro = new PigeonIMU(RobotMap.CAN_ID_PIGEON_IMU);
+  public PigeonIMU gyro = new PigeonIMU(RobotMap.CAN_ID_PIGEON_IMU);
   private double[] yawPitchRoll = new double[3];
+  public GyroPID gyroPID = new GyroPID();
+
+  private DriveTrainPID leftDriveTrainPID = new DriveTrainPID(
+   RobotMap.PID_P_LEFT_DRIVE,
+   RobotMap.PID_I_LEFT_DRIVE, 
+   RobotMap.PID_D_LEFT_DRIVE, 
+   leftMaster);
+  private DriveTrainPID rightDriveTrainPID = new DriveTrainPID(
+   RobotMap.PID_P_RIGHT_DRIVE, 
+   RobotMap.PID_I_RIGHT_DRIVE, 
+   RobotMap.PID_D_RIGHT_DRIVE, 
+   rightMaster);
 
   public DriveSub(){
     //leftSlave.setInverted(true);
     //rightSlave.setInverted(true);
+    leftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    rightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
   }
 
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
-    setDefaultCommand(new SplitArcadeDriveCommand());
+    setDefaultCommand(new ProportionalDriveCommand());
   }
 
-  public void drive(double speed, double turn){
-    double left = speed + turn;
-    double right = speed - turn;
-    drive.tankDrive(left, right);
+  public void PIDDrive(double left, double right){
+    leftDriveTrainPID.setSetpoint(left);
+    rightDriveTrainPID.setSetpoint(right);
+    drive.tankDrive(leftDriveTrainPID.output, rightDriveTrainPID.output);
   }
 
   public double getYaw(){
