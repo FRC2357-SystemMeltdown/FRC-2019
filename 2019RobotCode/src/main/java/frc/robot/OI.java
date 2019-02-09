@@ -7,7 +7,10 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
+import frc.robot.overlays.ProportionalDrive;
+import frc.robot.overlays.DriverFailSafe;
+import frc.robot.overlays.GunnerFailSafe;
+import frc.robot.overlays.ControlOverlay;
 
 /**
  * Operator Interface
@@ -16,19 +19,54 @@ public class OI {
   public static final int CONTROLLER_ID_DRIVER = 0;
   public static final int CONTROLLER_ID_GUNNER = 1;
 
-  public XboxController driver = new XboxController(OI.CONTROLLER_ID_DRIVER);
-  public XboxController gunner = new XboxController(OI.CONTROLLER_ID_GUNNER);
+  private XboxController driverController;
+  private XboxController gunnerController;
 
-  public double getTurn(){
-    return driver.getX(Hand.kRight);
+  private ControlOverlay driverOverlay;
+  private ControlOverlay gunnerOverlay;
+
+  public OI() {
+    this.driverController = new XboxController(CONTROLLER_ID_DRIVER);
+    this.gunnerController = new XboxController(CONTROLLER_ID_GUNNER);
+
+    this.driverOverlay = new DriverFailSafe(driverController);
+    this.gunnerOverlay = new GunnerFailSafe(gunnerController);
   }
 
-  public double getSpeed(){
-    return driver.getY(Hand.kLeft);
+  public double getProportionalTurn(){
+    double turn = 0;
+
+    if (driverOverlay instanceof ProportionalDrive) {
+      turn += ((ProportionalDrive) driverOverlay).getTurn();
+    }
+    if (gunnerOverlay instanceof ProportionalDrive) {
+      turn += ((ProportionalDrive) gunnerOverlay).getTurn();
+    }
+
+    turn = Math.max(-1.0, turn);
+    turn = Math.min(1.0, turn);
+
+    return turn;
   }
 
-  public double getArmSpeed(){
-    double speed = gunner.getRawAxis(2) - gunner.getRawAxis(3);
+  public double getProportionalSpeed() {
+    double speed = 0;
+
+    if (driverOverlay instanceof ProportionalDrive) {
+      speed += ((ProportionalDrive) driverOverlay).getSpeed();
+    }
+    if (gunnerOverlay instanceof ProportionalDrive) {
+      speed += ((ProportionalDrive) gunnerOverlay).getSpeed();
+    }
+
+    speed = Math.max(-1.0, speed);
+    speed = Math.min(1.0, speed);
+
     return speed;
+  }
+
+  public double getArmSpeed() {
+    //double speed = gunner.getRawAxis(2) - gunner.getRawAxis(3);
+    return 0;
   }
 }
