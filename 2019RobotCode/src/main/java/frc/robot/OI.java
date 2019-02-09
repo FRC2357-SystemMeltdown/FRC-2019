@@ -44,8 +44,8 @@ public class OI {
       turn += ((ProportionalDrive) gunnerOverlay).getTurn();
     }
 
-    turn = Math.min(-1.0, turn);
-    turn = Math.max(1.0, turn);
+    turn = Math.max(-1.0, turn);
+    turn = Math.min(1.0, turn);
 
     return turn;
   }
@@ -60,8 +60,8 @@ public class OI {
       speed += ((ProportionalDrive) gunnerOverlay).getSpeed();
     }
 
-    speed = Math.min(-1.0, speed);
-    speed = Math.max(1.0, speed);
+    speed = Math.max(-1.0, speed);
+    speed = Math.min(1.0, speed);
 
     return speed;
   }
