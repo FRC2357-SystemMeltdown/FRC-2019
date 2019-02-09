@@ -10,8 +10,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.overlays.ProportionalDrive;
 import frc.robot.overlays.DriverFailSafe;
 import frc.robot.overlays.GunnerFailSafe;
-import frc.robot.overlays.DriverOverlay;
-import frc.robot.overlays.GunnerOverlay;
+import frc.robot.overlays.ControlOverlay;
 
 /**
  * Operator Interface
@@ -23,8 +22,8 @@ public class OI {
   private XboxController driverController;
   private XboxController gunnerController;
 
-  private DriverOverlay driverOverlay;
-  private GunnerOverlay gunnerOverlay;
+  private ControlOverlay driverOverlay;
+  private ControlOverlay gunnerOverlay;
 
   public OI() {
     this.driverController = new XboxController(CONTROLLER_ID_DRIVER);

@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
  * The DriverFailSafe overlay is the least complex drive control system
  * that relies on minimal to no sensors to function.
  */
-public class DriverFailSafe extends DriverOverlay implements ProportionalDrive {
+public class DriverFailSafe extends ControlOverlay implements ProportionalDrive {
   public static final double DEFAULT_TURN_FACTOR = 1.0;
   public static final double DEFAULT_SPEED_FACTOR = 1.0;
 

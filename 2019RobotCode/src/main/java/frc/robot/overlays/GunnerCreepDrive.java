@@ -3,7 +3,7 @@ package frc.robot.overlays;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
-public class GunnerCreepDrive extends GunnerOverlay implements ProportionalDrive {
+public class GunnerCreepDrive extends ControlOverlay implements ProportionalDrive {
   public static final double DEFAULT_TURN_FACTOR = 0.25;
   public static final double DEFAULT_SPEED_FACTOR = 0.25;
 
