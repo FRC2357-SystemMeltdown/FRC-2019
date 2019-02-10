@@ -65,7 +65,8 @@ public class RobotMap {
   public static final int ARM_POTENTIOMETER_RANGE = ARM_POTENTIOMETER_MAX - ARM_POTENTIOMETER_MIN;
 
   // Cargo
-  public static final double INTAKE_IN_OUT_SPEED = 0.7;
+  public static final double INTAKE_IN_SPEED = -0.7;
+  public static final double INTAKE_OUT_SPEED = 0.7;
   public static final double INTAKE_STOP_SPEED = 0.0;
 
   // Hatch
