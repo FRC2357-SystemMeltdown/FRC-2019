@@ -64,6 +64,10 @@ public class RobotMap {
   public static final int ARM_POTENTIOMETER_MIN = 0;
   public static final int ARM_POTENTIOMETER_RANGE = ARM_POTENTIOMETER_MAX - ARM_POTENTIOMETER_MIN;
 
+  // arm speeds are PWM inputs in [-1, 1]
+  public static final double ARM_UP_SPEED = 0.1;
+  public static final double ARM_DOWN_SPEED = -0.1;
+
   // Cargo
   public static final double INTAKE_IN_SPEED = -0.7;
   public static final double INTAKE_OUT_SPEED = 0.7;

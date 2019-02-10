@@ -10,11 +10,23 @@ package frc.robot.Commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class MoveArmCommand extends Command {
-  public MoveArmCommand() {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
+// This command provides direct control over the arm motors
+public class MoveArmDirectCommand extends Command {
+  private double armSpeed;
+
+  public MoveArmDirectCommand(double aArmSpeed) {
     requires(Robot.ARM_SUB);
+
+    armSpeed = aArmSpeed;
+  }
+
+  public void setArmSpeed(double aArmSpeed)
+  {
+    armSpeed = aArmSpeed;
+  }
+
+  public double getArmSpeed() {
+    return armSpeed;
   }
 
   // Called just before this Command runs the first time
@@ -25,7 +37,7 @@ public class MoveArmCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.ARM_SUB.moveArmManual(Robot.OI.getArmSpeed());
+    Robot.ARM_SUB.moveArmManual(armSpeed);
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -37,6 +49,8 @@ public class MoveArmCommand extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    // Stop the arm
+    Robot.ARM_SUB.moveArmManual(0);
   }
 
   // Called when another command which requires one or more of the same
