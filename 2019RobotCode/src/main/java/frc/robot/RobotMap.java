@@ -34,6 +34,25 @@ public class RobotMap {
   public static final int GYRO_AXIS_YAW = 0;
   public static final int GYRO_AXIS_PITCH = 1;
   public static final int GYRO_AXIS_ROLL = 2;
+  public static final int ENCODER_TICKS_PER_ROTATION = 256;
+  public static final double WHEEL_CIRCUMFERENCE_INCHES = 6 * Math.PI;
+  public static final double MOTOR_MINIMUM_POWER = 0.05;
+  public static final double DRIVER_PROPORTION = 1.0;
+  public static final double GUNNER_PROPORTION = 0.25;
+  public static final double MAX_TURN_RATE_DEGREES_PER_SECOND = 180;
+  public static final double MAX_VELOCITY_INCHES_PER_SECOND = 10;
+  
+  //Drive PID Values
+  public static final double PID_P_LEFT_DRIVE = 0.0;
+  public static final double PID_I_LEFT_DRIVE = 0.0;
+  public static final double PID_D_LEFT_DRIVE = 0.0;
+  public static final double PID_P_RIGHT_DRIVE = 0.0;
+  public static final double PID_I_RIGHT_DRIVE = 0.0;
+  public static final double PID_D_RIGHT_DRIVE = 0.0;
+  public static final double PID_P_GYRO = 0.0;
+  public static final double PID_I_GYRO = 0.0;
+  public static final double PID_D_GYRO = 0.0;
+  public static final double DRIVE_TRAIN_SAMPLE_PERIOD = 1 / 5;
 
   // Arm
   public static final int ARM_MAX_ANGLE = 270;
@@ -51,4 +70,7 @@ public class RobotMap {
 
   // Vision
   public static final double VISION_DEFAULT_RETURN_VALUE = 0.0;
+
+  //General Purpose
+  public static final int MILLISECONDS_PER_SECOND = 1000;
 }

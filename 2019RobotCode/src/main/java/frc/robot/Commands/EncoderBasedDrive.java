@@ -9,9 +9,9 @@ package frc.robot.Commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class SplitArcadeDriveCommand extends Command {
+public class EncoderBasedDrive extends Command {
 
-  public SplitArcadeDriveCommand() {
+  public EncoderBasedDrive() {
     requires(Robot.DRIVE_SUB);
   }
 
@@ -23,10 +23,10 @@ public class SplitArcadeDriveCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    double turn = Robot.OI.getProportionalTurn();
-    double speed = Robot.OI.getProportionalSpeed();
+    double turn = Robot.OI.getGyroBasedTurn();
+    double speed = Robot.OI.getEncoderBasedSpeed();
 
-    Robot.DRIVE_SUB.drive(speed, turn);
+    Robot.DRIVE_SUB.PIDDrive(turn, speed);
   }
 
   // Make this return true when this Command no longer needs to run execute()
