@@ -11,13 +11,7 @@ import edu.wpi.first.wpilibj.command.PIDSubsystem;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 
-/**
- * Add your docs here.
- */
 public class GyroPID extends PIDSubsystem {
-  /**
-   * Add your docs here.
-   */
 
   private long lastTime;
   private double lastPosition;
@@ -26,10 +20,6 @@ public class GyroPID extends PIDSubsystem {
   public GyroPID() {
     // Intert a subsystem name and PID values here
     super(RobotMap.PID_P_GYRO, RobotMap.PID_I_GYRO, RobotMap.PID_D_GYRO);
-    // Use these to get going:
-    // setSetpoint() - Sets where the PID controller should move the system
-    // to
-    // enable() - Enables the PID controller.
     this.lastTime = 0l;
     this.lastPosition = 0.0;
     getPIDController().setContinuous(false);

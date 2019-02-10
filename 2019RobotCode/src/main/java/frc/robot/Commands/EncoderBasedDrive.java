@@ -23,15 +23,10 @@ public class EncoderBasedDrive extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.DRIVE_SUB.gyroPID.setSetpoint(Robot.OI.getGyroBasedTurn());
-
-    double turn = Robot.DRIVE_SUB.gyroPID.output;
+    double turn = Robot.OI.getGyroBasedTurn();
     double speed = Robot.OI.getEncoderBasedSpeed();
 
-    double left = speed - turn;
-    double right = speed + turn;
-
-    Robot.DRIVE_SUB.PIDDrive(left, right);
+    Robot.DRIVE_SUB.PIDDrive(turn, speed);
   }
 
   // Make this return true when this Command no longer needs to run execute()

@@ -33,7 +33,7 @@ public class DriveSub extends Subsystem {
   public SpeedControllerGroup right = new SpeedControllerGroup(rightMaster, rightSlave);
   public DifferentialDrive drive = new DifferentialDrive(right, left);
 
-  public PigeonIMU gyro = new PigeonIMU(RobotMap.CAN_ID_PIGEON_IMU);
+  private PigeonIMU gyro = new PigeonIMU(RobotMap.CAN_ID_PIGEON_IMU);
   private double[] yawPitchRoll = new double[3];
   public GyroPID gyroPID = new GyroPID();
 
@@ -62,7 +62,12 @@ public class DriveSub extends Subsystem {
     setDefaultCommand(new ProportionalDriveCommand());
   }
 
-  public void PIDDrive(double left, double right){
+  public void PIDDrive(double speed, double turn){
+    gyroPID.setSetpoint(turn);
+
+    double left = speed - gyroPID.output;
+    double right = speed + gyroPID.output;
+
     leftDriveTrainPID.setSetpoint(left);
     rightDriveTrainPID.setSetpoint(right);
     drive.tankDrive(leftDriveTrainPID.output, rightDriveTrainPID.output);
@@ -77,6 +82,10 @@ public class DriveSub extends Subsystem {
       yawPitchRoll[RobotMap.GYRO_AXIS_YAW] += 360;
     }
     return yawPitchRoll[RobotMap.GYRO_AXIS_YAW];
+  }
+
+  public void setTurnRateSetpoint(double setpoint){
+    gyroPID.setSetpoint(setpoint);
   }
 
 }

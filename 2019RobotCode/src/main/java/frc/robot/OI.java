@@ -65,6 +65,7 @@ public class OI {
     return speed;
   }
 
+  //Degrees/Second
   public double getGyroBasedTurn() {
     double turn = 0.0;
 
@@ -80,6 +81,7 @@ public class OI {
     return turn;
   }
 
+  //Inches/Second
   public double getEncoderBasedSpeed() {
     double speed = 0.0;
 

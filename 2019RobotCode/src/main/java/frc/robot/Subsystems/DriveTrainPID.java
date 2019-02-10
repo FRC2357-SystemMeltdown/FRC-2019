@@ -12,13 +12,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
 import frc.robot.RobotMap;
 
-/**
- * Add your docs here.
- */
 public class DriveTrainPID extends PIDSubsystem {
-  /**
-   * Add your docs here.
-   */
 
   private WPI_TalonSRX talon;
   private long lastTime;
@@ -28,10 +22,6 @@ public class DriveTrainPID extends PIDSubsystem {
   public DriveTrainPID(double pp, double ii, double dd, WPI_TalonSRX talon) {
     // Intert a subsystem name and PID values here
     super(pp, ii , dd, RobotMap.DRIVE_TRAIN_SAMPLE_PERIOD);
-    // Use these to get going:
-    // setSetpoint() - Sets where the PID controller should move the system
-    // to
-    // enable() - Enables the PID controller.
 
     this.talon = talon;
     this.lastTime = System.currentTimeMillis();
@@ -48,9 +38,6 @@ public class DriveTrainPID extends PIDSubsystem {
 
   @Override
   protected double returnPIDInput() {
-    // Return your input value for the PID loop
-    // e.g. a sensor, like a potentiometer:
-    // yourPot.getAverageVoltage() / kYourMaxVoltage;
     return getVelocityInchesPerSecond();
   }
 
@@ -77,7 +64,7 @@ public class DriveTrainPID extends PIDSubsystem {
   }
 
   public double getVelocityInchesPerSecond() {
-      double velocityInchesPerSecond = getVelocityRotationsPerSecond() * RobotMap.WHEEL_CIRCUMFERENCE;
+      double velocityInchesPerSecond = getVelocityRotationsPerSecond() * RobotMap.WHEEL_CIRCUMFERENCE_INCHES;
       return velocityInchesPerSecond;
   }
 }

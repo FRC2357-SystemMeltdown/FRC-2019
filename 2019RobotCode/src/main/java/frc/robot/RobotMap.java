@@ -35,7 +35,7 @@ public class RobotMap {
   public static final int GYRO_AXIS_PITCH = 1;
   public static final int GYRO_AXIS_ROLL = 2;
   public static final int ENCODER_TICKS_PER_ROTATION = 256;
-  public static final double WHEEL_CIRCUMFERENCE = 6 * Math.PI;
+  public static final double WHEEL_CIRCUMFERENCE_INCHES = 6 * Math.PI;
   public static final double MOTOR_MINIMUM_POWER = 0.05;
   public static final double DRIVER_PROPORTION = 1.0;
   public static final double GUNNER_PROPORTION = 0.25;
