@@ -13,6 +13,8 @@ public class TestTab {
   private ShuffleboardTab tab;
   private NetworkTableEntry encoderLeft;
   private NetworkTableEntry encoderRight;
+  private NetworkTableEntry hatchLimitLeft;
+  private NetworkTableEntry hatchLimitRight;
 
   public TestTab() {
     tab = Shuffleboard.getTab(TITLE);
@@ -21,6 +23,9 @@ public class TestTab {
 
     encoderLeft = tab.add("Drive Encoder - Left", 0).getEntry();
     encoderRight = tab.add("Drive Encoder - Right", 0).getEntry();
+
+    hatchLimitLeft = tab.add("Hatch Limit - Left", false).getEntry();
+    hatchLimitRight = tab.add("Hatch Limit - Right", false).getEntry();
   }
 
   public void show() {
@@ -33,5 +38,8 @@ public class TestTab {
 
     encoderLeft.setNumber(leftPosition);
     encoderRight.setNumber(rightPosition);
+
+    hatchLimitLeft.setBoolean(Robot.HATCH_SUB.leftLimitSwitch.get());
+    hatchLimitRight.setBoolean(Robot.HATCH_SUB.rightLimitSwitch.get());
   }
 }
