@@ -18,6 +18,7 @@ import frc.robot.Subsystems.DriveSub;
 import frc.robot.Subsystems.ArmSub;
 import frc.robot.Subsystems.HatchSub;
 import frc.robot.Subsystems.VisionSub;
+import frc.robot.shuffleboard.ShuffleboardController;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -42,8 +43,11 @@ public class Robot extends TimedRobot {
    public static final VisionSub VISION_SUB = new VisionSub();
    public static final OI OI = new OI();
 
-   public Robot(){
-   }
+  private ShuffleboardController shuffleboardController;
+
+  public Robot(){
+    this.shuffleboardController = new ShuffleboardController();
+  }
 
   @Override
   public void robotInit() {
@@ -59,7 +63,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    // Scheduler.getInstance().run();
+    Scheduler.getInstance().run();
   }
 
   /**
@@ -82,12 +86,22 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
   }
 
+  @Override
+  public void testInit() {
+    shuffleboardController.test();
+  }
+
+  @Override
+  public void disabledInit() {
+    // @todo: Put some code in here to decelerate gracefully
+    // because this will happen between auto and teleop
+  }
+
   /**
    * This function is called periodically during autonomous.
    */
   @Override
   public void autonomousPeriodic() {
-    Scheduler.getInstance().run();
   }
 
   /**
@@ -95,12 +109,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    Scheduler.getInstance().run();
-
+    /*
     SmartDashboard.putNumber("Gyro Yaw", DRIVE_SUB.getYaw());
     SmartDashboard.putNumber("Limelight X Angle", VISION_SUB.getTargetXAngle());
     SmartDashboard.putNumber("Limelight Area", VISION_SUB.getTargetArea());
     SmartDashboard.putNumber("Potentiometer Value", ARM_SUB.getPotentiometerAngle());
+    */
+
+    shuffleboardController.periodic();
   }
 
   /**
@@ -108,5 +124,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+    shuffleboardController.periodic();
+  }
+
+  /**
+   * This function is called periodically while disabled.
+   */
+  @Override
+  public void disabledPeriodic() {
+    // @todo: See what we need to do here.
   }
 }
