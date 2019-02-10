@@ -7,14 +7,21 @@
 
 package frc.robot.Subsystems;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.RobotMap;
 
 /**
- * Add your docs here.
+ * Hatch Gantry Subsystem
  */
 public class HatchSub extends Subsystem {
-  // Put methods for controlling this subsystem
-  // here. Call these from Commands.
+  public DigitalInput leftLimitSwitch;
+  public DigitalInput rightLimitSwitch;
+
+  public HatchSub() {
+    leftLimitSwitch = new DigitalInput(RobotMap.DIO_PORT_HATCH_LEFT);
+    rightLimitSwitch = new DigitalInput(RobotMap.DIO_PORT_HATCH_RIGHT);
+  }
 
   @Override
   public void initDefaultCommand() {

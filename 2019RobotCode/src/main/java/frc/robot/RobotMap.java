@@ -29,6 +29,8 @@ public class RobotMap {
 
   // DIO IDs
   public static final int DIO_PORT_CARGO_LIMIT_SWITCH = 0;
+  public static final int DIO_PORT_HATCH_LEFT         = 2;
+  public static final int DIO_PORT_HATCH_RIGHT        = 3;
 
   // Drive
   public static final int GYRO_AXIS_YAW = 0;
