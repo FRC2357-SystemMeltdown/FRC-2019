@@ -18,6 +18,9 @@ import frc.robot.Subsystems.DriveSub;
 import frc.robot.Subsystems.ArmSub;
 import frc.robot.Subsystems.HatchSub;
 import frc.robot.Subsystems.VisionSub;
+import frc.robot.modes.DPadModeManager;
+import frc.robot.modes.DriverFailsafeMode;
+import frc.robot.modes.GunnerFailsafeMode;
 import frc.robot.shuffleboard.ShuffleboardController;
 
 /**
@@ -44,9 +47,12 @@ public class Robot extends TimedRobot {
    public static final OI OI = new OI();
 
   private ShuffleboardController shuffleboardController;
+  private DPadModeManager driverModeMgr;
+  private DPadModeManager gunnerModeMgr;
 
   public Robot(){
     this.shuffleboardController = new ShuffleboardController();
+    initModeManagers();
   }
 
   @Override
@@ -64,6 +70,10 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     Scheduler.getInstance().run();
+
+    // Update the mode managers
+    driverModeMgr.updateDPadValue(OI.getDriverDPadValue());
+    gunnerModeMgr.updateDPadValue(OI.getGunnerDPadValue());
   }
 
   /**
@@ -133,5 +143,22 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     // @todo: See what we need to do here.
+  }
+
+  private void initModeManagers() {
+    driverModeMgr = new DPadModeManager(
+      new DriverFailsafeMode(),
+      null,
+      null,
+      null,
+      frc.robot.OI.DPadValue.Up
+      );
+    gunnerModeMgr = new DPadModeManager(
+      new GunnerFailsafeMode(),
+      null,
+      null,
+      null,
+      frc.robot.OI.DPadValue.Up
+      );
   }
 }

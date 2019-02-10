@@ -21,6 +21,38 @@ public class OI {
   public static final int CONTROLLER_ID_DRIVER = 0;
   public static final int CONTROLLER_ID_GUNNER = 1;
 
+  // D-pad values (probably move this somewhere else)
+  public enum DPadValue {
+    Up(0),
+    Right(1),
+    Down(2),
+    Left(3),
+    Unpressed(4);
+
+    public final int value;
+
+    // Convert a POV value from GenericHID to the enum.
+    // Snaps to a quadrant in case a diagonal is pressed.
+    public static DPadValue fromPOV(int povVal) {
+      if(povVal < 0) {
+        return Unpressed;
+      }
+      if(povVal < 45 || povVal >= 315) {
+          return Up;
+      }
+      if(povVal < 135) {
+        return Right;
+      }
+      if(povVal < 225) {
+        return Down;
+      }
+      return Left;
+    }
+
+    private DPadValue(int aValue) {
+      value = aValue;
+    }
+  }
   private XboxController driverController;
   private XboxController gunnerController;
 
@@ -30,9 +62,6 @@ public class OI {
   public OI() {
     this.driverController = new XboxController(CONTROLLER_ID_DRIVER);
     this.gunnerController = new XboxController(CONTROLLER_ID_GUNNER);
-
-    this.driverOverlay = new DriverFailSafe(driverController);
-    this.gunnerOverlay = new GunnerFailSafe(gunnerController);
   }
 
   public double getProportionalTurn(){
@@ -100,5 +129,29 @@ public class OI {
   public double getArmSpeed() {
     //double speed = gunner.getRawAxis(2) - gunner.getRawAxis(3);
     return 0;
+  }
+
+  public DPadValue getDriverDPadValue() {
+    return DPadValue.fromPOV(driverController.getPOV(0));
+  }
+
+  public DPadValue getGunnerDPadValue() {
+    return DPadValue.fromPOV(gunnerController.getPOV(0));
+  }
+
+  public XboxController getDriverController() {
+    return driverController;
+  }
+
+  public XboxController getGunnerController() {
+    return gunnerController;
+  }
+
+  public void setDriverOverlay(ControlOverlay overlay) {
+    driverOverlay = overlay;
+  }
+
+  public void setGunnerOverlay(ControlOverlay overlay) {
+    gunnerOverlay = overlay;
   }
 }
