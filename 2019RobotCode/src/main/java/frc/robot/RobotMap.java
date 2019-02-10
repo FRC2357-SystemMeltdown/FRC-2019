@@ -11,14 +11,14 @@ package frc.robot;
  */
 public class RobotMap {
   // CAN IDs
-  public static final int CAN_ID_PDP               = 0;
   public static final int CAN_ID_RIGHT_DRIVE       = 1;
   public static final int CAN_ID_RIGHT_DRIVE_SLAVE = 2;
   public static final int CAN_ID_LEFT_DRIVE_SLAVE  = 3;
   public static final int CAN_ID_LEFT_DRIVE        = 4;
-  public static final int CAN_ID_PCM               = 5;
   public static final int CAN_ID_PIGEON_IMU        = 6;
   public static final int CAN_ID_CARGO_INTAKE      = 7;
+  public static final int CAN_ID_PDP               = 20;
+  public static final int CAN_ID_PCM               = 25;
 
   // PWM IDs
   public static final int PWM_PORT_RIGHT_ARM = 0;
