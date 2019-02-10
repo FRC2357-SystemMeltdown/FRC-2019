@@ -116,6 +116,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Potentiometer Value", ARM_SUB.getPotentiometerAngle());
     */
 
+    OI.pollInputs();
     shuffleboardController.periodic();
   }
 

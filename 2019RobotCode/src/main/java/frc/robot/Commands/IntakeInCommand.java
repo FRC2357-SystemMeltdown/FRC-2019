@@ -12,8 +12,6 @@ import frc.robot.Robot;
 
 public class IntakeInCommand extends Command {
   public IntakeInCommand() {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
     requires(Robot.CARGO_SUB);
   }
 
