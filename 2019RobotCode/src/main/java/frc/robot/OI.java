@@ -101,10 +101,4 @@ public class OI {
     //double speed = gunner.getRawAxis(2) - gunner.getRawAxis(3);
     return 0;
   }
-
-  // Poll binary inputs for state changes
-  public void pollInputs() {
-    driverOverlay.pollButtons();
-    gunnerOverlay.pollButtons();
-  }
 }
