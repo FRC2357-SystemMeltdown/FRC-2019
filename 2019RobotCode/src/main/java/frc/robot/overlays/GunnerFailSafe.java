@@ -49,10 +49,10 @@ public class GunnerFailSafe extends GunnerCreepDrive implements ProportionalDriv
     armDownButton.whileHeld(armDownCommand);
 
     hatchMoveButton = new JoystickButton(controller, XboxRaw.X.value);
-    hatchMoveButton.whileHeld(new MoveHatchCommand(controller.getBumper(Hand.kLeft), controller.getBumper(Hand.kRight)));
+    hatchMoveButton.whileHeld(new MoveHatchCommand(controller.getTriggerAxis(Hand.kLeft), controller.getTriggerAxis(Hand.kRight)));
     
     hatchOpenCloseButton = new JoystickButton(controller, XboxRaw.Y.value);
-    hatchOpenCloseButton.whileHeld(new HatchOpenCloseCommand(controller.getBumper(Hand.kLeft), controller.getBumper(Hand.kRight)));
+    hatchOpenCloseButton.whileHeld(new HatchOpenCloseCommand(controller.getTriggerAxis(Hand.kLeft), controller.getTriggerAxis(Hand.kRight)));
   }
 
   public double getTurn() {
