@@ -36,6 +36,6 @@ public class CargoSub extends Subsystem {
   }
 
   public void intakeStop() {
-    intake.set(RobotMap.INTAKE_STOP_SPEED);
+    intake.set(RobotMap.STOP_SPEED);
   }
 }
