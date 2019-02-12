@@ -18,8 +18,8 @@ public class TestTab {
 
   public TestTab() {
     tab = Shuffleboard.getTab(TITLE);
-    tab.add("Drive - Left", Robot.DRIVE_SUB.left);
-    tab.add("Drive - Right", Robot.DRIVE_SUB.right);
+    tab.add("Drive - Left", Robot.DRIVE_SUB.leftMaster);
+    tab.add("Drive - Right", Robot.DRIVE_SUB.rightMaster);
 
     encoderLeft = tab.add("Drive Encoder - Left", 0).getEntry();
     encoderRight = tab.add("Drive Encoder - Right", 0).getEntry();
