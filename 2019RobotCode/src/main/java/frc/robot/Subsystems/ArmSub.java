@@ -10,7 +10,6 @@ package frc.robot.Subsystems;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
 import frc.robot.Commands.ArmStateCommand;
@@ -56,14 +55,14 @@ public class ArmSub extends Subsystem {
    */
   public void moveArmManual(int direction) {
     if(direction == 1) {
-      extendingSolenoid.set(Value.kForward);
-      loweringSolenoid.set(Value.kReverse);
+      extendingSolenoid.set(DoubleSolenoid.Value.kForward);
+      loweringSolenoid.set(DoubleSolenoid.Value.kReverse);
     } else if (direction == -1) {
-      extendingSolenoid.set(Value.kReverse);
-      loweringSolenoid.set(Value.kForward);
+      extendingSolenoid.set(DoubleSolenoid.Value.kReverse);
+      loweringSolenoid.set(DoubleSolenoid.Value.kForward);
     } else {
-      extendingSolenoid.set(Value.kReverse);
-      loweringSolenoid.set(Value.kReverse);
+      extendingSolenoid.set(DoubleSolenoid.Value.kReverse);
+      loweringSolenoid.set(DoubleSolenoid.Value.kReverse);
     }
   }
 
