@@ -15,7 +15,7 @@ public class GyroPID extends PIDSubsystem {
 
   private long lastTime;
   private double lastPosition;
-  public double output;
+  private double output;
 
   public GyroPID() {
     // Intert a subsystem name and PID values here
@@ -60,5 +60,13 @@ public class GyroPID extends PIDSubsystem {
     double velocityDegreesPerMilisecond = deltaPosition / deltaTime;
     double velocityDegreesPerSecond = velocityDegreesPerMilisecond * RobotMap.MILLISECONDS_PER_SECOND;
     return velocityDegreesPerSecond;
+  }
+
+  /**
+   * 
+   * @return The output of the PID loop between -1.0d and 1.0d
+   */
+  public double getOutput() {
+    return output;
   }
 }

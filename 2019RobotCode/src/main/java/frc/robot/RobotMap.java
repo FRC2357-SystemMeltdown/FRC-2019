@@ -43,6 +43,7 @@ public class RobotMap {
   public static final int GYRO_AXIS_YAW = 0;
   public static final int GYRO_AXIS_PITCH = 1;
   public static final int GYRO_AXIS_ROLL = 2;
+  public static final int GYRO_AXIS_TOTAL = 3;
   public static final int ENCODER_TICKS_PER_ROTATION = 256;
   public static final double WHEEL_CIRCUMFERENCE_INCHES = 6 * Math.PI;
   public static final double MOTOR_MINIMUM_POWER = 0.05;
@@ -55,9 +56,11 @@ public class RobotMap {
   public static final double PID_P_LEFT_DRIVE = 0.0;
   public static final double PID_I_LEFT_DRIVE = 0.0;
   public static final double PID_D_LEFT_DRIVE = 0.0;
+  public static final double PID_F_LEFT_DRIVE = 0.0;
   public static final double PID_P_RIGHT_DRIVE = 0.0;
   public static final double PID_I_RIGHT_DRIVE = 0.0;
   public static final double PID_D_RIGHT_DRIVE = 0.0;
+  public static final double PID_F_RIGHT_DRIVE = 0.0;
   public static final double PID_P_GYRO = 0.0;
   public static final double PID_I_GYRO = 0.0;
   public static final double PID_D_GYRO = 0.0;

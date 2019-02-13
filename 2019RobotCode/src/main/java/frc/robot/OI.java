@@ -94,7 +94,10 @@ public class OI {
     return speed;
   }
 
-  //Degrees/Second
+  /**
+   * 
+   * @return The desired turn rate in degrees/sec
+   */
   public double getGyroBasedTurn() {
     double turn = 0.0;
 
@@ -110,7 +113,9 @@ public class OI {
     return turn;
   }
 
-  //Inches/Second
+  /**
+   * @return The desired speed in inches/sec
+   */
   public double getEncoderBasedSpeed() {
     double speed = 0.0;
 
