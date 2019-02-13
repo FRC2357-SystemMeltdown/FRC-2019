@@ -16,6 +16,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 /**
  * Add your docs here.
@@ -28,6 +29,7 @@ public class DriveSub extends Subsystem {
   public WPI_TalonSRX leftSlave = new WPI_TalonSRX(RobotMap.CAN_ID_LEFT_DRIVE_SLAVE);
   public WPI_TalonSRX rightMaster = new WPI_TalonSRX(RobotMap.CAN_ID_RIGHT_DRIVE);
   public WPI_TalonSRX rightSlave = new WPI_TalonSRX(RobotMap.CAN_ID_RIGHT_DRIVE_SLAVE);
+  public DifferentialDrive drive = new DifferentialDrive(leftMaster, rightMaster);
 
   private PigeonIMU gyro = new PigeonIMU(RobotMap.CAN_ID_PIGEON_IMU);
   private double[] yawPitchRoll = new double[RobotMap.GYRO_AXIS_TOTAL];
@@ -105,7 +107,7 @@ public class DriveSub extends Subsystem {
    * @return The speed converted to encoder ticks/100ms
    */
   private double calcMotorControlSpeed(double speedInchesPerSecond) {
-    double speedInchesPer100ms = speedInchesPerSecond * 100 * RobotMap.MILLISECONDS_PER_SECOND;
+    double speedInchesPer100ms = speedInchesPerSecond * 100 / RobotMap.MILLISECONDS_PER_SECOND;
     double speedRotationsPer100ms = speedInchesPer100ms / RobotMap.WHEEL_CIRCUMFERENCE_INCHES;
     double speedTicksPer100ms = speedRotationsPer100ms * RobotMap.ENCODER_TICKS_PER_ROTATION;
     return speedTicksPer100ms;
