@@ -33,8 +33,8 @@ public class GunnerFailSafe extends GunnerCreepDrive implements ProportionalDriv
 
     intakeInCommand = new IntakeInCommand();
     intakeOutCommand = new IntakeOutCommand();
-    armUpCommand = new MoveArmDirectCommand(RobotMap.ARM_UP_SPEED);
-    armDownCommand = new MoveArmDirectCommand(RobotMap.ARM_DOWN_SPEED);
+    armUpCommand = new MoveArmDirectCommand(RobotMap.ARM_UP);
+    armDownCommand = new MoveArmDirectCommand(RobotMap.ARM_DOWN);
 
     intakeInButton = new JoystickButton(controller, XboxRaw.A.value);
     intakeInButton.whileHeld(intakeInCommand);
