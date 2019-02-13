@@ -4,9 +4,11 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.robot.RobotMap;
+import frc.robot.Commands.HatchOpenCloseCommand;
 import frc.robot.Commands.IntakeInCommand;
 import frc.robot.Commands.IntakeOutCommand;
 import frc.robot.Commands.MoveArmDirectCommand;
+import frc.robot.Commands.MoveHatchCommand;
 import frc.robot.Other.XboxRaw;
 
 public class GunnerFailSafe extends GunnerCreepDrive implements ProportionalDrive {
@@ -22,6 +24,9 @@ public class GunnerFailSafe extends GunnerCreepDrive implements ProportionalDriv
   private MoveArmDirectCommand armDownCommand;
   private JoystickButton armUpButton;
   private JoystickButton armDownButton;
+
+  private JoystickButton hatchMoveButton;
+  private JoystickButton hatchOpenCloseButton;
 
   public GunnerFailSafe(XboxController controller) {
     super(controller);
@@ -42,6 +47,12 @@ public class GunnerFailSafe extends GunnerCreepDrive implements ProportionalDriv
 
     armDownButton = new JoystickButton(controller, XboxRaw.BumperLeft.value);
     armDownButton.whileHeld(armDownCommand);
+
+    hatchMoveButton = new JoystickButton(controller, XboxRaw.X.value);
+    hatchMoveButton.whileHeld(new MoveHatchCommand(controller.getTriggerAxis(Hand.kLeft), controller.getTriggerAxis(Hand.kRight)));
+    
+    hatchOpenCloseButton = new JoystickButton(controller, XboxRaw.Y.value);
+    hatchOpenCloseButton.whileHeld(new HatchOpenCloseCommand(controller.getTriggerAxis(Hand.kLeft), controller.getTriggerAxis(Hand.kRight)));
   }
 
   public double getTurn() {

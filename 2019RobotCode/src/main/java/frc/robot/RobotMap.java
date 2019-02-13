@@ -11,14 +11,16 @@ package frc.robot;
  */
 public class RobotMap {
   // CAN IDs
-  public static final int CAN_ID_RIGHT_DRIVE       = 1;
-  public static final int CAN_ID_RIGHT_DRIVE_SLAVE = 2;
-  public static final int CAN_ID_LEFT_DRIVE_SLAVE  = 3;
-  public static final int CAN_ID_LEFT_DRIVE        = 4;
-  public static final int CAN_ID_PIGEON_IMU        = 6;
-  public static final int CAN_ID_CARGO_INTAKE      = 7;
-  public static final int CAN_ID_PDP               = 20;
-  public static final int CAN_ID_PCM               = 25;
+  public static final int CAN_ID_RIGHT_DRIVE        = 1;
+  public static final int CAN_ID_RIGHT_DRIVE_SLAVE  = 2;
+  public static final int CAN_ID_LEFT_DRIVE_SLAVE   = 3;
+  public static final int CAN_ID_LEFT_DRIVE         = 4;
+  public static final int CAN_ID_PIGEON_IMU         = 6;
+  public static final int CAN_ID_CARGO_INTAKE       = 7;
+  public static final int CAN_ID_LEFT_HATCH_GANTRY  = 8;
+  public static final int CAN_ID_RIGHT_HATCH_GANTRY = 9;
+  public static final int CAN_ID_PDP                = 20;
+  public static final int CAN_ID_PCM                = 25;
 
   // PWM IDs
   public static final int PWM_PORT_RIGHT_ARM = 0;
@@ -74,13 +76,14 @@ public class RobotMap {
   // Cargo
   public static final double INTAKE_IN_SPEED = -0.7;
   public static final double INTAKE_OUT_SPEED = 0.7;
-  public static final double INTAKE_STOP_SPEED = 0.0;
 
   // Hatch
+  public static final double HATCH_FAILSAFE_MOVEMENT_SPEED = 0.7;
 
   // Vision
   public static final double VISION_DEFAULT_RETURN_VALUE = 0.0;
 
   //General Purpose
   public static final int MILLISECONDS_PER_SECOND = 1000;
+  public static final double STOP_SPEED = 0.0;
 }
