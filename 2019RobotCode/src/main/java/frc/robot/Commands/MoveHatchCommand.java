@@ -9,48 +9,48 @@ package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
+import frc.robot.Subsystems.HatchSub;
 
-// This command provides direct control over the arm motors
-public class MoveArmDirectCommand extends Command {
-  private int direction;
+public class MoveHatchCommand extends Command {
 
-  public MoveArmDirectCommand(int direction) {
-    requires(Robot.ARM_SUB);
+  double left, right;
 
-    this.direction = direction;
-  }
+  /**
+   * 
+   * @param left If the button to move the gantries left is held
+   * @param right If the button to move the gantries right is held
+   */
+  public MoveHatchCommand(double left, double right) {
+    // Use requires() here to declare subsystem dependencies
+    // eg. requires(chassis);
+    requires(Robot.HATCH_SUB);
 
-  public void setDirection(int direction)
-  {
-    this.direction = direction;
-  }
-
-  public double getDirection() {
-    return direction;
+    this.left = left;
+    this.right = right;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    double speed = left - right;
+    Robot.HATCH_SUB.failsafeMoveGantry(speed);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.ARM_SUB.moveArmManual(direction);
+    
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return true;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    // Stop the arm
-    Robot.ARM_SUB.moveArmManual(0);
   }
 
   // Called when another command which requires one or more of the same

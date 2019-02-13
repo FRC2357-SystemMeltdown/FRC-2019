@@ -8,10 +8,11 @@
 package frc.robot.Subsystems;
 
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
-import frc.robot.Commands.MoveArmDirectCommand;
-import edu.wpi.first.wpilibj.PWM;
+import frc.robot.Commands.ArmStateCommand;
 
 /**
  * Add your docs here.
@@ -19,28 +20,61 @@ import edu.wpi.first.wpilibj.PWM;
 public class ArmSub extends Subsystem {
 
   private AnalogInput potentiometer = new AnalogInput(RobotMap.ANALOG_PORT_ARM_POTENTIOMETER);
-  private PWM leftSpark = new PWM(RobotMap.PWM_PORT_LEFT_ARM);
-  private PWM rightSpark = new PWM(RobotMap.PWM_PORT_RIGHT_ARM);
+  private DoubleSolenoid extendingSolenoid = new DoubleSolenoid(
+    RobotMap.PCM_PORT_EXTENDING_SOLENOID_OPEN,
+    RobotMap.PCM_PORT_EXTENDING_SOLENOID_CLOSE);
+  private DoubleSolenoid loweringSolenoid = new DoubleSolenoid(
+    RobotMap.PCM_PORT_LOWERING_SOLENOID_OPEN,
+    RobotMap.PCM_PORT_LOWERING_SOLENOID_CLOSE);
+  private Servo lock = new Servo(RobotMap.PWM_ID_ARM_LOCK_SERVO);
+  public double targetAngle;
+
+  public ArmSub() {
+    targetAngle = 0.0;
+  }
 
   @Override
   public void initDefaultCommand() {
     // Default command sets the arm speed to zero
-    setDefaultCommand(new MoveArmDirectCommand(0));
+    setDefaultCommand(new ArmStateCommand());
   }
 
+  /**
+   * 
+   * @return The angle of the arm in degrees relative to its lowest possible state.
+   */
   public double getPotentiometerAngle() {
-    double factor = RobotMap.ARM_MAX_ANGLE / RobotMap.ARM_POTENTIOMETER_MAX;
-    double angle = potentiometer.getValue() * factor;
-    return angle;
+    double angle = potentiometer.getValue() * RobotMap.ARM_ANGLE_FACTOR;
+    double angleFromBase = angle - RobotMap.ARM_MIN_ANGLE;
+    return angleFromBase;
   }
 
-  // Set a speed for the arm. Positive moves up
-  // @param input in [-1, 1]
-  public void moveArmManual(double input) {
-    int leftRawPWMValue = (int)Math.ceil((input + 1) * 255 / 2);
-    int rightRawPWMValue = -leftRawPWMValue;
-    leftSpark.setRaw(leftRawPWMValue);
-    rightSpark.setRaw(rightRawPWMValue);
+  /**
+   * 
+   * @param direction If 1, arm will raise. If -1, arm will lower. If 0, arm will hold.
+   */
+  public void moveArmManual(int direction) {
+    if(direction == 1) {
+      extendingSolenoid.set(DoubleSolenoid.Value.kForward);
+      loweringSolenoid.set(DoubleSolenoid.Value.kReverse);
+    } else if (direction == -1) {
+      extendingSolenoid.set(DoubleSolenoid.Value.kReverse);
+      loweringSolenoid.set(DoubleSolenoid.Value.kForward);
+    } else {
+      extendingSolenoid.set(DoubleSolenoid.Value.kReverse);
+      loweringSolenoid.set(DoubleSolenoid.Value.kReverse);
+    }
+  }
+
+  /**
+   * Engages the lock servo
+   */
+  public void lockArm(){
+    if(lock.get() == RobotMap.SERVO_LOCK_POSITION) {
+      lock.set(RobotMap.SERVO_RETRACTED_POSITION);
+    } else {
+      lock.set(RobotMap.SERVO_LOCK_POSITION);
+    }
   }
 
 }
