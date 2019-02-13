@@ -14,10 +14,10 @@ import frc.robot.Robot;
 public class MoveArmDirectCommand extends Command {
   private int direction;
 
-  public MoveArmDirectCommand(int direciton) {
+  public MoveArmDirectCommand(int direction) {
     requires(Robot.ARM_SUB);
 
-    this.direction = direciton;
+    this.direction = direction;
   }
 
   public void setDirection(int direction)
