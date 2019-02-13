@@ -12,21 +12,21 @@ import frc.robot.Robot;
 
 // This command provides direct control over the arm motors
 public class MoveArmDirectCommand extends Command {
-  private double armSpeed;
+  private int direction;
 
-  public MoveArmDirectCommand(double aArmSpeed) {
+  public MoveArmDirectCommand(int direction) {
     requires(Robot.ARM_SUB);
 
-    armSpeed = aArmSpeed;
+    this.direction = direction;
   }
 
-  public void setArmSpeed(double aArmSpeed)
+  public void setDirection(int direction)
   {
-    armSpeed = aArmSpeed;
+    this.direction = direction;
   }
 
-  public double getArmSpeed() {
-    return armSpeed;
+  public double getDirection() {
+    return direction;
   }
 
   // Called just before this Command runs the first time
@@ -37,7 +37,7 @@ public class MoveArmDirectCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.ARM_SUB.moveArmManual(armSpeed);
+    Robot.ARM_SUB.moveArmManual(direction);
   }
 
   // Make this return true when this Command no longer needs to run execute()

@@ -23,8 +23,7 @@ public class RobotMap {
   public static final int CAN_ID_PCM                = 25;
 
   // PWM IDs
-  public static final int PWM_PORT_RIGHT_ARM = 0;
-  public static final int PWM_PORT_LEFT_ARM  = 1;
+  public static final int PWM_ID_ARM_LOCK_SERVO = 0;
 
   // Analog In IDs
   public static final int ANALOG_PORT_ARM_POTENTIOMETER = 0;
@@ -33,6 +32,12 @@ public class RobotMap {
   public static final int DIO_PORT_CARGO_LIMIT_SWITCH = 0;
   public static final int DIO_PORT_HATCH_LEFT         = 2;
   public static final int DIO_PORT_HATCH_RIGHT        = 3;
+
+  //PCM IDs
+  public static final int PCM_PORT_EXTENDING_SOLENOID_CLOSE = 0;
+  public static final int PCM_PORT_EXTENDING_SOLENOID_OPEN = 1;
+  public static final int PCM_PORT_LOWERING_SOLENOID_CLOSE = 2;
+  public static final int PCM_PORT_LOWERING_SOLENOID_OPEN = 3;
 
   // Drive
   public static final int GYRO_AXIS_YAW = 0;
@@ -56,6 +61,9 @@ public class RobotMap {
   public static final double PID_P_GYRO = 0.0;
   public static final double PID_I_GYRO = 0.0;
   public static final double PID_D_GYRO = 0.0;
+  public static final double PID_P_ARM = 0.0;
+  public static final double PID_I_ARM = 0.0;
+  public static final double PID_D_ARM = 0.0;
   public static final double DRIVE_TRAIN_SAMPLE_PERIOD = 1 / 5;
 
   // Arm
@@ -65,10 +73,17 @@ public class RobotMap {
   public static final int ARM_POTENTIOMETER_MAX = 4096;
   public static final int ARM_POTENTIOMETER_MIN = 0;
   public static final int ARM_POTENTIOMETER_RANGE = ARM_POTENTIOMETER_MAX - ARM_POTENTIOMETER_MIN;
-
-  // arm speeds are PWM inputs in [-1, 1]
-  public static final double ARM_UP_SPEED = 0.1;
-  public static final double ARM_DOWN_SPEED = -0.1;
+  public static final double ARM_ANGLE_FACTOR = ARM_POTENTIOMETER_RANGE / ARM_RANGE;
+  public static final int ARM_UP = 1;
+  public static final int ARM_DOWN = -1;
+  public static final double ARM_HIGH_GOAL_ANGLE = 70.0;
+  public static final double ARM_MID_GOAL_ANGLE = 40.0;
+  public static final double ARM_LOW_GOAL_ANGLE = 10.0;
+  public static final double ARM_STARTING_ANGLE = 0.0;
+  public static final double ARM_ANGLE_TOLERANCE = 2.0;
+  public static final double ARM_COASTING_DISTANCE = 10.0;
+  public static final double SERVO_LOCK_POSITION = 1.0;
+  public static final double SERVO_RETRACTED_POSITION = 0.0;
 
   // Cargo
   public static final double INTAKE_IN_SPEED = -0.7;
