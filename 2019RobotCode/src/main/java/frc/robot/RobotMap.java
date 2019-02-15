@@ -82,9 +82,10 @@ public class RobotMap {
   public static final double ARM_HIGH_GOAL_ANGLE = 70.0;
   public static final double ARM_MID_GOAL_ANGLE = 40.0;
   public static final double ARM_LOW_GOAL_ANGLE = 10.0;
+  public static final double ARM_CARGO_PICKUP_ANGLE = 5.0;
   public static final double ARM_STARTING_ANGLE = 0.0;
-  public static final double ARM_ANGLE_TOLERANCE = 2.0;
-  public static final double ARM_COASTING_DISTANCE = 10.0;
+  public static final double ARM_ANGLE_TOLERANCE = 1.0;
+  public static final double ARM_COASTING_PERCENTAGE = 0.1;
   public static final double SERVO_LOCK_POSITION = 1.0;
   public static final double SERVO_RETRACTED_POSITION = 0.0;
 

@@ -10,8 +10,11 @@ package frc.robot.Commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
+import frc.robot.Other.Utility;
 
 public class ArmStateCommand extends Command {
+
+  double lastTargetAngle;
 
   public ArmStateCommand() {
     // Use requires() here to declare subsystem dependencies
@@ -29,57 +32,27 @@ public class ArmStateCommand extends Command {
   protected void execute() {
     double minAngle = Robot.ARM_SUB.targetAngle - RobotMap.ARM_ANGLE_TOLERANCE;
     double maxAngle = Robot.ARM_SUB.targetAngle + RobotMap.ARM_ANGLE_TOLERANCE;
-    double coastAngle = Robot.ARM_SUB.targetAngle + RobotMap.ARM_COASTING_DISTANCE;
+    // double coastAngle = Robot.ARM_SUB.targetAngle + RobotMap.ARM_COASTING_DISTANCE;
     double currentAngle = Robot.ARM_SUB.getPotentiometerAngle();
-    if(Robot.ARM_SUB.targetAngle == RobotMap.ARM_HIGH_GOAL_ANGLE) {
-      if(currentAngle > maxAngle) {
-        Robot.ARM_SUB.moveArmManual(-1);
-        Robot.ARM_SUB.lockArm();
-      } else if(currentAngle < minAngle) {
-        Robot.ARM_SUB.moveArmManual(1);
-        if(currentAngle > RobotMap.ARM_MID_GOAL_ANGLE) {
-          Robot.ARM_SUB.lockArm();
-        }
-      } else {
-        Robot.ARM_SUB.moveArmManual(0);
-      }
-    } else if(Robot.ARM_SUB.targetAngle == RobotMap.ARM_MID_GOAL_ANGLE) {
-      if(currentAngle > coastAngle) {
-        Robot.ARM_SUB.moveArmManual(-1);
-        if(currentAngle < RobotMap.ARM_HIGH_GOAL_ANGLE) {
-          Robot.ARM_SUB.lockArm();
-        }
-      } else if(currentAngle < minAngle) {
-        Robot.ARM_SUB.moveArmManual(1);
-        if(currentAngle > RobotMap.ARM_LOW_GOAL_ANGLE) {
-          Robot.ARM_SUB.lockArm();
-        }
-      } else {
-        Robot.ARM_SUB.moveArmManual(0);
-      }
-    } else if(Robot.ARM_SUB.targetAngle == RobotMap.ARM_LOW_GOAL_ANGLE) {
-      if(currentAngle > coastAngle) {
-        Robot.ARM_SUB.moveArmManual(-1);
-        if(currentAngle < RobotMap.ARM_MID_GOAL_ANGLE) {
-          Robot.ARM_SUB.lockArm();
-        }
-      } else if(currentAngle < minAngle) {
-        Robot.ARM_SUB.moveArmManual(1);
-        Robot.ARM_SUB.lockArm();
-      } else {
-        Robot.ARM_SUB.moveArmManual(0);
-      }
+    double deltaAngle = lastTargetAngle - Robot.ARM_SUB.targetAngle;
+    double coastDistance = deltaAngle * RobotMap.ARM_COASTING_PERCENTAGE;
+    double poweredDistance = deltaAngle - coastDistance;
+    double maxLockAngle = Utility.getNearestArmPresetAbove(Robot.ARM_SUB.targetAngle) - RobotMap.ARM_ANGLE_TOLERANCE;
+    double minLockAngle = Utility.getNearestArmPresetBelow(Robot.ARM_SUB.targetAngle) + RobotMap.ARM_ANGLE_TOLERANCE;
+    if(currentAngle < maxLockAngle && currentAngle > minLockAngle) {
+      Robot.ARM_SUB.lockArm();
     } else {
-      Robot.ARM_SUB.targetAngle = RobotMap.ARM_STARTING_ANGLE;
-      minAngle = RobotMap.ARM_STARTING_ANGLE;
-      coastAngle = Robot.ARM_SUB.targetAngle + RobotMap.ARM_COASTING_DISTANCE;
-      if(currentAngle > coastAngle) {
-        Robot.ARM_SUB.moveArmManual(-1);
-      } else if(currentAngle < minAngle) {
-        Robot.ARM_SUB.moveArmManual(1);
-      } else {
-        Robot.ARM_SUB.moveArmManual(0);
-      }
+      Robot.ARM_SUB.unlockArm();
+    }
+    if(currentAngle <= lastTargetAngle - poweredDistance) {
+      Robot.ARM_SUB.moveArmManual(0);
+    } else if(currentAngle > minAngle && currentAngle < maxAngle) {
+      Robot.ARM_SUB.moveArmManual(0);
+      lastTargetAngle = Robot.ARM_SUB.targetAngle;
+    } else if(Robot.ARM_SUB.targetAngle < lastTargetAngle) {
+      Robot.ARM_SUB.moveArmManual(RobotMap.ARM_DOWN);
+    } else if(Robot.ARM_SUB.targetAngle > lastTargetAngle) {
+      Robot.ARM_SUB.moveArmManual(RobotMap.ARM_UP);
     }
   }
 
