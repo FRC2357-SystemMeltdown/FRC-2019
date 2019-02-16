@@ -40,7 +40,15 @@ public class ArmSub extends Subsystem {
   }
 
   /**
-   * 
+   * Gets the raw potentiometer value
+   * @return A value between 0 and 4096 (12-bit adc)
+   */
+  public int getPotentiometerValue() {
+    return potentiometer.getValue();
+  }
+
+  /**
+   *
    * @return The angle of the arm in degrees relative to its lowest possible state.
    */
   public double getPotentiometerAngle() {
@@ -50,7 +58,7 @@ public class ArmSub extends Subsystem {
   }
 
   /**
-   * 
+   *
    * @param direction If 1, arm will raise. If -1, arm will lower. If 0, arm will hold.
    */
   public void moveArmManual(int direction) {
