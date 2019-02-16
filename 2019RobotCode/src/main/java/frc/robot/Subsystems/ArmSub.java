@@ -70,11 +70,13 @@ public class ArmSub extends Subsystem {
    * Engages the lock servo
    */
   public void lockArm(){
-    if(lock.get() == RobotMap.SERVO_LOCK_POSITION) {
-      lock.set(RobotMap.SERVO_RETRACTED_POSITION);
-    } else {
-      lock.set(RobotMap.SERVO_LOCK_POSITION);
-    }
+    lock.set(RobotMap.SERVO_LOCK_POSITION);
   }
 
+  /**
+   * Disengages the lock servo
+   */
+  public void unlockArm(){
+    lock.set(RobotMap.SERVO_RETRACTED_POSITION);
+  }
 }
