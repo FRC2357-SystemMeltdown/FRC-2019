@@ -9,8 +9,8 @@ import frc.robot.RobotMap;
  * that relies on no sensors to function.
  */
 public class DriverFailSafe extends ControlOverlay implements ProportionalDrive {
-  public static final double TURN_FACTOR = RobotMap.DRIVER_PROPORTION;
-  public static final double SPEED_FACTOR = RobotMap.DRIVER_PROPORTION;
+  public static final double TURN_FACTOR = RobotMap.DRIVER_TURN_PROPORTION;
+  public static final double SPEED_FACTOR = RobotMap.DRIVER_SPEED_PROPORTION;
 
   public DriverFailSafe(XboxController controller) {
     super(controller);

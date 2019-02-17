@@ -40,7 +40,7 @@ public class RobotMap {
   public static final int PCM_PORT_RELEASE = 6;
   public static final int PCM_PORT_LATCH = 7;
 
-  // Drive
+  // Drive System
   public static final int GYRO_AXIS_YAW = 0;
   public static final int GYRO_AXIS_PITCH = 1;
   public static final int GYRO_AXIS_ROLL = 2;
@@ -48,8 +48,12 @@ public class RobotMap {
   public static final int ENCODER_TICKS_PER_ROTATION = 256;
   public static final double WHEEL_CIRCUMFERENCE_INCHES = 6 * Math.PI;
   public static final double MOTOR_MINIMUM_POWER = 0.05;
-  public static final double DRIVER_PROPORTION = 0.6;
-  public static final double GUNNER_PROPORTION = 0.3;
+
+  // Drive Controls
+  public static final double DRIVER_SPEED_PROPORTION = 0.6;
+  public static final double DRIVER_TURN_PROPORTION = 0.6;
+  public static final double GUNNER_SPEED_PROPORTION = 0.3;
+  public static final double GUNNER_TURN_PROPORTION = 0.3;
   public static final double MAX_TURN_RATE_DEGREES_PER_SECOND = 180;
   public static final double MAX_VELOCITY_INCHES_PER_SECOND = 10;
 
