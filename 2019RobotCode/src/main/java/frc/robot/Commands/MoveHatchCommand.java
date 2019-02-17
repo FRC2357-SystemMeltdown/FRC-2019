@@ -10,42 +10,39 @@ package frc.robot.Commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 import frc.robot.Subsystems.HatchSub;
+import frc.robot.overlays.HatchControl;
 
 public class MoveHatchCommand extends Command {
 
-  double left, right;
+  HatchControl controller;
 
   /**
    * 
-   * @param left If the button to move the gantries left is held
-   * @param right If the button to move the gantries right is held
    */
-  public MoveHatchCommand(double left, double right) {
+  public MoveHatchCommand(HatchControl controller) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     requires(Robot.HATCH_SUB);
 
-    this.left = left;
-    this.right = right;
+    this.controller = controller;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    double speed = left - right;
-    Robot.HATCH_SUB.failsafeMoveGantry(speed);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    
+    double speed = controller.getHatchMoveSpeed();
+    Robot.HATCH_SUB.failsafeMoveGantry(speed);    
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return true;
+    return false;
   }
 
   // Called once after isFinished returns true
