@@ -35,16 +35,15 @@ public class HatchSub extends Subsystem {
   }
 
   /**
-   * 
    * @param speed The speed for the hatch gantries to move, where positive is left and negative is right.
    */
   public void failsafeMoveGantry(double speed) {
-    leftGantry.set(speed);
-    rightGantry.set(speed);
+    leftGantry.set(-speed);
+    rightGantry.set(-speed);
   }
 
   /**
-   * 
+   *
    * @param speed The speed for the hatch gantries to open.
    */
   public void failsafeOpenCloseGantry(double speed) {

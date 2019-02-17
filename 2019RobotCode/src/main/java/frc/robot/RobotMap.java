@@ -91,7 +91,7 @@ public class RobotMap {
   public static final double SERVO_RETRACTED_POSITION = 0.0;
 
   // Cargo
-  public static final double INTAKE_IN_SPEED = -0.7;
+  public static final double INTAKE_IN_SPEED = -1.0;
   public static final double INTAKE_OUT_SPEED = 0.7;
 
   // Hatch
