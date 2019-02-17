@@ -65,11 +65,11 @@ public class GunnerFailSafe extends GunnerCreepDrive implements ProportionalDriv
 
   @Override
   public double getHatchMoveSpeed() {
-    return controller.getTriggerAxis(Hand.kRight) - controller.getTriggerAxis(Hand.kLeft);
+    return controller.getTriggerAxis(Hand.kLeft) - controller.getTriggerAxis(Hand.kRight);
   }
 
   @Override
   public double getHatchOpenCloseSpeed() {
-    return controller.getTriggerAxis(Hand.kRight) - controller.getTriggerAxis(Hand.kLeft);
+    return controller.getTriggerAxis(Hand.kLeft) - controller.getTriggerAxis(Hand.kRight);
   }
 }
