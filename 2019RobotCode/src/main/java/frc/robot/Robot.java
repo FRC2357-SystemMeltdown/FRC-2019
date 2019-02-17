@@ -20,6 +20,8 @@ import frc.robot.Subsystems.HatchSub;
 import frc.robot.Subsystems.VisionSub;
 import frc.robot.modes.DPadModeManager;
 import frc.robot.modes.DriverFailsafeMode;
+import frc.robot.modes.DriverPIDMode;
+import frc.robot.modes.FakeFailsafeMode;
 import frc.robot.modes.GunnerFailsafeMode;
 import frc.robot.shuffleboard.ShuffleboardController;
 
@@ -46,11 +48,13 @@ public class Robot extends TimedRobot {
    public static final VisionSub VISION_SUB = new VisionSub();
    public static final OI OI = new OI();
 
+  private static Robot robotInstance;
   private ShuffleboardController shuffleboardController;
   private DPadModeManager driverModeMgr;
   private DPadModeManager gunnerModeMgr;
 
   public Robot(){
+    robotInstance = this;
     this.shuffleboardController = new ShuffleboardController();
     initModeManagers();
   }
@@ -148,10 +152,22 @@ public class Robot extends TimedRobot {
     // @todo: See what we need to do here.
   }
 
+  public static Robot getInstance() {
+    return robotInstance;
+  }
+
+  public String getDriverModeName() {
+    return driverModeMgr.getCurrentMode().getModeName();
+  }
+
+  public String getGunnerModeName() {
+    return gunnerModeMgr.getCurrentMode().getModeName();
+  }
+
   private void initModeManagers() {
     driverModeMgr = new DPadModeManager(
       new DriverFailsafeMode(),
-      null,
+      new DriverPIDMode(),
       null,
       null,
       frc.robot.OI.DPadValue.Up

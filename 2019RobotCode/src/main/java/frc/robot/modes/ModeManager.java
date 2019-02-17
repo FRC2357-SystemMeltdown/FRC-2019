@@ -22,4 +22,8 @@ public class ModeManager {
       mode.activate();
     }
   }
+
+  public ModeBase getCurrentMode() {
+    return mode;
+  }
 }

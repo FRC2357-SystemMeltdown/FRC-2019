@@ -20,6 +20,8 @@ public class TestTab {
   private NetworkTableEntry armPotentiometer;
   private NetworkTableEntry cargoLimitLeft;
   private NetworkTableEntry cargoLimitRight;
+  private NetworkTableEntry driverMode;
+  private NetworkTableEntry gunnerMode;
 
   public TestTab() {
     tab = Shuffleboard.getTab(TITLE);
@@ -45,6 +47,9 @@ public class TestTab {
 
     hatchLimitLeft = tab.add("Hatch Left", false).getEntry();
     hatchLimitRight = tab.add("Hatch Right", false).getEntry();
+
+    driverMode = tab.add("Driver Mode", "").getEntry();
+    gunnerMode = tab.add("Gunner Mode", "").getEntry();
   }
 
   public void show() {
@@ -68,5 +73,7 @@ public class TestTab {
     hatchLimitLeft.setBoolean(Robot.HATCH_SUB.leftLimitSwitch.get());
     hatchLimitRight.setBoolean(Robot.HATCH_SUB.rightLimitSwitch.get());
 
+    driverMode.setString(Robot.getInstance().getDriverModeName());
+    gunnerMode.setString(Robot.getInstance().getGunnerModeName());
   }
 }
