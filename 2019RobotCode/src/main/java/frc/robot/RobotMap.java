@@ -29,15 +29,16 @@ public class RobotMap {
   public static final int ANALOG_PORT_ARM_POTENTIOMETER = 0;
 
   // DIO IDs
-  public static final int DIO_PORT_CARGO_LIMIT_SWITCH = 0;
+  public static final int DIO_PORT_CARGO_LIMIT_LEFT   = 0;
+  public static final int DIO_PORT_CARGO_LIMIT_RIGHT  = 1;
   public static final int DIO_PORT_HATCH_LEFT         = 2;
   public static final int DIO_PORT_HATCH_RIGHT        = 3;
 
   //PCM IDs
-  public static final int PCM_PORT_EXTENDING_SOLENOID_CLOSE = 0;
-  public static final int PCM_PORT_EXTENDING_SOLENOID_OPEN = 1;
-  public static final int PCM_PORT_LOWERING_SOLENOID_CLOSE = 2;
-  public static final int PCM_PORT_LOWERING_SOLENOID_OPEN = 3;
+  public static final int PCM_PORT_EXTEND = 1;
+  public static final int PCM_PORT_CONTRACT = 0;
+  public static final int PCM_PORT_RELEASE = 6;
+  public static final int PCM_PORT_LATCH = 7;
 
   // Drive
   public static final int GYRO_AXIS_YAW = 0;
@@ -47,11 +48,11 @@ public class RobotMap {
   public static final int ENCODER_TICKS_PER_ROTATION = 256;
   public static final double WHEEL_CIRCUMFERENCE_INCHES = 6 * Math.PI;
   public static final double MOTOR_MINIMUM_POWER = 0.05;
-  public static final double DRIVER_PROPORTION = 1.0;
+  public static final double DRIVER_PROPORTION = 0.6;
   public static final double GUNNER_PROPORTION = 0.25;
   public static final double MAX_TURN_RATE_DEGREES_PER_SECOND = 180;
   public static final double MAX_VELOCITY_INCHES_PER_SECOND = 10;
-  
+
   //Drive PID Values
   public static final double PID_P_LEFT_DRIVE = 0.0;
   public static final double PID_I_LEFT_DRIVE = 0.0;

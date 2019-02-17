@@ -8,24 +8,29 @@
 package frc.robot.Subsystems;
 
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
 import frc.robot.Commands.ArmStateCommand;
+import frc.robot.Commands.MoveArmDirectCommand;
 
 /**
  * Add your docs here.
  */
 public class ArmSub extends Subsystem {
 
+  public Compressor compressor = new Compressor(RobotMap.CAN_ID_PCM);
+  public DoubleSolenoid movementSolenoid = new DoubleSolenoid(
+    RobotMap.CAN_ID_PCM,
+    RobotMap.PCM_PORT_EXTEND,
+    RobotMap.PCM_PORT_CONTRACT);
+  public DoubleSolenoid latchingSolenoid = new DoubleSolenoid(
+    RobotMap.CAN_ID_PCM,
+    RobotMap.PCM_PORT_RELEASE,
+    RobotMap.PCM_PORT_LATCH);
   private AnalogInput potentiometer = new AnalogInput(RobotMap.ANALOG_PORT_ARM_POTENTIOMETER);
-  private DoubleSolenoid extendingSolenoid = new DoubleSolenoid(
-    RobotMap.PCM_PORT_EXTENDING_SOLENOID_OPEN,
-    RobotMap.PCM_PORT_EXTENDING_SOLENOID_CLOSE);
-  private DoubleSolenoid loweringSolenoid = new DoubleSolenoid(
-    RobotMap.PCM_PORT_LOWERING_SOLENOID_OPEN,
-    RobotMap.PCM_PORT_LOWERING_SOLENOID_CLOSE);
   private Servo lock = new Servo(RobotMap.PWM_ID_ARM_LOCK_SERVO);
   public double targetAngle;
 
@@ -36,7 +41,7 @@ public class ArmSub extends Subsystem {
   @Override
   public void initDefaultCommand() {
     // Default command sets the arm speed to zero
-    setDefaultCommand(new ArmStateCommand());
+    setDefaultCommand(new MoveArmDirectCommand(0));
   }
 
   /**
@@ -63,14 +68,14 @@ public class ArmSub extends Subsystem {
    */
   public void moveArmManual(int direction) {
     if(direction == 1) {
-      extendingSolenoid.set(DoubleSolenoid.Value.kForward);
-      loweringSolenoid.set(DoubleSolenoid.Value.kReverse);
+      latchingSolenoid.set(DoubleSolenoid.Value.kForward);
+      movementSolenoid.set(DoubleSolenoid.Value.kForward);
     } else if (direction == -1) {
-      extendingSolenoid.set(DoubleSolenoid.Value.kReverse);
-      loweringSolenoid.set(DoubleSolenoid.Value.kForward);
+      latchingSolenoid.set(DoubleSolenoid.Value.kForward);
+      movementSolenoid.set(DoubleSolenoid.Value.kReverse);
     } else {
-      extendingSolenoid.set(DoubleSolenoid.Value.kReverse);
-      loweringSolenoid.set(DoubleSolenoid.Value.kReverse);
+      movementSolenoid.set(DoubleSolenoid.Value.kForward);
+      latchingSolenoid.set(DoubleSolenoid.Value.kReverse);
     }
   }
 

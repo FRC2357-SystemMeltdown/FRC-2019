@@ -90,15 +90,18 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
+    ARM_SUB.compressor.setClosedLoopControl(true);
   }
 
   @Override
   public void teleopInit() {
+    ARM_SUB.compressor.setClosedLoopControl(true);
   }
 
   @Override
   public void testInit() {
     shuffleboardController.test();
+    ARM_SUB.compressor.setClosedLoopControl(true);
   }
 
   @Override
