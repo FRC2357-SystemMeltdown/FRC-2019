@@ -11,6 +11,10 @@ import frc.robot.Commands.MoveArmDirectCommand;
 import frc.robot.Commands.MoveHatchCommand;
 import frc.robot.Other.XboxRaw;
 
+/**
+ * The GunnerFailSafe overlay is the least complex control system
+ * that relies on no sensors to function.
+ */
 public class GunnerFailSafe extends GunnerCreepDrive implements ProportionalDrive, HatchControl {
   public static final double TURN_FACTOR = RobotMap.GUNNER_PROPORTION;
   public static final double SPEED_FACTOR = RobotMap.GUNNER_PROPORTION;
@@ -55,12 +59,14 @@ public class GunnerFailSafe extends GunnerCreepDrive implements ProportionalDriv
     hatchOpenCloseButton.whileHeld(new HatchOpenCloseCommand(this));
   }
 
+  @Override
   public double getTurn() {
       return controller.getX(Hand.kRight) * TURN_FACTOR;
   }
 
+  @Override
   public double getSpeed() {
-      return controller.getY(Hand.kLeft) * SPEED_FACTOR;
+      return - (controller.getY(Hand.kLeft) * SPEED_FACTOR);
   }
 
   @Override

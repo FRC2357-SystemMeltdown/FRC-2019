@@ -19,8 +19,9 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
  */
 public class CargoSub extends Subsystem {
 
-  private WPI_VictorSPX intake = new WPI_VictorSPX(RobotMap.CAN_ID_CARGO_INTAKE);
-  private DigitalInput limitSwitch = new DigitalInput(RobotMap.CAN_ID_CARGO_INTAKE);
+  public WPI_VictorSPX roller = new WPI_VictorSPX(RobotMap.CAN_ID_CARGO_INTAKE);
+  public DigitalInput limitLeft = new DigitalInput(RobotMap.DIO_PORT_CARGO_LIMIT_LEFT);
+  public DigitalInput limitRight = new DigitalInput(RobotMap.DIO_PORT_CARGO_LIMIT_RIGHT);
 
   @Override
   public void initDefaultCommand() {
@@ -28,14 +29,14 @@ public class CargoSub extends Subsystem {
   }
 
   public void intakeIn() {
-    intake.set(RobotMap.INTAKE_IN_SPEED);
+    roller.set(RobotMap.INTAKE_IN_SPEED);
   }
 
   public void intakeOut() {
-    intake.set(RobotMap.INTAKE_OUT_SPEED);
+    roller.set(RobotMap.INTAKE_OUT_SPEED);
   }
 
   public void intakeStop() {
-    intake.set(RobotMap.STOP_SPEED);
+    roller.set(RobotMap.STOP_SPEED);
   }
 }
