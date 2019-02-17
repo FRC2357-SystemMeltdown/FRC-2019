@@ -21,6 +21,6 @@ public class DriverFailSafe extends ControlOverlay implements ProportionalDrive 
   }
 
   public double getSpeed() {
-      return controller.getY(Hand.kLeft) * SPEED_FACTOR;
+      return - (controller.getY(Hand.kLeft) * SPEED_FACTOR);
   }
 }

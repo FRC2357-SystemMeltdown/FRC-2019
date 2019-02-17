@@ -36,9 +36,6 @@ public class DriveSub extends Subsystem {
   public GyroPID gyroPID = new GyroPID();
 
   public DriveSub(){
-    //leftSlave.setInverted(true);
-    //rightSlave.setInverted(true);
-
     leftSlave.follow(leftMaster);
     rightSlave.follow(rightMaster);
 
@@ -46,14 +43,14 @@ public class DriveSub extends Subsystem {
     rightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
 
     configTalon(leftMaster,
-     RobotMap.PID_P_LEFT_DRIVE, 
-     RobotMap.PID_I_LEFT_DRIVE, 
-     RobotMap.PID_D_LEFT_DRIVE, 
+     RobotMap.PID_P_LEFT_DRIVE,
+     RobotMap.PID_I_LEFT_DRIVE,
+     RobotMap.PID_D_LEFT_DRIVE,
      RobotMap.PID_F_LEFT_DRIVE);
     configTalon(rightMaster,
-     RobotMap.PID_P_RIGHT_DRIVE, 
-     RobotMap.PID_I_RIGHT_DRIVE, 
-     RobotMap.PID_D_RIGHT_DRIVE, 
+     RobotMap.PID_P_RIGHT_DRIVE,
+     RobotMap.PID_I_RIGHT_DRIVE,
+     RobotMap.PID_D_RIGHT_DRIVE,
      RobotMap.PID_F_RIGHT_DRIVE);
   }
 
@@ -65,7 +62,7 @@ public class DriveSub extends Subsystem {
   }
 
   /**
-   * 
+   *
    * @param speed The desired speed in inches/sec
    * @param turn The desired turn rate in degrees/sec
    */
@@ -84,7 +81,7 @@ public class DriveSub extends Subsystem {
   }
 
   /**
-   * 
+   *
    * @return The gyro's current Yaw value
    */
   public double getYaw() {
@@ -114,7 +111,7 @@ public class DriveSub extends Subsystem {
   }
 
   /**
-   * 
+   *
    * @param talon The talon SRX to config
    * @param kP The proportional value to set
    * @param kI The interval value to set
