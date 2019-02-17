@@ -11,7 +11,7 @@ import frc.robot.Commands.MoveArmDirectCommand;
 import frc.robot.Commands.MoveHatchCommand;
 import frc.robot.Other.XboxRaw;
 
-public class GunnerFailSafe extends GunnerCreepDrive implements ProportionalDrive {
+public class GunnerFailSafe extends GunnerCreepDrive implements ProportionalDrive, HatchControl {
   public static final double TURN_FACTOR = RobotMap.GUNNER_PROPORTION;
   public static final double SPEED_FACTOR = RobotMap.GUNNER_PROPORTION;
 
@@ -49,10 +49,10 @@ public class GunnerFailSafe extends GunnerCreepDrive implements ProportionalDriv
     armDownButton.whileHeld(armDownCommand);
 
     hatchMoveButton = new JoystickButton(controller, XboxRaw.X.value);
-    hatchMoveButton.whileHeld(new MoveHatchCommand(controller.getTriggerAxis(Hand.kLeft), controller.getTriggerAxis(Hand.kRight)));
-    
+    hatchMoveButton.whileHeld(new MoveHatchCommand(this));
+
     hatchOpenCloseButton = new JoystickButton(controller, XboxRaw.Y.value);
-    hatchOpenCloseButton.whileHeld(new HatchOpenCloseCommand(controller.getTriggerAxis(Hand.kLeft), controller.getTriggerAxis(Hand.kRight)));
+    hatchOpenCloseButton.whileHeld(new HatchOpenCloseCommand(this));
   }
 
   public double getTurn() {
@@ -61,5 +61,15 @@ public class GunnerFailSafe extends GunnerCreepDrive implements ProportionalDriv
 
   public double getSpeed() {
       return controller.getY(Hand.kLeft) * SPEED_FACTOR;
-  } 
+  }
+
+  @Override
+  public double getHatchMoveSpeed() {
+    return controller.getTriggerAxis(Hand.kRight) - controller.getTriggerAxis(Hand.kLeft);
+  }
+
+  @Override
+  public double getHatchOpenCloseSpeed() {
+    return controller.getTriggerAxis(Hand.kRight) - controller.getTriggerAxis(Hand.kLeft);
+  }
 }
