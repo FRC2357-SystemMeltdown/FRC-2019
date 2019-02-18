@@ -50,10 +50,10 @@ public class RobotMap {
   public static final double MOTOR_MINIMUM_POWER = 0.05;
 
   // Drive Controls
-  public static final double DRIVER_SPEED_PROPORTION = 0.6;
-  public static final double DRIVER_TURN_PROPORTION = 0.6;
-  public static final double GUNNER_SPEED_PROPORTION = 0.3;
-  public static final double GUNNER_TURN_PROPORTION = 0.3;
+  public static final double DRIVER_SPEED_PROPORTION = 0.8;
+  public static final double DRIVER_TURN_PROPORTION = 0.8;
+  public static final double GUNNER_SPEED_PROPORTION = 0.5;
+  public static final double GUNNER_TURN_PROPORTION = 0.5;
   public static final double MAX_TURN_RATE_DEGREES_PER_SECOND = 180;
   public static final double MAX_VELOCITY_INCHES_PER_SECOND = 10;
 
