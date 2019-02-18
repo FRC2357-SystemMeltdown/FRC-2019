@@ -12,6 +12,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
+import frc.robot.Commands.HatchStopCommand;;
 
 /**
  * Hatch Gantry Subsystem
@@ -30,23 +31,23 @@ public class HatchSub extends Subsystem {
 
   @Override
   public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
+    setDefaultCommand(new HatchStopCommand());
   }
 
   /**
+   * Sets the motor speeds directly to move left or right.
    * @param speed The speed for the hatch gantries to move, where positive is left and negative is right.
    */
-  public void failsafeMoveGantry(double speed) {
+  public void directMoveGantry(double speed) {
     leftGantry.set(-speed);
     rightGantry.set(-speed);
   }
 
   /**
-   *
+   * Sets the motor speeds directly to open or close.
    * @param speed The speed for the hatch gantries to open.
    */
-  public void failsafeOpenCloseGantry(double speed) {
+  public void directOpenCloseGantry(double speed) {
     leftGantry.set(speed);
     rightGantry.set(-speed);
   }
