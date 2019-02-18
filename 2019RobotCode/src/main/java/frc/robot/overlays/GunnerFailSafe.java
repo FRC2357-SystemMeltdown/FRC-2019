@@ -17,8 +17,8 @@ import frc.robot.Other.XboxRaw;
  * that relies on no sensors to function.
  */
 public class GunnerFailSafe extends GunnerCreepDrive implements ProportionalDrive, HatchControl {
-  public static final double TURN_FACTOR = RobotMap.GUNNER_PROPORTION;
-  public static final double SPEED_FACTOR = RobotMap.GUNNER_PROPORTION;
+  public static final double TURN_FACTOR = RobotMap.GUNNER_TURN_PROPORTION;
+  public static final double SPEED_FACTOR = RobotMap.GUNNER_SPEED_PROPORTION;
 
   private IntakeInCommand intakeInCommand;
   private IntakeOutCommand intakeOutCommand;
