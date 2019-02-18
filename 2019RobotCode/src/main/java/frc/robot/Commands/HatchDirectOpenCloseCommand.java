@@ -9,19 +9,16 @@ package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
-import frc.robot.Subsystems.HatchSub;
 import frc.robot.overlays.HatchControl;
 
-public class MoveHatchCommand extends Command {
+public class HatchDirectOpenCloseCommand extends Command {
 
   HatchControl controller;
 
   /**
-   * 
+   *
    */
-  public MoveHatchCommand(HatchControl controller) {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
+  public HatchDirectOpenCloseCommand(HatchControl controller) {
     requires(Robot.HATCH_SUB);
 
     this.controller = controller;
@@ -35,8 +32,8 @@ public class MoveHatchCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    double speed = controller.getHatchMoveSpeed();
-    Robot.HATCH_SUB.failsafeMoveGantry(speed);    
+    double speed = controller.getHatchOpenCloseSpeed();
+    Robot.HATCH_SUB.directOpenCloseGantry(speed);
   }
 
   // Make this return true when this Command no longer needs to run execute()
