@@ -7,6 +7,9 @@
 
 package frc.robot;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoSink;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -70,6 +73,9 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     Scheduler.getInstance().run();
+
+    VISION_SUB.setVisionProcessingEnabled(false);
+    VISION_SUB.setLEDMode(VisionSub.LEDMode.Off);
 
     // Update the mode managers
     driverModeMgr.updateDPadValue(OI.getDriverDPadValue());

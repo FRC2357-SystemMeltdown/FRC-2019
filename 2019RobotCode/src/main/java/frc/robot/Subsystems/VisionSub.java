@@ -24,6 +24,19 @@ public class VisionSub extends Subsystem {
   private NetworkTableEntry tx = table.getEntry("tx");
   private NetworkTableEntry ta = table.getEntry("ta");
 
+  public enum LEDMode {
+    PipelineDefault(0),
+    Off(1),
+    Blink(2),
+    On(3);
+
+    public final int value;
+
+    private LEDMode(int value) {
+      this.value = value;
+    }
+  }
+
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
@@ -36,5 +49,22 @@ public class VisionSub extends Subsystem {
 
   public double getTargetArea(){
     return ta.getDouble(RobotMap.VISION_DEFAULT_RETURN_VALUE);
+  }
+
+  /**
+   * Enable or disable vision processing on the limelight. If vision processing
+   * is disabled the exposure is increased for easier human viewing.
+   * @param enable
+   */
+  public void setVisionProcessingEnabled(boolean enable) {
+    table.getEntry("camMode").setNumber(enable ? 0 : 1);
+  }
+
+  /**
+   * Set the LED mode on the limelight.
+   * @param ledMode
+   */
+  public void setLEDMode(LEDMode ledMode) {
+    table.getEntry("ledMode").setNumber(ledMode.value);
   }
 }

@@ -2,6 +2,8 @@ package frc.robot.shuffleboard;
 
 import com.ctre.phoenix.motorcontrol.SensorCollection;
 
+import edu.wpi.cscore.VideoSource;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -20,8 +22,11 @@ public class TestTab {
   private NetworkTableEntry armPotentiometer;
   private NetworkTableEntry cargoLimitLeft;
   private NetworkTableEntry cargoLimitRight;
+  private boolean videoSourcesInitialized;
 
   public TestTab() {
+    videoSourcesInitialized = false;
+
     tab = Shuffleboard.getTab(TITLE);
 
     tab.add("Drive - Left", Robot.DRIVE_SUB.leftMaster);
@@ -45,6 +50,14 @@ public class TestTab {
 
     hatchLimitLeft = tab.add("Hatch Left", false).getEntry();
     hatchLimitRight = tab.add("Hatch Right", false).getEntry();
+
+    for(VideoSource source : VideoSource.enumerateSources()) {
+      tab.add(source.getName(), source);
+      // if(source.getName() == "limelight") {
+      //   tab.add("limelight", source);
+      //   break;
+      // }
+    }
   }
 
   public void show() {
@@ -68,5 +81,11 @@ public class TestTab {
     hatchLimitLeft.setBoolean(Robot.HATCH_SUB.leftLimitSwitch.get());
     hatchLimitRight.setBoolean(Robot.HATCH_SUB.rightLimitSwitch.get());
 
+    if(!videoSourcesInitialized && VideoSource.enumerateSources().length >= 2) {
+      for(VideoSource source : VideoSource.enumerateSources()) {
+        tab.add(source.getName(), source);
+      }
+      videoSourcesInitialized = true;
+    }
   }
 }
