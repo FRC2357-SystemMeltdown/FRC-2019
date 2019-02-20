@@ -5,8 +5,8 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import frc.robot.RobotMap;
 
 public class GunnerCreepDrive extends ControlOverlay implements VelocityDrive {
-  public static final double TURN_FACTOR = RobotMap.GUNNER_PROPORTION;
-  public static final double SPEED_FACTOR = RobotMap.GUNNER_PROPORTION;
+  public static final double TURN_FACTOR = RobotMap.GUNNER_TURN_PROPORTION;
+  public static final double SPEED_FACTOR = RobotMap.GUNNER_SPEED_PROPORTION;
 
   public GunnerCreepDrive(XboxController controller) {
     super(controller);

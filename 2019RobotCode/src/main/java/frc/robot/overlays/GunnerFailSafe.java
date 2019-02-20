@@ -4,11 +4,12 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.robot.RobotMap;
-import frc.robot.Commands.HatchOpenCloseCommand;
+import frc.robot.Commands.HatchDirectOpenCloseCommand;
+import frc.robot.Commands.HatchDirectMoveCommand;
+import frc.robot.Commands.HatchStopCommand;
 import frc.robot.Commands.IntakeInCommand;
 import frc.robot.Commands.IntakeOutCommand;
 import frc.robot.Commands.MoveArmDirectCommand;
-import frc.robot.Commands.MoveHatchCommand;
 import frc.robot.Other.XboxRaw;
 
 /**
@@ -16,8 +17,8 @@ import frc.robot.Other.XboxRaw;
  * that relies on no sensors to function.
  */
 public class GunnerFailSafe extends GunnerCreepDrive implements ProportionalDrive, HatchControl {
-  public static final double TURN_FACTOR = RobotMap.GUNNER_PROPORTION;
-  public static final double SPEED_FACTOR = RobotMap.GUNNER_PROPORTION;
+  public static final double TURN_FACTOR = RobotMap.GUNNER_TURN_PROPORTION;
+  public static final double SPEED_FACTOR = RobotMap.GUNNER_SPEED_PROPORTION;
 
   private IntakeInCommand intakeInCommand;
   private IntakeOutCommand intakeOutCommand;
@@ -29,6 +30,9 @@ public class GunnerFailSafe extends GunnerCreepDrive implements ProportionalDriv
   private JoystickButton armUpButton;
   private JoystickButton armDownButton;
 
+  private HatchDirectOpenCloseCommand hatchOpenCloseCommand;
+  private HatchDirectMoveCommand hatchMoveCommand;
+  private HatchStopCommand hatchStopCommand;
   private JoystickButton hatchMoveButton;
   private JoystickButton hatchOpenCloseButton;
 
@@ -39,6 +43,9 @@ public class GunnerFailSafe extends GunnerCreepDrive implements ProportionalDriv
     intakeOutCommand = new IntakeOutCommand();
     armUpCommand = new MoveArmDirectCommand(RobotMap.ARM_UP);
     armDownCommand = new MoveArmDirectCommand(RobotMap.ARM_DOWN);
+    hatchOpenCloseCommand = new HatchDirectOpenCloseCommand(this);
+    hatchMoveCommand = new HatchDirectMoveCommand(this);
+    hatchStopCommand = new HatchStopCommand();
 
     intakeInButton = new JoystickButton(controller, XboxRaw.A.value);
     intakeInButton.whileHeld(intakeInCommand);
@@ -53,10 +60,12 @@ public class GunnerFailSafe extends GunnerCreepDrive implements ProportionalDriv
     armDownButton.whileHeld(armDownCommand);
 
     hatchMoveButton = new JoystickButton(controller, XboxRaw.X.value);
-    hatchMoveButton.whileHeld(new MoveHatchCommand(this));
+    hatchMoveButton.whenPressed(hatchMoveCommand);
+    hatchMoveButton.whenReleased(hatchStopCommand);
 
     hatchOpenCloseButton = new JoystickButton(controller, XboxRaw.Y.value);
-    hatchOpenCloseButton.whileHeld(new HatchOpenCloseCommand(this));
+    hatchOpenCloseButton.whenPressed(hatchOpenCloseCommand);
+    hatchOpenCloseButton.whenReleased(hatchStopCommand);
   }
 
   @Override
