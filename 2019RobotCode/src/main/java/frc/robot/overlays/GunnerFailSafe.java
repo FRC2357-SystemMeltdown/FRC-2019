@@ -5,10 +5,10 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.robot.RobotMap;
 import frc.robot.Commands.HatchDirectOpenCloseCommand;
+import frc.robot.Commands.CargoRollerDirectCommand;
+import frc.robot.Commands.CargoRollerStopCommand;
 import frc.robot.Commands.HatchDirectMoveCommand;
 import frc.robot.Commands.HatchStopCommand;
-import frc.robot.Commands.IntakeInCommand;
-import frc.robot.Commands.IntakeOutCommand;
 import frc.robot.Commands.MoveArmDirectCommand;
 import frc.robot.Other.XboxRaw;
 
@@ -16,14 +16,16 @@ import frc.robot.Other.XboxRaw;
  * The GunnerFailSafe overlay is the least complex control system
  * that relies on no sensors to function.
  */
-public class GunnerFailSafe extends GunnerCreepDrive implements ProportionalDrive, HatchControl {
+public class GunnerFailSafe
+  extends GunnerCreepDrive
+  implements ProportionalDrive, HatchControl, CargoControl
+{
   public static final double TURN_FACTOR = RobotMap.GUNNER_TURN_PROPORTION;
   public static final double SPEED_FACTOR = RobotMap.GUNNER_SPEED_PROPORTION;
 
-  private IntakeInCommand intakeInCommand;
-  private IntakeOutCommand intakeOutCommand;
-  private JoystickButton intakeInButton;
-  private JoystickButton intakeOutButton;
+  private CargoRollerDirectCommand cargoRollerCommand;
+  private CargoRollerStopCommand cargoRollerStopCommand;
+  private JoystickButton cargoRollerButton;
 
   private MoveArmDirectCommand armUpCommand;
   private MoveArmDirectCommand armDownCommand;
@@ -39,19 +41,17 @@ public class GunnerFailSafe extends GunnerCreepDrive implements ProportionalDriv
   public GunnerFailSafe(XboxController controller) {
     super(controller);
 
-    intakeInCommand = new IntakeInCommand();
-    intakeOutCommand = new IntakeOutCommand();
+    cargoRollerCommand = new CargoRollerDirectCommand(this);
+    cargoRollerStopCommand = new CargoRollerStopCommand();
     armUpCommand = new MoveArmDirectCommand(RobotMap.ARM_UP);
     armDownCommand = new MoveArmDirectCommand(RobotMap.ARM_DOWN);
     hatchOpenCloseCommand = new HatchDirectOpenCloseCommand(this);
     hatchMoveCommand = new HatchDirectMoveCommand(this);
     hatchStopCommand = new HatchStopCommand();
 
-    intakeInButton = new JoystickButton(controller, XboxRaw.A.value);
-    intakeInButton.whileHeld(intakeInCommand);
-
-    intakeOutButton = new JoystickButton(controller, XboxRaw.B.value);
-    intakeOutButton.whileHeld(intakeOutCommand);
+    cargoRollerButton = new JoystickButton(controller, XboxRaw.A.value);
+    cargoRollerButton.whenPressed(cargoRollerCommand);
+    cargoRollerButton.whenReleased(cargoRollerStopCommand);
 
     armUpButton = new JoystickButton(controller, XboxRaw.BumperRight.value);
     armUpButton.whileHeld(armUpCommand);
@@ -85,6 +85,11 @@ public class GunnerFailSafe extends GunnerCreepDrive implements ProportionalDriv
 
   @Override
   public double getHatchOpenCloseSpeed() {
+    return controller.getTriggerAxis(Hand.kLeft) - controller.getTriggerAxis(Hand.kRight);
+  }
+
+  @Override
+  public double getCargoRollerSpeed() {
     return controller.getTriggerAxis(Hand.kLeft) - controller.getTriggerAxis(Hand.kRight);
   }
 }
