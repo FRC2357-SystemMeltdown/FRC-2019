@@ -7,6 +7,8 @@
 
 package frc.robot.Subsystems;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -20,9 +22,18 @@ public class VisionSub extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-  private NetworkTableEntry tx = table.getEntry("tx");
-  private NetworkTableEntry ta = table.getEntry("ta");
+  private NetworkTable table;
+  private NetworkTableEntry tx;
+  private NetworkTableEntry ta;
+  private UsbCamera webCam;
+
+  public VisionSub(){
+    table = NetworkTableInstance.getDefault().getTable("limelight");
+    tx = table.getEntry("tx");
+    ta = table.getEntry("ta");
+
+    webCam = CameraServer.getInstance().startAutomaticCapture(0);
+  }
 
   public enum LEDMode {
     PipelineDefault(0),
