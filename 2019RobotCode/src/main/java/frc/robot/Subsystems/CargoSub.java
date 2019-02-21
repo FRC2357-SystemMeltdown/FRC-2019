@@ -10,7 +10,7 @@ package frc.robot.Subsystems;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
-import frc.robot.Commands.IntakeStopCommand;
+import frc.robot.Commands.CargoRollerStopCommand;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
@@ -25,18 +25,14 @@ public class CargoSub extends Subsystem {
 
   @Override
   public void initDefaultCommand() {
-    setDefaultCommand(new IntakeStopCommand());
+    setDefaultCommand(new CargoRollerStopCommand());
   }
 
-  public void intakeIn() {
-    roller.set(RobotMap.INTAKE_IN_SPEED);
+  public void cargoRollerDirect(double speed) {
+    roller.set(speed);
   }
 
-  public void intakeOut() {
-    roller.set(RobotMap.INTAKE_OUT_SPEED);
-  }
-
-  public void intakeStop() {
+  public void cargoRollerStop() {
     roller.set(RobotMap.STOP_SPEED);
   }
 }
