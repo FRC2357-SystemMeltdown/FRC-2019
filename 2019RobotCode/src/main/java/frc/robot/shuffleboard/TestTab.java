@@ -65,8 +65,8 @@ public class TestTab {
     cargoLimitLeft.setBoolean(Robot.CARGO_SUB.limitLeft.get());
     cargoLimitRight.setBoolean(Robot.CARGO_SUB.limitRight.get());
 
-    hatchLimitLeft.setBoolean(Robot.HATCH_SUB.leftLimitSwitch.get());
-    hatchLimitRight.setBoolean(Robot.HATCH_SUB.rightLimitSwitch.get());
+    hatchLimitLeft.setBoolean(Robot.HATCH_SUB.getLeftLimit());
+    hatchLimitRight.setBoolean(Robot.HATCH_SUB.getRightLimit());
 
   }
 }

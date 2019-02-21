@@ -29,8 +29,8 @@ public class RobotMap {
   public static final int ANALOG_PORT_ARM_POTENTIOMETER = 0;
 
   // DIO IDs
-  public static final int DIO_PORT_CARGO_LIMIT_LEFT   = 0;
-  public static final int DIO_PORT_CARGO_LIMIT_RIGHT  = 1;
+  public static final int DIO_PORT_CARGO_LIMIT_LEFT   = 8;
+  public static final int DIO_PORT_CARGO_LIMIT_RIGHT  = 9;
   public static final int DIO_PORT_HATCH_LEFT         = 2;
   public static final int DIO_PORT_HATCH_RIGHT        = 3;
 

@@ -29,6 +29,14 @@ public class HatchSub extends Subsystem {
     rightLimitSwitch = new DigitalInput(RobotMap.DIO_PORT_HATCH_RIGHT);
   }
 
+  public boolean getLeftLimit() {
+    return leftGantry.getSensorCollection().isFwdLimitSwitchClosed();
+  }
+
+  public boolean getRightLimit() {
+    return rightGantry.getSensorCollection().isFwdLimitSwitchClosed();
+  }
+
   @Override
   public void initDefaultCommand() {
     setDefaultCommand(new HatchStopCommand());
