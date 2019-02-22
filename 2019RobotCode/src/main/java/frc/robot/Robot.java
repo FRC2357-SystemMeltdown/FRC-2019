@@ -19,10 +19,9 @@ import frc.robot.Subsystems.ArmSub;
 import frc.robot.Subsystems.HatchSub;
 import frc.robot.Subsystems.VisionSub;
 import frc.robot.modes.DPadModeManager;
-import frc.robot.modes.DriverFailsafeMode;
-import frc.robot.modes.DriverPIDMode;
-import frc.robot.modes.FakeFailsafeMode;
-import frc.robot.modes.GunnerFailsafeMode;
+import frc.robot.modes.DriverModeManager;
+import frc.robot.modes.GunnerModeManager;
+import frc.robot.modes.ModeManager;
 import frc.robot.shuffleboard.ShuffleboardController;
 
 /**
@@ -56,7 +55,8 @@ public class Robot extends TimedRobot {
   public Robot(){
     robotInstance = this;
     this.shuffleboardController = new ShuffleboardController();
-    initModeManagers();
+    driverModeMgr = new DriverModeManager();
+    gunnerModeMgr = new GunnerModeManager();
   }
 
   @Override
@@ -156,28 +156,11 @@ public class Robot extends TimedRobot {
     return robotInstance;
   }
 
-  public String getDriverModeName() {
-    return driverModeMgr.getCurrentMode().getModeName();
+  public ModeManager getDriverModeManager() {
+    return driverModeMgr;
   }
 
-  public String getGunnerModeName() {
-    return gunnerModeMgr.getCurrentMode().getModeName();
-  }
-
-  private void initModeManagers() {
-    driverModeMgr = new DPadModeManager(
-      new DriverFailsafeMode(),
-      new DriverPIDMode(),
-      null,
-      null,
-      frc.robot.OI.DPadValue.Up
-      );
-    gunnerModeMgr = new DPadModeManager(
-      new GunnerFailsafeMode(),
-      null,
-      null,
-      null,
-      frc.robot.OI.DPadValue.Up
-      );
+  public ModeManager getGunnerModeManager() {
+    return gunnerModeMgr;
   }
 }
