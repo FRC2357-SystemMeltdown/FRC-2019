@@ -9,10 +9,9 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Robot;
 
-public class TestTab {
+public class TestTab extends TabBase {
   private static final String TITLE = "Test Mode";
 
-  private ShuffleboardTab tab;
   private NetworkTableEntry compressorEnabled;
   private NetworkTableEntry pressureLow;
   private NetworkTableEntry encoderLeft;
@@ -25,9 +24,9 @@ public class TestTab {
   private boolean videoSourcesInitialized;
 
   public TestTab() {
-    videoSourcesInitialized = false;
+    super(TITLE);
 
-    tab = Shuffleboard.getTab(TITLE);
+    videoSourcesInitialized = false;
 
     tab.add("Drive - Left", Robot.DRIVE_SUB.leftMaster);
     tab.add("Drive - Right", Robot.DRIVE_SUB.rightMaster);
@@ -53,15 +52,7 @@ public class TestTab {
 
     for(VideoSource source : VideoSource.enumerateSources()) {
       tab.add(source.getName(), source);
-      // if(source.getName() == "limelight") {
-      //   tab.add("limelight", source);
-      //   break;
-      // }
     }
-  }
-
-  public void show() {
-    Shuffleboard.selectTab(TITLE);
   }
 
   public void periodic() {

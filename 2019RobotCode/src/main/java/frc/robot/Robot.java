@@ -18,6 +18,7 @@ import frc.robot.Subsystems.ClimberSub;
 //import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Subsystems.DriveSub;
+import frc.robot.Other.LimelightLEDMode;
 import frc.robot.Subsystems.ArmSub;
 import frc.robot.Subsystems.HatchSub;
 import frc.robot.Subsystems.VisionSub;
@@ -74,9 +75,6 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     Scheduler.getInstance().run();
 
-    VISION_SUB.setVisionProcessingEnabled(false);
-    VISION_SUB.setLEDMode(VisionSub.LEDMode.Off);
-
     // Update the mode managers
     driverModeMgr.updateDPadValue(OI.getDriverDPadValue());
     gunnerModeMgr.updateDPadValue(OI.getGunnerDPadValue());
@@ -101,6 +99,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    shuffleboardController.drive();
     ARM_SUB.compressor.setClosedLoopControl(true);
   }
 

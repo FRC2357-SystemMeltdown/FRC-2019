@@ -14,6 +14,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
+import frc.robot.Other.LimelightLEDMode;
 
 /**
  * Add your docs here.
@@ -33,19 +34,6 @@ public class VisionSub extends Subsystem {
     ta = table.getEntry("ta");
 
     webCam = CameraServer.getInstance().startAutomaticCapture(0);
-  }
-
-  public enum LEDMode {
-    PipelineDefault(0),
-    Off(1),
-    Blink(2),
-    On(3);
-
-    public final int value;
-
-    private LEDMode(int value) {
-      this.value = value;
-    }
   }
 
   @Override
@@ -75,7 +63,7 @@ public class VisionSub extends Subsystem {
    * Set the LED mode on the limelight.
    * @param ledMode
    */
-  public void setLEDMode(LEDMode ledMode) {
+  public void setLimelightLEDMode(LimelightLEDMode ledMode) {
     table.getEntry("ledMode").setNumber(ledMode.value);
   }
 }
