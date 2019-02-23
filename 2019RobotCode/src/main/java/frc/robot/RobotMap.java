@@ -38,6 +38,7 @@ public class RobotMap {
   public static final int PCM_PORT_UP = 1;
 
   // Drive System
+  public static final int GYRO_UNITS_PER_ROTATION = 8192; // Pigeon IMU
   public static final int GYRO_AXIS_YAW = 0;
   public static final int GYRO_AXIS_PITCH = 1;
   public static final int GYRO_AXIS_ROLL = 2;
