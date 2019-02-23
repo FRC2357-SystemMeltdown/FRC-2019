@@ -19,7 +19,7 @@ public class GyroPID extends PIDSubsystem {
 
   public GyroPID() {
     // Intert a subsystem name and PID values here
-    super(RobotMap.PID_P_GYRO, RobotMap.PID_I_GYRO, RobotMap.PID_D_GYRO);
+    super(RobotMap.PID_GYRO.kp, RobotMap.PID_GYRO.ki, RobotMap.PID_GYRO.kd);
     this.lastTime = 0l;
     this.lastPosition = 0.0;
     getPIDController().setContinuous(false);

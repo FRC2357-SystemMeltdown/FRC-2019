@@ -6,6 +6,8 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot;
 
+import frc.robot.Other.PIDValues;
+
 /**
  * Add your docs here.
  */
@@ -55,20 +57,10 @@ public class RobotMap {
   public static final double FAILSAFE_TRIM_REVERSE_DEFAULT = 0.0;
 
   //Drive PID Values
-  public static final double PID_P_LEFT_DRIVE = 0.0;
-  public static final double PID_I_LEFT_DRIVE = 0.0;
-  public static final double PID_D_LEFT_DRIVE = 0.0;
-  public static final double PID_F_LEFT_DRIVE = 0.0;
-  public static final double PID_P_RIGHT_DRIVE = 0.0;
-  public static final double PID_I_RIGHT_DRIVE = 0.0;
-  public static final double PID_D_RIGHT_DRIVE = 0.0;
-  public static final double PID_F_RIGHT_DRIVE = 0.0;
-  public static final double PID_P_GYRO = 0.0;
-  public static final double PID_I_GYRO = 0.0;
-  public static final double PID_D_GYRO = 0.0;
-  public static final double PID_P_ARM = 0.0;
-  public static final double PID_I_ARM = 0.0;
-  public static final double PID_D_ARM = 0.0;
+  public static final PIDValues PID_LEFT_DRIVE = new PIDValues(0, 0, 0, 0, 0);
+  public static final PIDValues PID_RIGHT_DRIVE = new PIDValues(0, 0, 0, 0, 0);
+  public static final PIDValues PID_GYRO = new PIDValues(0, 0, 0, 0, 0);
+  public static final PIDValues PID_ARM = new PIDValues(0, 0, 0, 0, 0);
   public static final double DRIVE_TRAIN_SAMPLE_PERIOD = 1 / 5;
 
   // Arm
@@ -95,6 +87,12 @@ public class RobotMap {
 
   // Hatch
   public static final double HATCH_FAILSAFE_MOVEMENT_SPEED = 0.7;
+  public static final double HATCH_ENCODER_TICKS_PER_ROTATION = 256;
+  public static final double HATCH_INCHES_PER_ROTATION = 3; // ?? wild guess
+  public static final PIDValues HATCH_LEFT_PID = new PIDValues(0, 0, 0, 0, 0);
+  public static final PIDValues HATCH_RIGHT_PID = new PIDValues(0, 0, 0, 0, 0);
+  public static final double HATCH_ACCELERATION = 4; // inches/s/s
+  public static final double HATCH_MAX_VELOCITY = 8; // inches/s
 
   // Vision
   public static final double VISION_DEFAULT_RETURN_VALUE = 0.0;

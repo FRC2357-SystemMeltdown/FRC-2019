@@ -9,6 +9,8 @@ package frc.robot.Subsystems;
 
 import frc.robot.RobotMap;
 import frc.robot.Commands.ProportionalDriveCommand;
+import frc.robot.Other.PIDValues;
+import frc.robot.Other.Utility;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -42,16 +44,8 @@ public class DriveSub extends Subsystem {
     leftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
     rightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
 
-    configTalon(leftMaster,
-     RobotMap.PID_P_LEFT_DRIVE,
-     RobotMap.PID_I_LEFT_DRIVE,
-     RobotMap.PID_D_LEFT_DRIVE,
-     RobotMap.PID_F_LEFT_DRIVE);
-    configTalon(rightMaster,
-     RobotMap.PID_P_RIGHT_DRIVE,
-     RobotMap.PID_I_RIGHT_DRIVE,
-     RobotMap.PID_D_RIGHT_DRIVE,
-     RobotMap.PID_F_RIGHT_DRIVE);
+    Utility.configTalonPID(leftMaster, RobotMap.PID_LEFT_DRIVE);
+    Utility.configTalonPID(rightMaster, RobotMap.PID_RIGHT_DRIVE);
   }
 
   @Override
@@ -109,20 +103,4 @@ public class DriveSub extends Subsystem {
     double speedTicksPer100ms = speedRotationsPer100ms * RobotMap.ENCODER_TICKS_PER_ROTATION;
     return speedTicksPer100ms;
   }
-
-  /**
-   *
-   * @param talon The talon SRX to config
-   * @param kP The proportional value to set
-   * @param kI The interval value to set
-   * @param kD The derivative value to set
-   * @param kF The feedforward value to set
-   */
-  private void configTalon(WPI_TalonSRX talon, double kP, double kI, double kD, double kF) {
-    talon.config_kP(0, kP);
-    talon.config_kI(0, kI);
-    talon.config_kD(0, kD);
-    talon.config_kF(0, kF);
-  }
-
 }
