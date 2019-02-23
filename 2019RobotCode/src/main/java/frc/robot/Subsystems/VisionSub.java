@@ -15,6 +15,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
 import frc.robot.Other.LimelightLEDMode;
+import frc.robot.Other.LimelightPiPMode;
 
 /**
  * Add your docs here.
@@ -60,10 +61,18 @@ public class VisionSub extends Subsystem {
   }
 
   /**
-   * Set the LED mode on the limelight.
+   * Set the LED mode on the Limelight.
    * @param ledMode
    */
   public void setLimelightLEDMode(LimelightLEDMode ledMode) {
     table.getEntry("ledMode").setNumber(ledMode.value);
+  }
+
+  /**
+   * Set the picture in picture mode on the Limelight.
+   * @param pipMode
+   */
+  public void setLimelightPiPMode(LimelightPiPMode pipMode) {
+    table.getEntry("stream").setNumber(pipMode.value);
   }
 }
