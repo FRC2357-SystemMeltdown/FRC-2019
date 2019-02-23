@@ -7,11 +7,14 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.robot.Subsystems.CargoSub;
 import frc.robot.Subsystems.ClimberSub;
 import frc.robot.Subsystems.DriveSub;
+import frc.robot.Other.Utility;
 import frc.robot.Subsystems.ArmSub;
 import frc.robot.Subsystems.HatchSub;
 import frc.robot.Subsystems.VisionSub;
@@ -20,6 +23,9 @@ import frc.robot.modes.DriverModeManager;
 import frc.robot.modes.GunnerModeManager;
 import frc.robot.modes.ModeManager;
 import frc.robot.shuffleboard.ShuffleboardController;
+import java.util.Optional;
+import badlog.lib.BadLog;
+import badlog.lib.DataInferMode;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -44,6 +50,9 @@ public class Robot extends TimedRobot {
 
   private boolean hatchLeftLimitClosed;
   private boolean hatchRightLimitClosed;
+  private BadLog log;
+  private long startTimeNs;
+  private long lastLogMs;
 
   public Robot(){
     robotInstance = this;
@@ -56,6 +65,27 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     hatchLeftLimitClosed = HATCH_SUB.isLeftLimitClosed();
     hatchRightLimitClosed = HATCH_SUB.isRightLimitClosed();
+    startTimeNs = System.nanoTime();
+    lastLogMs = System.currentTimeMillis();
+
+    log = BadLog.init("log.badlog");
+
+    DriverStation driverStation = DriverStation.getInstance();
+
+    // Add log fields here
+    BadLog.createValue("Start Time", Utility.getTimestamp());
+    BadLog.createValue("Event Name", Optional.ofNullable(driverStation.getEventName()).orElse(""));
+    BadLog.createValue("Event Type", driverStation.getMatchType().toString());
+    BadLog.createValue("Match Number", String.valueOf(driverStation.getMatchNumber()));
+    BadLog.createValue("Alliance", driverStation.getAlliance().toString());
+    BadLog.createValue("Location", String.valueOf(driverStation.getLocation()));
+
+    BadLog.createTopicSubscriber("Time", "s", DataInferMode.DEFAULT, "hide", "delta", "xaxis");
+
+    BadLog.createTopic("System/Battery Voltage", "V", () -> RobotController.getBatteryVoltage());
+    BadLog.createTopic("Match Time", "s", () -> driverStation.getMatchTime());
+
+    log.finishInitialization();
   }
 
   /**
@@ -68,6 +98,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    double upTime = ((double) (System.nanoTime() - startTimeNs)) * 1e-9;
+    BadLog.publish("Time", upTime);
+
     Scheduler.getInstance().run();
 
     // Update the mode managers
@@ -83,6 +116,17 @@ public class Robot extends TimedRobot {
     }
     hatchLeftLimitClosed = HATCH_SUB.isLeftLimitClosed();
     hatchRightLimitClosed = HATCH_SUB.isRightLimitClosed();
+
+    // Update log topics
+    log.updateTopics();
+
+    // Write log every 250ms if the driver station is disabled to
+    // save disk space
+    long currentTimeMs = System.currentTimeMillis();
+    if(!DriverStation.getInstance().isDisabled() || (currentTimeMs - lastLogMs) >= 250) {
+      log.log();
+      lastLogMs = currentTimeMs;
+    }
   }
 
   /**

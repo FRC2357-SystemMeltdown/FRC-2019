@@ -1,6 +1,8 @@
 package frc.robot.Other;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Utility{
   public static double clamp(double input, double min, double max){
@@ -31,5 +33,10 @@ public class Utility{
     talon.config_kD(slotIdx, pid.kd);
     talon.config_kF(slotIdx, pid.kf);
     talon.config_IntegralZone(slotIdx, pid.izone);
+  }
+
+  public static String getTimestamp() {
+    SimpleDateFormat format = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
+    return format.format(new Date());
   }
 }
