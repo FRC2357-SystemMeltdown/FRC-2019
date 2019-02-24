@@ -23,6 +23,9 @@ import frc.robot.modes.DriverModeManager;
 import frc.robot.modes.GunnerModeManager;
 import frc.robot.modes.ModeManager;
 import frc.robot.shuffleboard.ShuffleboardController;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Optional;
 import badlog.lib.BadLog;
 import badlog.lib.DataInferMode;
@@ -50,6 +53,7 @@ public class Robot extends TimedRobot {
 
   private boolean hatchLeftLimitClosed;
   private boolean hatchRightLimitClosed;
+  private static final String LOG_PATH_TEMPLATE = "/var/log/log-{time}.badlog";
   private BadLog log;
   private long startTimeNs;
   private long lastLogMs;
@@ -68,7 +72,7 @@ public class Robot extends TimedRobot {
     startTimeNs = System.nanoTime();
     lastLogMs = System.currentTimeMillis();
 
-    log = BadLog.init("log.badlog");
+    log = BadLog.init(getLogFilepath());
 
     DriverStation driverStation = DriverStation.getInstance();
 
@@ -206,5 +210,10 @@ public class Robot extends TimedRobot {
 
   public ModeManager getGunnerModeManager() {
     return gunnerModeMgr;
+  }
+
+  private String getLogFilepath() {
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+    return LOG_PATH_TEMPLATE.replace("{time}", format.format(new Date()));
   }
 }
