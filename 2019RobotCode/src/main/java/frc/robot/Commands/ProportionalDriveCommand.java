@@ -9,11 +9,11 @@ package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
+import frc.robot.Other.Utility;
+import frc.robot.shuffleboard.SettingsTab;
 
 public class ProportionalDriveCommand extends Command {
   public ProportionalDriveCommand() {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
     requires(Robot.DRIVE_SUB);
   }
 
@@ -25,7 +25,30 @@ public class ProportionalDriveCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.DRIVE_SUB.drive.arcadeDrive(Robot.OI.getProportionalSpeed(), Robot.OI.getProportionalTurn());
+    double speed = Robot.OI.getProportionalSpeed();
+    double turn = Robot.OI.getProportionalTurn();
+
+    double leftSpeed = (speed + turn);
+    double rightSpeed = (speed - turn);
+
+    leftSpeed = Utility.clamp(leftSpeed, -1.0, 1.0);
+    rightSpeed = Utility.clamp(rightSpeed, -1.0, 1.0);
+
+    double trim = 0.0;
+
+    if (speed > 0) {
+      trim = SettingsTab.getFailsafeTrimForward();
+    } else if (speed < 0) {
+      trim = SettingsTab.getFailsafeTrimReverse();
+    }
+
+    if (trim > 0) {
+      rightSpeed *= (1 - trim);
+    } else if (trim < 0) {
+      leftSpeed *= (1 + trim);
+    }
+
+    Robot.DRIVE_SUB.drive.tankDrive(leftSpeed, rightSpeed);
   }
 
   // Make this return true when this Command no longer needs to run execute()

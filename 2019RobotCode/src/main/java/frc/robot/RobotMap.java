@@ -56,6 +56,8 @@ public class RobotMap {
   public static final double GUNNER_TURN_PROPORTION = 0.5;
   public static final double MAX_TURN_RATE_DEGREES_PER_SECOND = 180;
   public static final double MAX_VELOCITY_INCHES_PER_SECOND = 10;
+  public static final double FAILSAFE_TRIM_FORWARD_DEFAULT = 0.0;
+  public static final double FAILSAFE_TRIM_REVERSE_DEFAULT = 0.0;
 
   //Drive PID Values
   public static final double PID_P_LEFT_DRIVE = 0.0;
