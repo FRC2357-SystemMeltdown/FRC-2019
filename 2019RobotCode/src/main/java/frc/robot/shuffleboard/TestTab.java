@@ -33,8 +33,8 @@ public class TestTab {
 
     armPotentiometer = tab.add("Arm Pot", 0).getEntry();
 
-    tab.add("Arm Latch", Robot.ARM_SUB.latchingSolenoid);
-    tab.add("Arm Move", Robot.ARM_SUB.movementSolenoid);
+    tab.add("Arm Up", Robot.ARM_SUB.upSolenoid);
+    tab.add("Arm Down", Robot.ARM_SUB.downSolenoid);
 
     tab.add("Cargo", Robot.CARGO_SUB.roller);
 
