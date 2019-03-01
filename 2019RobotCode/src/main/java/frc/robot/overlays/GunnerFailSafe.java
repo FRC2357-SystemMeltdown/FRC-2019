@@ -11,6 +11,7 @@ import frc.robot.Commands.HatchDirectMoveCommand;
 import frc.robot.Commands.HatchStopCommand;
 import frc.robot.Commands.MoveArmDirectCommand;
 import frc.robot.Other.XboxRaw;
+import frc.robot.Subsystems.ArmSub;
 
 /**
  * The GunnerFailSafe overlay is the least complex control system
@@ -43,8 +44,8 @@ public class GunnerFailSafe
 
     cargoRollerCommand = new CargoRollerDirectCommand(this);
     cargoRollerStopCommand = new CargoRollerStopCommand();
-    armUpCommand = new MoveArmDirectCommand(RobotMap.ARM_UP);
-    armDownCommand = new MoveArmDirectCommand(RobotMap.ARM_DOWN);
+    armUpCommand = new MoveArmDirectCommand(ArmSub.Direction.UP);
+    armDownCommand = new MoveArmDirectCommand(ArmSub.Direction.DOWN);
     hatchOpenCloseCommand = new HatchDirectOpenCloseCommand(this);
     hatchMoveCommand = new HatchDirectMoveCommand(this);
     hatchStopCommand = new HatchStopCommand();

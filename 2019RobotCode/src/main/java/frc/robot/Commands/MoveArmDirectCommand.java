@@ -9,23 +9,23 @@ package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
+import frc.robot.Subsystems.ArmSub;
 
 // This command provides direct control over the arm motors
 public class MoveArmDirectCommand extends Command {
-  private int direction;
+  private ArmSub.Direction direction;
 
-  public MoveArmDirectCommand(int direction) {
+  public MoveArmDirectCommand(ArmSub.Direction direction) {
     requires(Robot.ARM_SUB);
 
     this.direction = direction;
   }
 
-  public void setDirection(int direction)
-  {
+  public void setDirection(ArmSub.Direction direction) {
     this.direction = direction;
   }
 
-  public double getDirection() {
+  public ArmSub.Direction getDirection() {
     return direction;
   }
 
@@ -49,8 +49,7 @@ public class MoveArmDirectCommand extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    // Stop the arm
-    Robot.ARM_SUB.moveArmManual(0);
+    Robot.ARM_SUB.moveArmManual(ArmSub.Direction.STOP);
   }
 
   // Called when another command which requires one or more of the same

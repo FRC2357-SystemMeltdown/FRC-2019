@@ -22,9 +22,6 @@ public class RobotMap {
   public static final int CAN_ID_PDP                = 20;
   public static final int CAN_ID_PCM                = 25;
 
-  // PWM IDs
-  public static final int PWM_ID_ARM_LOCK_SERVO = 0;
-
   // Analog In IDs
   public static final int ANALOG_PORT_ARM_POTENTIOMETER = 0;
 
@@ -35,10 +32,8 @@ public class RobotMap {
   public static final int DIO_PORT_HATCH_RIGHT        = 3;
 
   //PCM IDs
-  public static final int PCM_PORT_EXTEND = 1;
-  public static final int PCM_PORT_CONTRACT = 0;
-  public static final int PCM_PORT_RELEASE = 6;
-  public static final int PCM_PORT_LATCH = 7;
+  public static final int PCM_PORT_DOWN = 0;
+  public static final int PCM_PORT_UP = 1;
 
   // Drive System
   public static final int GYRO_AXIS_YAW = 0;
@@ -84,8 +79,6 @@ public class RobotMap {
   public static final int ARM_POTENTIOMETER_MIN = 0;
   public static final int ARM_POTENTIOMETER_RANGE = ARM_POTENTIOMETER_MAX - ARM_POTENTIOMETER_MIN;
   public static final double ARM_ANGLE_FACTOR = ARM_POTENTIOMETER_RANGE / ARM_RANGE;
-  public static final int ARM_UP = 1;
-  public static final int ARM_DOWN = -1;
   public static final double ARM_HIGH_GOAL_ANGLE = 70.0;
   public static final double ARM_MID_GOAL_ANGLE = 40.0;
   public static final double ARM_LOW_GOAL_ANGLE = 10.0;
