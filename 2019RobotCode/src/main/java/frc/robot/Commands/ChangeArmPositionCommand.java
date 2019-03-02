@@ -9,23 +9,24 @@ package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
+import frc.robot.Subsystems.ArmSub;
 
-public class ChangeArmStateCommand extends Command {
+public class ChangeArmPositionCommand extends Command {
 
-  private double targetAngle;
+  private ArmSub.Position targetPosition;
 
-  public ChangeArmStateCommand(double targetAngle) {
+  public ChangeArmPositionCommand(ArmSub.Position targetPosition) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     requires(Robot.ARM_SUB);
 
-    this.targetAngle = targetAngle;
+    this.targetPosition = targetPosition;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    Robot.ARM_SUB.targetAngle = this.targetAngle;
+    Robot.ARM_SUB.setPosition(targetPosition);
   }
 
   // Called repeatedly when this Command is scheduled to run

@@ -3,18 +3,19 @@ package frc.robot.overlays;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import frc.robot.RobotMap;
-import frc.robot.Commands.ChangeArmStateCommand;
+import frc.robot.Commands.ChangeArmPositionCommand;
+import frc.robot.Subsystems.ArmSub.Position;
 import frc.robot.Commands.CargoRollerDirectCommand;;
 
 public class GunnerCargoFromFloor extends GunnerCreepDrive implements CargoControl {
 
-  private ChangeArmStateCommand setCargoPickupState;
+  private ChangeArmPositionCommand setCargoPickupState;
   private CargoRollerDirectCommand intakeIn;
 
   public GunnerCargoFromFloor(XboxController controller) {
     super(controller);
 
-    setCargoPickupState = new ChangeArmStateCommand(RobotMap.ARM_CARGO_PICKUP_ANGLE);
+    setCargoPickupState = new ChangeArmPositionCommand(Position.CARGO);
     setCargoPickupState.start();
 
     intakeIn = new CargoRollerDirectCommand(this);

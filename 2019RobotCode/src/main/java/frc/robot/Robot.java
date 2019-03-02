@@ -21,6 +21,7 @@ import frc.robot.Subsystems.VisionSub;
 import frc.robot.modes.DPadModeManager;
 import frc.robot.modes.DriverFailsafeMode;
 import frc.robot.modes.GunnerFailsafeMode;
+import frc.robot.modes.GunnerHatchScoringMode;
 import frc.robot.shuffleboard.ShuffleboardController;
 
 /**
@@ -158,7 +159,7 @@ public class Robot extends TimedRobot {
       );
     gunnerModeMgr = new DPadModeManager(
       new GunnerFailsafeMode(),
-      null,
+      new GunnerHatchScoringMode(),
       null,
       null,
       frc.robot.OI.DPadValue.Up

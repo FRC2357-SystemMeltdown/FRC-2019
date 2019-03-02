@@ -2,40 +2,40 @@ package frc.robot.overlays;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import frc.robot.RobotMap;
-import frc.robot.Commands.ChangeArmStateCommand;
+import frc.robot.Commands.ChangeArmPositionCommand;
 import frc.robot.Other.XboxRaw;
+import frc.robot.Subsystems.ArmSub.Position;
 
 public class GunnerScoring extends GunnerCreepDrive {
 
-  private ChangeArmStateCommand changeStateHigh;
-  private ChangeArmStateCommand changeStateMid;
-  private ChangeArmStateCommand changeStateLow;
-  private ChangeArmStateCommand changeStateMin;
+  private ChangeArmPositionCommand changePositionHigh;
+  private ChangeArmPositionCommand changePositionMid;
+  private ChangeArmPositionCommand changePositionLow;
+  private ChangeArmPositionCommand changePositionMin;
 
-  private JoystickButton changeStateHighButton;
-  private JoystickButton changeStateMidButton;
-  private JoystickButton changeStateLowButton;
-  private JoystickButton changeStateMinButton;
+  private JoystickButton changePositionHighButton;
+  private JoystickButton changePositionMidButton;
+  private JoystickButton changePositionLowButton;
+  private JoystickButton changePositionMinButton;
 
   public GunnerScoring(XboxController controller) {
     super(controller);
 
-    changeStateHigh = new ChangeArmStateCommand(RobotMap.ARM_HIGH_GOAL_ANGLE);
-    changeStateMid = new ChangeArmStateCommand(RobotMap.ARM_MID_GOAL_ANGLE);
-    changeStateLow = new ChangeArmStateCommand(RobotMap.ARM_LOW_GOAL_ANGLE);
-    changeStateMin = new ChangeArmStateCommand(RobotMap.ARM_MIN_ANGLE);
+    changePositionHigh = new ChangeArmPositionCommand(Position.HIGH);
+    changePositionMid = new ChangeArmPositionCommand(Position.MID);
+    changePositionLow = new ChangeArmPositionCommand(Position.LOW);
+    changePositionMin = new ChangeArmPositionCommand(Position.MIN);
 
-    changeStateHighButton = new JoystickButton(controller, XboxRaw.Y.value);
-    changeStateHighButton.whenPressed(changeStateHigh);
+    changePositionHighButton = new JoystickButton(controller, XboxRaw.Y.value);
+    changePositionHighButton.whenPressed(changePositionHigh);
 
-    changeStateMidButton = new JoystickButton(controller, XboxRaw.X.value);
-    changeStateMidButton.whenPressed(changeStateMid);
+    changePositionMidButton = new JoystickButton(controller, XboxRaw.X.value);
+    changePositionMidButton.whenPressed(changePositionMid);
 
-    changeStateLowButton = new JoystickButton(controller, XboxRaw.A.value);
-    changeStateLowButton.whenPressed(changeStateLow);
+    changePositionLowButton = new JoystickButton(controller, XboxRaw.A.value);
+    changePositionLowButton.whenPressed(changePositionLow);
 
-    changeStateMinButton = new JoystickButton(controller, XboxRaw.Start.value);
-    changeStateMinButton.whenPressed(changeStateMin);
+    changePositionMinButton = new JoystickButton(controller, XboxRaw.Start.value);
+    changePositionMinButton.whenPressed(changePositionMin);
   }
 }

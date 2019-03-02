@@ -24,6 +24,20 @@ public class ArmSub extends Subsystem {
     UP,
   }
 
+  public enum Position {
+    HIGH(RobotMap.ARM_HIGH_GOAL_ANGLE),
+    MID(RobotMap.ARM_MID_GOAL_ANGLE),
+    LOW(RobotMap.ARM_LOW_GOAL_ANGLE),
+    CARGO(RobotMap.ARM_CARGO_PICKUP_ANGLE),
+    MIN(RobotMap.ARM_STARTING_ANGLE);
+
+    public int angle;
+
+    private Position(int angle) {
+    this.angle = angle;
+    }
+  }
+
   public Compressor compressor = new Compressor(RobotMap.CAN_ID_PCM);
   public Solenoid downSolenoid = new Solenoid(
     RobotMap.CAN_ID_PCM,
@@ -34,9 +48,8 @@ public class ArmSub extends Subsystem {
 
   private AnalogInput potentiometer = new AnalogInput(RobotMap.ANALOG_PORT_ARM_POTENTIOMETER);
   private Direction currentDirection = null;
+  public Position currentPosition = Position.MIN;
 
-  // TODO: Make this private
-  public double targetAngle = 0.0;
 
   @Override
   public void initDefaultCommand() {
@@ -98,5 +111,11 @@ public class ArmSub extends Subsystem {
   private void stop() {
     downSolenoid.set(false);
     upSolenoid.set(false);
+  }
+
+  public void setPosition(Position targetPosition) {
+    if(targetPosition != currentPosition) {
+      currentPosition = targetPosition;
+    }
   }
 }

@@ -91,6 +91,6 @@ public class GunnerFailSafe
 
   @Override
   public double getCargoRollerSpeed() {
-    return controller.getTriggerAxis(Hand.kLeft) - controller.getTriggerAxis(Hand.kRight);
+    return controller.getTriggerAxis(Hand.kRight) - controller.getTriggerAxis(Hand.kLeft);
   }
 }
