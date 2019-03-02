@@ -5,27 +5,26 @@ package frc.robot.modes;
  * @return
  */
 public class ModeManager {
-  private ModeBase mode;
+  private ModeBase currentMode;
   protected ModeBase failsafeMode;
 
   protected ModeManager() {
-    mode = null;
+    currentMode = null;
     failsafeMode = null;
   }
 
   public ModeManager(ModeBase initialMode, ModeBase failsafeMode) {
-    mode = initialMode;
     this.failsafeMode = failsafeMode;
-    mode.activate();
+    this.switchMode(initialMode);
   }
 
   public void switchMode(ModeBase newMode) {
-    if(mode != newMode) {
-      if(mode != null) {
-        mode.deactivate();
+    if (currentMode != newMode) {
+      if (currentMode != null) {
+        currentMode.deactivate();
       }
-      mode = newMode;
-      mode.activate();
+      currentMode = newMode;
+      currentMode.activate();
     }
   }
 
@@ -34,10 +33,10 @@ public class ModeManager {
   }
 
   public ModeBase getCurrentMode() {
-    return mode;
+    return currentMode;
   }
 
   public boolean isFailsafeActive() {
-    return mode == failsafeMode;
+    return currentMode == failsafeMode;
   }
 }

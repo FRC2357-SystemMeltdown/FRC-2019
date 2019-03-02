@@ -1,19 +1,23 @@
 package frc.robot.modes;
 
-import frc.robot.OI.DPadValue;
-
 /**
  * Initializes the gunner mode list.
  */
 public class GunnerModeManager extends DPadModeManager {
+  private static ModeBase failsafeMode = new GunnerFailsafeMode();
+  private static ModeBase cargoLoadingMode = new GunnerCargoLoadingMode();
+  private static ModeBase hatchLoadingMode = new GunnerHatchLoadingMode();
+  private static ModeBase cargoScoringMode = new GunnerCargoScoringMode();
+  private static ModeBase hatchScoringMode = new GunnerHatchScoringMode();
+
   public GunnerModeManager() {
     super(
-      new GunnerFailsafeMode(),
-      new GunnerCargoLoadingMode(),
-      new GunnerHatchLoadingMode(),
-      new GunnerCargoScoringMode(),
-      new GunnerHatchScoringMode(),
-      DPadValue.Up
+      failsafeMode,     // failsafe
+      cargoLoadingMode, // up
+      hatchScoringMode, // right
+      hatchLoadingMode, // down
+      cargoScoringMode, // left
+      hatchScoringMode  // up
     );
   }
 }
