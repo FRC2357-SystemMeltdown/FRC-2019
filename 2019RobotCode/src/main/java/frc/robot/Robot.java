@@ -22,6 +22,9 @@ import frc.robot.modes.DPadModeManager;
 import frc.robot.modes.DriverFailsafeMode;
 import frc.robot.modes.GunnerFailsafeMode;
 import frc.robot.modes.GunnerHatchScoringMode;
+import frc.robot.modes.DriverModeManager;
+import frc.robot.modes.GunnerModeManager;
+import frc.robot.modes.ModeManager;
 import frc.robot.shuffleboard.ShuffleboardController;
 
 /**
@@ -47,13 +50,16 @@ public class Robot extends TimedRobot {
    public static final VisionSub VISION_SUB = new VisionSub();
    public static final OI OI = new OI();
 
+  private static Robot robotInstance;
   private ShuffleboardController shuffleboardController;
   private DPadModeManager driverModeMgr;
   private DPadModeManager gunnerModeMgr;
 
   public Robot(){
+    robotInstance = this;
     this.shuffleboardController = new ShuffleboardController();
-    initModeManagers();
+    driverModeMgr = new DriverModeManager();
+    gunnerModeMgr = new GunnerModeManager();
   }
 
   @Override
@@ -149,20 +155,15 @@ public class Robot extends TimedRobot {
     // @todo: See what we need to do here.
   }
 
-  private void initModeManagers() {
-    driverModeMgr = new DPadModeManager(
-      new DriverFailsafeMode(),
-      null,
-      null,
-      null,
-      frc.robot.OI.DPadValue.Up
-      );
-    gunnerModeMgr = new DPadModeManager(
-      new GunnerFailsafeMode(),
-      new GunnerHatchScoringMode(),
-      null,
-      null,
-      frc.robot.OI.DPadValue.Up
-      );
+  public static Robot getInstance() {
+    return robotInstance;
+  }
+
+  public ModeManager getDriverModeManager() {
+    return driverModeMgr;
+  }
+
+  public ModeManager getGunnerModeManager() {
+    return gunnerModeMgr;
   }
 }

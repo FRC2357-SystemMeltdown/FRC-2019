@@ -1,25 +1,42 @@
 package frc.robot.modes;
 
-// This class keeps track of a mode state.
+/**
+ * This class keeps track of a mode state.
+ * @return
+ */
 public class ModeManager {
-  private ModeBase mode;
+  private ModeBase currentMode;
+  protected ModeBase failsafeMode;
 
   protected ModeManager() {
-    mode = null;
+    currentMode = null;
+    failsafeMode = null;
   }
 
-  public ModeManager(ModeBase initialMode) {
-    mode = initialMode;
-    mode.activate();
+  public ModeManager(ModeBase initialMode, ModeBase failsafeMode) {
+    this.failsafeMode = failsafeMode;
+    this.switchMode(initialMode);
   }
 
   public void switchMode(ModeBase newMode) {
-    if(mode != newMode) {
-      if(mode != null) {
-        mode.deactivate();
+    if (currentMode != newMode) {
+      if (currentMode != null) {
+        currentMode.deactivate();
       }
-      mode = newMode;
-      mode.activate();
+      currentMode = newMode;
+      currentMode.activate();
     }
+  }
+
+  public void activateFailsafeMode() {
+    switchMode(failsafeMode);
+  }
+
+  public ModeBase getCurrentMode() {
+    return currentMode;
+  }
+
+  public boolean isFailsafeActive() {
+    return currentMode == failsafeMode;
   }
 }
