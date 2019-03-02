@@ -1,9 +1,12 @@
 package frc.robot.shuffleboard;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import frc.robot.Robot;
+import frc.robot.modes.ModeManager;
 
 public class TestTab {
   private static final String TITLE = "Test Mode";
@@ -18,6 +21,10 @@ public class TestTab {
   private NetworkTableEntry armPotentiometer;
   private NetworkTableEntry cargoLimitLeft;
   private NetworkTableEntry cargoLimitRight;
+  private NetworkTableEntry driverMode;
+  private NetworkTableEntry gunnerMode;
+  private ToggleButton driverFailsafeButton;
+  private ToggleButton gunnerFailsafeButton;
 
   public TestTab() {
     tab = Shuffleboard.getTab(TITLE);
@@ -43,6 +50,12 @@ public class TestTab {
 
     hatchLimitLeft = tab.add("Hatch Left", false).getEntry();
     hatchLimitRight = tab.add("Hatch Right", false).getEntry();
+
+    driverMode = tab.add("Driver Mode", "").getEntry();
+    gunnerMode = tab.add("Gunner Mode", "").getEntry();
+
+    driverFailsafeButton = new ToggleButton(tab, "Driver Failsafe");
+    gunnerFailsafeButton = new ToggleButton(tab, "Gunner Failsafe");
   }
 
   public void show() {
@@ -66,5 +79,29 @@ public class TestTab {
     hatchLimitLeft.setBoolean(Robot.HATCH_SUB.getLeftLimit());
     hatchLimitRight.setBoolean(Robot.HATCH_SUB.getRightLimit());
 
+    ModeManager driverModeMgr = Robot.getInstance().getDriverModeManager();
+    ModeManager gunnerModeMgr = Robot.getInstance().getGunnerModeManager();
+
+    driverMode.setString(driverModeMgr.getCurrentMode().getModeName());
+    gunnerMode.setString(gunnerModeMgr.getCurrentMode().getModeName());
+
+    updateFailsafeButton(driverFailsafeButton, driverModeMgr);
+    updateFailsafeButton(gunnerFailsafeButton, gunnerModeMgr);
+  }
+
+  /**
+   * Update the state of a failsafe button.
+   * 
+   * If the button has changed to true the failsafe mode will
+   * be activated.
+   * @param button
+   * @param mgr
+   */
+  private void updateFailsafeButton(ToggleButton button, ModeManager mgr) {
+    if(button.didValueChange() && button.getValue()) {
+      mgr.activateFailsafeMode();
+    } else {
+      button.setValue(mgr.isFailsafeActive());
+    }
   }
 }

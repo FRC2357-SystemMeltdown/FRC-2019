@@ -9,8 +9,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.overlays.ProportionalDrive;
 import frc.robot.overlays.VelocityDrive;
-import frc.robot.overlays.DriverFailSafe;
-import frc.robot.overlays.GunnerFailSafe;
 import frc.robot.Other.Utility;
 import frc.robot.overlays.ControlOverlay;
 
@@ -53,6 +51,7 @@ public class OI {
       value = aValue;
     }
   }
+
   private XboxController driverController;
   private XboxController gunnerController;
 
@@ -95,7 +94,7 @@ public class OI {
   }
 
   /**
-   * 
+   *
    * @return The desired turn rate in degrees/sec
    */
   public double getGyroBasedTurn() {
@@ -109,7 +108,7 @@ public class OI {
     }
 
     turn = Utility.clamp(turn, -RobotMap.MAX_TURN_RATE_DEGREES_PER_SECOND, RobotMap.MAX_TURN_RATE_DEGREES_PER_SECOND);
-    
+
     return turn;
   }
 
@@ -127,7 +126,7 @@ public class OI {
     }
 
     speed = Utility.clamp(speed, -RobotMap.MAX_VELOCITY_INCHES_PER_SECOND, RobotMap.MAX_VELOCITY_INCHES_PER_SECOND);
-    
+
     return speed;
   }
 
