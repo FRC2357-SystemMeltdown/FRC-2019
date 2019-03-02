@@ -9,6 +9,7 @@ package frc.robot.Subsystems;
 
 import frc.robot.Robot;
 import frc.robot.RobotMap;
+import frc.robot.Commands.EncoderBasedDrive;
 import frc.robot.Commands.ProportionalDriveCommand;
 import frc.robot.Other.PIDValues;
 import frc.robot.Other.Utility;
@@ -19,9 +20,12 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.FollowerType;
 import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.SensorTerm;
+import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
+import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
@@ -36,7 +40,7 @@ public class DriveSub extends Subsystem {
   public WPI_TalonSRX leftSlave = new WPI_TalonSRX(RobotMap.CAN_ID_LEFT_DRIVE_SLAVE);
   public WPI_TalonSRX rightMaster = new WPI_TalonSRX(RobotMap.CAN_ID_RIGHT_DRIVE);
   public WPI_TalonSRX rightSlave = new WPI_TalonSRX(RobotMap.CAN_ID_RIGHT_DRIVE_SLAVE);
-  public DifferentialDrive drive = new DifferentialDrive(leftMaster, rightMaster);
+  public DifferentialDrive drive;// = new DifferentialDrive(leftMaster, rightMaster);
 
   private PigeonIMU gyro = new PigeonIMU(RobotMap.CAN_ID_PIGEON_IMU);
   private double[] yawPitchRoll = new double[RobotMap.GYRO_AXIS_TOTAL];
@@ -47,6 +51,7 @@ public class DriveSub extends Subsystem {
   public DriveSub(){
     leftSlave.follow(leftMaster);
     rightSlave.follow(rightMaster);
+    rightSlave.setInverted(true);
 
     /*
     This sets up the left and right Talons to use their encoders and the Pigeon yaw.
@@ -56,6 +61,8 @@ public class DriveSub extends Subsystem {
     gives two PID outputs, PID0 + PID1 and PID0 - PID1. We assign one to each Talon
     master.
     */
+
+    rightMaster.configFactoryDefault();
 
     // The left feedback sensor will be transmitted to the right controller
     leftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
@@ -73,6 +80,10 @@ public class DriveSub extends Subsystem {
     rightMaster.configSelectedFeedbackSensor(FeedbackDevice.SensorSum);
     rightMaster.configSelectedFeedbackCoefficient(0.5);
 
+    rightMaster.setSensorPhase(false);
+    rightMaster.setInverted(true);
+    rightMaster.configAuxPIDPolarity(true);
+
     // set right aux PID feedback to the Pigeon yaw
     rightMaster.configRemoteFeedbackFilter(
       gyro.getDeviceID(),
@@ -81,6 +92,12 @@ public class DriveSub extends Subsystem {
     );
     rightMaster.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor1, 1, 0);
     rightMaster.configSelectedFeedbackCoefficient(1, 1, 0);
+
+    rightMaster.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20);
+    rightMaster.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20);
+    rightMaster.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 20);
+    leftMaster.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5);
+    gyro.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR, 5);
 
     // configure PIDs
     Utility.configTalonPID(leftMaster, RobotMap.PID_LEFT_DRIVE);
@@ -94,7 +111,7 @@ public class DriveSub extends Subsystem {
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
-    setDefaultCommand(new ProportionalDriveCommand());
+    setDefaultCommand(new EncoderBasedDrive()); // ProportionalDriveCommand());
   }
 
   /**
@@ -103,6 +120,8 @@ public class DriveSub extends Subsystem {
    * @param turn The desired turn rate in degrees/sec
    */
   public void PIDDrive(double speed, double turn) {
+    //double speedTicksPer100ms = Robot.OI.getDriverController().getAButton() ? 400 : 200;// calcMotorControlSpeed(speed);
+    //double speedTicksPer100ms = (Robot.OI.getDriverController().getAButton() ? 400 : 200) * -Robot.OI.getDriverController().getY(Hand.kLeft);
     double speedTicksPer100ms = calcMotorControlSpeed(speed);
 
     // get the gyro yaw
@@ -111,6 +130,7 @@ public class DriveSub extends Subsystem {
 
     // set the PID points on the right master
     rightMaster.set(ControlMode.Velocity, speedTicksPer100ms, DemandType.AuxPID, heading + headingDelta);
+    //leftMaster.set(ControlMode.PercentOutput, 1);
 
     // tell the left master to use the right's conjugate PID output
     leftMaster.follow(rightMaster, FollowerType.AuxOutput1);

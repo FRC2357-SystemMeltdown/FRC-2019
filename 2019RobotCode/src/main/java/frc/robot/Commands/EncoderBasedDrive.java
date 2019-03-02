@@ -26,7 +26,7 @@ public class EncoderBasedDrive extends Command {
     double turn = Robot.OI.getGyroBasedTurn();
     double speed = Robot.OI.getEncoderBasedSpeed();
 
-    Robot.DRIVE_SUB.PIDDrive(turn, speed);
+    Robot.DRIVE_SUB.PIDDrive(speed, turn);
   }
 
   // Make this return true when this Command no longer needs to run execute()

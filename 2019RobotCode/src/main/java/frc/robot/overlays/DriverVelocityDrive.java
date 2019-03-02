@@ -21,7 +21,7 @@ public class DriverVelocityDrive extends ControlOverlay implements VelocityDrive
 
   public double getSpeedInchesPerSecond() {
     double input = controller.getY(Hand.kLeft);
-    double speed = input * RobotMap.MAX_VELOCITY_INCHES_PER_SECOND;
+    double speed = -input * RobotMap.MAX_VELOCITY_INCHES_PER_SECOND;
     return speed;
   }
 }

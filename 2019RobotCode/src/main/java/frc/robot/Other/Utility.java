@@ -6,8 +6,8 @@ import frc.robot.RobotMap;
 public class Utility{
     public static double clamp(double input, double min, double max){
         double value = input;
-        value = Math.max(value, -1.0);
-        value = Math.min(value, 1.0);
+        value = Math.max(value, min);
+        value = Math.min(value, max);
         return value;
     }
 

@@ -43,7 +43,7 @@ public class RobotMap {
   public static final int GYRO_AXIS_PITCH = 1;
   public static final int GYRO_AXIS_ROLL = 2;
   public static final int GYRO_AXIS_TOTAL = 3;
-  public static final int ENCODER_TICKS_PER_ROTATION = 256;
+  public static final int ENCODER_TICKS_PER_ROTATION = 512;
   public static final double WHEEL_CIRCUMFERENCE_INCHES = 6 * Math.PI;
   public static final double MOTOR_MINIMUM_POWER = 0.05;
 
@@ -53,14 +53,14 @@ public class RobotMap {
   public static final double GUNNER_SPEED_PROPORTION = 0.5;
   public static final double GUNNER_TURN_PROPORTION = 0.5;
   public static final double MAX_TURN_RATE_DEGREES_PER_SECOND = 180;
-  public static final double MAX_VELOCITY_INCHES_PER_SECOND = 10;
+  public static final double MAX_VELOCITY_INCHES_PER_SECOND = 40;
   public static final double FAILSAFE_TRIM_FORWARD_DEFAULT = 0.0;
   public static final double FAILSAFE_TRIM_REVERSE_DEFAULT = 0.0;
 
   //Drive PID Values
-  public static final PIDValues PID_LEFT_DRIVE = new PIDValues(0, 0, 0, 0, 0);
-  public static final PIDValues PID_RIGHT_DRIVE = new PIDValues(0, 0, 0, 0, 0);
-  public static final PIDValues PID_GYRO = new PIDValues(0, 0, 0, 0, 0);
+  public static final PIDValues PID_LEFT_DRIVE = new PIDValues(2.5, 0, 0, 1023.0 / 920.0, 0);
+  public static final PIDValues PID_RIGHT_DRIVE = new PIDValues(2.5, 0, 0, 1023.0 / 920.0, 0);
+  public static final PIDValues PID_GYRO = new PIDValues(3.0, 0, 2.0, 0, 0);
   public static final PIDValues PID_ARM = new PIDValues(0, 0, 0, 0, 0);
   public static final double DRIVE_TRAIN_SAMPLE_PERIOD = 1 / 5;
 
