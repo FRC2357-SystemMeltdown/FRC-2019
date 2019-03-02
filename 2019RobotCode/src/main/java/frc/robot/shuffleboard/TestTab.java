@@ -15,6 +15,8 @@ public class TestTab {
   private NetworkTableEntry encoderRight;
   private NetworkTableEntry hatchLimitLeft;
   private NetworkTableEntry hatchLimitRight;
+  private NetworkTableEntry hatchPositionLeft;
+  private NetworkTableEntry hatchPositionRight;
   private NetworkTableEntry armPotentiometer;
   private NetworkTableEntry cargoLimitLeft;
   private NetworkTableEntry cargoLimitRight;
@@ -43,6 +45,9 @@ public class TestTab {
 
     hatchLimitLeft = tab.add("Hatch Left", false).getEntry();
     hatchLimitRight = tab.add("Hatch Right", false).getEntry();
+
+    hatchPositionLeft = tab.add("Hatch Left Pos", 0).getEntry();
+    hatchPositionRight = tab.add("Hatch Right Pos", 0).getEntry();
   }
 
   public void show() {
@@ -66,5 +71,7 @@ public class TestTab {
     hatchLimitLeft.setBoolean(Robot.HATCH_SUB.getLeftLimit());
     hatchLimitRight.setBoolean(Robot.HATCH_SUB.getRightLimit());
 
+    hatchPositionLeft.setNumber(Robot.HATCH_SUB.getLeftPosition());
+    hatchPositionRight.setNumber(Robot.HATCH_SUB.getRightPosition());
   }
 }

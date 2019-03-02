@@ -28,8 +28,6 @@ public class RobotMap {
   // DIO IDs
   public static final int DIO_PORT_CARGO_LIMIT_LEFT   = 8;
   public static final int DIO_PORT_CARGO_LIMIT_RIGHT  = 9;
-  public static final int DIO_PORT_HATCH_LEFT         = 2;
-  public static final int DIO_PORT_HATCH_RIGHT        = 3;
 
   //PCM IDs
   public static final int PCM_PORT_DOWN = 0;

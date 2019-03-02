@@ -7,6 +7,8 @@
 
 package frc.robot.Subsystems;
 
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -18,23 +20,38 @@ import frc.robot.Commands.HatchStopCommand;;
  * Hatch Gantry Subsystem
  */
 public class HatchSub extends Subsystem {
-  public DigitalInput leftLimitSwitch;
-  public DigitalInput rightLimitSwitch;
-
   private WPI_TalonSRX leftGantry = new WPI_TalonSRX(RobotMap.CAN_ID_LEFT_HATCH_GANTRY);
   private WPI_TalonSRX rightGantry = new WPI_TalonSRX(RobotMap.CAN_ID_RIGHT_HATCH_GANTRY);
 
   public HatchSub() {
-    leftLimitSwitch = new DigitalInput(RobotMap.DIO_PORT_HATCH_LEFT);
-    rightLimitSwitch = new DigitalInput(RobotMap.DIO_PORT_HATCH_RIGHT);
+    TalonSRXConfiguration leftConfig = new TalonSRXConfiguration();
+    TalonSRXConfiguration rightConfig = new TalonSRXConfiguration();
+
+    leftGantry.getAllConfigs(leftConfig);
+    leftConfig.clearPositionOnLimitF = true;
+    leftConfig.forwardLimitSwitchNormal = LimitSwitchNormal.Disabled;
+    leftGantry.configAllSettings(leftConfig);
+
+    rightGantry.getAllConfigs(rightConfig);
+    rightConfig.clearPositionOnLimitF = true;
+    rightConfig.forwardLimitSwitchNormal = LimitSwitchNormal.Disabled;
+    rightGantry.configAllSettings(rightConfig);
   }
 
   public boolean getLeftLimit() {
     return leftGantry.getSensorCollection().isFwdLimitSwitchClosed();
   }
 
+  public int getLeftPosition() {
+    return leftGantry.getSensorCollection().getQuadraturePosition();
+  }
+
   public boolean getRightLimit() {
     return rightGantry.getSensorCollection().isFwdLimitSwitchClosed();
+  }
+
+  public int getRightPosition() {
+    return rightGantry.getSensorCollection().getQuadraturePosition();
   }
 
   @Override
