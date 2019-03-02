@@ -4,6 +4,9 @@ import frc.robot.Robot;
 import frc.robot.overlays.GunnerHatchScoring;
 
 public class GunnerHatchScoringMode extends ModeBase {
+  public GunnerHatchScoringMode() {
+    super("HATCH SCORE");
+  }
 
   @Override
   public void activate() {

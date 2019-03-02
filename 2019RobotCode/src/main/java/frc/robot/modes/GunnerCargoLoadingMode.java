@@ -4,6 +4,9 @@ import frc.robot.Robot;
 import frc.robot.overlays.GunnerCargoFromFloor;
 
 public class GunnerCargoLoadingMode extends ModeBase {
+  public GunnerCargoLoadingMode() {
+    super("CARGO LOAD");
+  }
 
   @Override
   public void activate() {

@@ -9,11 +9,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Subsystems.CargoSub;
 import frc.robot.Subsystems.ClimberSub;
-//import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Subsystems.DriveSub;
 import frc.robot.Subsystems.ArmSub;
 import frc.robot.Subsystems.HatchSub;
@@ -32,13 +29,6 @@ import frc.robot.shuffleboard.ShuffleboardController;
  * project.
  */
 public class Robot extends TimedRobot {
-  //private final SendableChooser<String> m_chooser = new SendableChooser<>();
-
-  /**
-   * This function is run when the robot is first started up and should be
-   * used for any initialization code.
-   */
-
    public static final DriveSub DRIVE_SUB = new DriveSub();
    public static final ArmSub ARM_SUB = new ArmSub();
    public static final CargoSub CARGO_SUB = new CargoSub();
@@ -93,12 +83,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     ARM_SUB.compressor.setClosedLoopControl(true);
   }
 
   @Override
   public void teleopInit() {
+    shuffleboardController.drive();
     ARM_SUB.compressor.setClosedLoopControl(true);
   }
 
@@ -126,13 +116,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    /*
-    SmartDashboard.putNumber("Gyro Yaw", DRIVE_SUB.getYaw());
-    SmartDashboard.putNumber("Limelight X Angle", VISION_SUB.getTargetXAngle());
-    SmartDashboard.putNumber("Limelight Area", VISION_SUB.getTargetArea());
-    SmartDashboard.putNumber("Potentiometer Value", ARM_SUB.getPotentiometerAngle());
-    */
-
     shuffleboardController.periodic();
   }
 

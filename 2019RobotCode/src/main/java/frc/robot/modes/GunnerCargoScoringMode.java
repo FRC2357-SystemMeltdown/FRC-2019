@@ -4,6 +4,9 @@ import frc.robot.Robot;
 import frc.robot.overlays.GunnerCargoScoring;
 
 public class GunnerCargoScoringMode extends ModeBase {
+  public GunnerCargoScoringMode() {
+    super("CARGO SCORE");
+  }
 
   @Override
   public void activate() {

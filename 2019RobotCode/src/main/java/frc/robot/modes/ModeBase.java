@@ -7,7 +7,13 @@ public abstract class ModeBase
 
   abstract public void deactivate();
 
+  private String name;
+
+  protected ModeBase(String name) {
+    this.name = name;
+  }
+
   public String getModeName() {
-    return getClass().getSimpleName();
+    return name;
   }
 }
