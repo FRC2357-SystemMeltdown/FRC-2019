@@ -8,6 +8,7 @@ public class DriverPIDMode extends ModeBase {
   EncoderBasedDrive driveCommand;
 
   public DriverPIDMode() {
+    super("FAST");
     driveCommand = new EncoderBasedDrive();
   }
 

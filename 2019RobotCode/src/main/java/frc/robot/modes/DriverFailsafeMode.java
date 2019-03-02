@@ -8,6 +8,7 @@ public class DriverFailsafeMode extends ModeBase {
   ProportionalDriveCommand driveCommand;
 
   public DriverFailsafeMode() {
+    super("FAILSAFE");
     driveCommand = new ProportionalDriveCommand();
   }
 

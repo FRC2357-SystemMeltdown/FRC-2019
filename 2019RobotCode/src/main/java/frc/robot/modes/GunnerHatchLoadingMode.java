@@ -4,6 +4,9 @@ import frc.robot.Robot;
 import frc.robot.overlays.GunnerHatchLoading;
 
 public class GunnerHatchLoadingMode extends ModeBase {
+  public GunnerHatchLoadingMode() {
+    super("HATCH LOAD");
+  }
 
   @Override
   public void activate() {
