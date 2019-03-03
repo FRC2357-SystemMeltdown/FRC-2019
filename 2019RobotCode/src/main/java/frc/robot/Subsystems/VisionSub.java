@@ -21,8 +21,10 @@ public class VisionSub extends Subsystem {
   // here. Call these from Commands.
 
   private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+  private NetworkTableEntry tv = table.getEntry("tv");
   private NetworkTableEntry tx = table.getEntry("tx");
   private NetworkTableEntry ta = table.getEntry("ta");
+  private NetworkTableEntry ts = table.getEntry("ts");
 
   @Override
   public void initDefaultCommand() {
@@ -30,11 +32,19 @@ public class VisionSub extends Subsystem {
     // setDefaultCommand(new MySpecialCommand());
   }
 
-  public double getTargetXAngle(){
+  public double getTV(){
+    return tv.getDouble(RobotMap.VISION_DEFAULT_RETURN_VALUE);
+  }
+
+  public double getTX(){
     return tx.getDouble(RobotMap.VISION_DEFAULT_RETURN_VALUE);
   }
 
-  public double getTargetArea(){
+  public double getTA(){
     return ta.getDouble(RobotMap.VISION_DEFAULT_RETURN_VALUE);
+  }
+
+  public double getTS(){
+    return ts.getDouble(RobotMap.VISION_DEFAULT_RETURN_VALUE);
   }
 }
