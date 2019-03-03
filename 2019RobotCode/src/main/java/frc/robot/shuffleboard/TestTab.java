@@ -18,6 +18,7 @@ public class TestTab {
   private NetworkTableEntry armPotentiometer;
   private NetworkTableEntry cargoLimitLeft;
   private NetworkTableEntry cargoLimitRight;
+  private NetworkTableEntry visionTarget;
 
   public TestTab() {
     tab = Shuffleboard.getTab(TITLE);
@@ -43,6 +44,8 @@ public class TestTab {
 
     hatchLimitLeft = tab.add("Hatch Left", false).getEntry();
     hatchLimitRight = tab.add("Hatch Right", false).getEntry();
+
+    visionTarget = tab.add("Target", "none").getEntry();
   }
 
   public void show() {
@@ -65,5 +68,16 @@ public class TestTab {
 
     hatchLimitLeft.setBoolean(Robot.HATCH_SUB.getLeftLimit());
     hatchLimitRight.setBoolean(Robot.HATCH_SUB.getRightLimit());
+
+    String visionString = "none";
+
+    if (0 < Robot.VISION_SUB.getTV()) {
+      double tx = Robot.VISION_SUB.getTX();
+      double ta = Robot.VISION_SUB.getTA();
+      double ts = Robot.VISION_SUB.getTS();
+      visionString = "x=" + tx + " a=" + ta + " s=" + ts;
+    }
+
+    visionTarget.setString(visionString);
   }
 }
