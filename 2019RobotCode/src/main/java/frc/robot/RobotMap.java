@@ -79,11 +79,11 @@ public class RobotMap {
   public static final int ARM_POTENTIOMETER_MIN = 0;
   public static final int ARM_POTENTIOMETER_RANGE = ARM_POTENTIOMETER_MAX - ARM_POTENTIOMETER_MIN;
   public static final double ARM_ANGLE_FACTOR = ARM_POTENTIOMETER_RANGE / ARM_RANGE;
-  public static final int ARM_HIGH_GOAL_ANGLE = 4000;
-  public static final int ARM_MID_GOAL_ANGLE = 2000;
-  public static final int ARM_LOW_GOAL_ANGLE = 300;
-  public static final int ARM_CARGO_PICKUP_ANGLE = 100;
-  public static final int ARM_STARTING_ANGLE = 0;
+  public static final int ARM_HIGH_GOAL_ANGLE = 1056;
+  public static final int ARM_MID_GOAL_ANGLE = 1987;
+  public static final int ARM_LOW_GOAL_ANGLE = 2650;
+  public static final int ARM_CARGO_PICKUP_ANGLE = 2968;
+  public static final int ARM_STARTING_ANGLE = 3063;
   public static final int ARM_ANGLE_TOLERANCE = 10;
   public static final double ARM_COASTING_PERCENTAGE = 0.1;
   public static final double SERVO_LOCK_POSITION = 1.0;

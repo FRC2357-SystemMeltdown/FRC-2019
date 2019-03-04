@@ -30,10 +30,13 @@ public class ArmPositionCommand extends Command {
   protected void execute() {
     if(Robot.ARM_SUB.getPotentiometerValue() > Robot.ARM_SUB.currentPosition.angle + RobotMap.ARM_ANGLE_TOLERANCE) {
       Robot.ARM_SUB.moveArmManual(ArmSub.Direction.UP);
+      System.out.println("Arm up");
     } else if(Robot.ARM_SUB.getPotentiometerValue() < Robot.ARM_SUB.currentPosition.angle - RobotMap.ARM_ANGLE_TOLERANCE) {
       Robot.ARM_SUB.moveArmManual(ArmSub.Direction.DOWN);
+      System.out.println("Arm down");
     } else {
       Robot.ARM_SUB.moveArmManual(ArmSub.Direction.STOP);
+      System.out.println("Arm stop");
     }
   }
 

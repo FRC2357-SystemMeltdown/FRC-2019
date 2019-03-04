@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
+import frc.robot.Commands.ArmPositionCommand;
 import frc.robot.Commands.MoveArmDirectCommand;
 
 /**
@@ -54,7 +55,7 @@ public class ArmSub extends Subsystem {
   @Override
   public void initDefaultCommand() {
     // Default command sets the arm speed to zero
-    setDefaultCommand(new MoveArmDirectCommand(Direction.STOP));
+    setDefaultCommand(new ArmPositionCommand());
   }
 
   /**

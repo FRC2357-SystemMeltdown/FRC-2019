@@ -26,6 +26,7 @@ public class ChangeArmPositionCommand extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    System.out.println("Target Position Set");
     Robot.ARM_SUB.setPosition(targetPosition);
   }
 
