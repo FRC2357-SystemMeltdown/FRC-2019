@@ -104,10 +104,21 @@ public class RobotMap {
   public static final double LIMELIGHT_MOUNTING_HEIGHT_INCHES = 38.0;
   // Calibrate at 10-15 feet.
   public static final double LIMELIGHT_MOUNTING_ANGLE = -2.3;
+  // Calibrate centered at 5 feet.
+  public static final double LIMELIGHT_SKEW_CLOCKWISE_MIN = -89.99;
+  public static final double LIMELIGHT_SKEW_CLOCKWISE_MAX = -60.00;
+  public static final double LIMELIGHT_SKEW_COUNTERCLOCKWISE_MIN = -0.01;
+  public static final double LIMELIGHT_SKEW_COUNTERCLOCKWISE_MAX = -30.00;
 
   //-------
   // Field
   //-------
+  // Vision target overall dimensions: 14 3/4" x 5 7/8"
+  public static final double FIELD_VISION_TARGET_WIDTH = 14.75;
+  public static final double FIELD_VISION_TARGET_HEIGHT = 5.875;
+  public static final double FIELD_VISION_TARGET_PROPORTION =
+    FIELD_VISION_TARGET_WIDTH / FIELD_VISION_TARGET_HEIGHT;
+
   // 2' 7 1/2"
   public static final double FIELD_HATCH_TARGET_TOP_FROM_FLOOR = 31.5;
   public static final double FIELD_HATCH_TARGET_CENTER_FROM_FLOOR = 28.5;

@@ -26,6 +26,8 @@ public class VisionSub extends Subsystem {
   private NetworkTableEntry ty = table.getEntry("ty");
   private NetworkTableEntry ta = table.getEntry("ta");
   private NetworkTableEntry ts = table.getEntry("ts");
+  private NetworkTableEntry thor = table.getEntry("thor");
+  private NetworkTableEntry tvert = table.getEntry("tvert");
 
   @Override
   public void initDefaultCommand() {
@@ -53,6 +55,14 @@ public class VisionSub extends Subsystem {
     return ts.getDouble(RobotMap.VISION_DEFAULT_RETURN_VALUE);
   }
 
+  public double getTHOR() {
+    return thor.getDouble(RobotMap.VISION_DEFAULT_RETURN_VALUE);
+  }
+
+  public double getTVERT() {
+    return tvert.getDouble(RobotMap.VISION_DEFAULT_RETURN_VALUE);
+  }
+
   public double getInchesFromTarget(double targetHeight) {
     double angleDegrees = Math.abs(getTY()) + RobotMap.LIMELIGHT_MOUNTING_ANGLE;
 
@@ -60,5 +70,41 @@ public class VisionSub extends Subsystem {
     double distance = heightDifference / Math.tan(Math.toRadians(angleDegrees));
 
     return distance;
+  }
+
+  public boolean isHeadOnTarget() {
+    return getTS() == 0.0;
+  }
+
+  public boolean isRightOfTarget() {
+    double ts = getTS();
+    return ts <= RobotMap.LIMELIGHT_SKEW_CLOCKWISE_MAX &&
+      ts >= RobotMap.LIMELIGHT_SKEW_CLOCKWISE_MIN;
+  }
+
+  public boolean isLeftOfTarget() {
+    double ts = getTS();
+    return ts >= RobotMap.LIMELIGHT_SKEW_COUNTERCLOCKWISE_MAX &&
+      ts <= RobotMap.LIMELIGHT_SKEW_COUNTERCLOCKWISE_MIN;
+  }
+
+  public double getTargetRotationDegrees() {
+    if (isHeadOnTarget()) {
+      return 0.0;
+    }
+    if (isRightOfTarget()) {
+      return - getRotationAngle();
+    }
+    if (isLeftOfTarget()) {
+      return getRotationAngle();
+    }
+
+    return Double.NaN;
+  }
+
+  private double getRotationAngle() {
+    double proportion = getTHOR() / getTVERT();
+    double factor = proportion / RobotMap.FIELD_VISION_TARGET_PROPORTION;
+    return 90.0 - (factor * 90.0);
   }
 }
