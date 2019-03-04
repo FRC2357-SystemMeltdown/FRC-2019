@@ -96,10 +96,27 @@ public class RobotMap {
   // Hatch
   public static final double HATCH_FAILSAFE_MOVEMENT_SPEED = 0.7;
 
+  //--------
   // Vision
+  //--------
   public static final double VISION_DEFAULT_RETURN_VALUE = 0.0;
+  // Calibrate at with target touching bumper.
+  public static final double LIMELIGHT_MOUNTING_HEIGHT_INCHES = 38.0;
+  // Calibrate at 10-15 feet.
+  public static final double LIMELIGHT_MOUNTING_ANGLE = -2.3;
 
-  //General Purpose
+  //-------
+  // Field
+  //-------
+  // 2' 7 1/2"
+  public static final double FIELD_HATCH_TARGET_TOP_FROM_FLOOR = 31.5;
+  public static final double FIELD_HATCH_TARGET_CENTER_FROM_FLOOR = 28.5;
+
+  // 3' 3 1/8"
+  public static final double FIELD_CARGO_TARGET_TOP_FROM_FLOOR = 39.125;
+  public static final double FIELD_CARGO_TARGET_CENTER_FROM_FLOOR = 36.125;
+
+  // General Purpose
   public static final int MILLISECONDS_PER_SECOND = 1000;
   public static final double STOP_SPEED = 0.0;
 }
