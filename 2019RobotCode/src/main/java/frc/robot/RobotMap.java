@@ -43,7 +43,7 @@ public class RobotMap {
   public static final int GYRO_AXIS_PITCH = 1;
   public static final int GYRO_AXIS_ROLL = 2;
   public static final int GYRO_AXIS_TOTAL = 3;
-  public static final int ENCODER_TICKS_PER_ROTATION = 512;
+  public static final int ENCODER_TICKS_PER_ROTATION = 1024;
   public static final double WHEEL_CIRCUMFERENCE_INCHES = 6 * Math.PI;
   public static final double MOTOR_MINIMUM_POWER = 0.05;
 
@@ -58,9 +58,9 @@ public class RobotMap {
   public static final double FAILSAFE_TRIM_REVERSE_DEFAULT = 0.0;
 
   //Drive PID Values
-  public static final PIDValues PID_LEFT_DRIVE = new PIDValues(2.5, 0, 0, 1023.0 / 920.0, 0);
-  public static final PIDValues PID_RIGHT_DRIVE = new PIDValues(2.5, 0, 0, 1023.0 / 920.0, 0);
-  public static final PIDValues PID_GYRO = new PIDValues(3.0, 0, 2.0, 0, 0);
+  public static final PIDValues PID_LEFT_DRIVE = new PIDValues(0, 0, 0, 1023.0 / 750.0, 0);
+  public static final PIDValues PID_RIGHT_DRIVE = new PIDValues(2, 0, 0, 1023.0 / 750.0, 0);
+  public static final PIDValues PID_GYRO = new PIDValues(0.6, 0, 0, 0, 0);
   public static final PIDValues PID_ARM = new PIDValues(0, 0, 0, 0, 0);
   public static final double DRIVE_TRAIN_SAMPLE_PERIOD = 1 / 5;
 

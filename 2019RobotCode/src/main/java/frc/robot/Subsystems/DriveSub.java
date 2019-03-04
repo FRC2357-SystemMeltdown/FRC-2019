@@ -74,15 +74,15 @@ public class DriveSub extends Subsystem {
       0
     );
 
-    // set the right feedback to (remote0 + its encoder)/2
-    rightMaster.configSensorTerm(SensorTerm.Sum0, FeedbackDevice.RemoteSensor0);
-    rightMaster.configSensorTerm(SensorTerm.Sum1, FeedbackDevice.QuadEncoder);
-    rightMaster.configSelectedFeedbackSensor(FeedbackDevice.SensorSum);
+    // set the right feedback to (remote0 - its encoder)/2
+    rightMaster.configSensorTerm(SensorTerm.Diff0, FeedbackDevice.RemoteSensor0);
+    rightMaster.configSensorTerm(SensorTerm.Diff1, FeedbackDevice.QuadEncoder);
+    rightMaster.configSelectedFeedbackSensor(FeedbackDevice.SensorDifference);
     rightMaster.configSelectedFeedbackCoefficient(0.5);
 
-    rightMaster.setSensorPhase(false);
+    rightMaster.setSensorPhase(true);
     rightMaster.setInverted(true);
-    rightMaster.configAuxPIDPolarity(true);
+    rightMaster.configAuxPIDPolarity(false);
 
     // set right aux PID feedback to the Pigeon yaw
     rightMaster.configRemoteFeedbackFilter(
@@ -93,7 +93,7 @@ public class DriveSub extends Subsystem {
     rightMaster.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor1, 1, 0);
     rightMaster.configSelectedFeedbackCoefficient(1, 1, 0);
 
-    rightMaster.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20);
+    rightMaster.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 5);
     rightMaster.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20);
     rightMaster.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 20);
     leftMaster.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5);
@@ -105,6 +105,18 @@ public class DriveSub extends Subsystem {
     Utility.configTalonPID(rightMaster, TURN_PID_SLOT, RobotMap.PID_GYRO);
     rightMaster.selectProfileSlot(DRIVE_PID_SLOT, 0);
     rightMaster.selectProfileSlot(TURN_PID_SLOT, 1);
+
+    rightMaster.configClosedloopRamp(5);
+
+    resetSensors();
+  }
+
+  private void resetSensors() {
+    // reset sensors
+    rightMaster.getSensorCollection().setQuadraturePosition(0, 0);
+    leftMaster.getSensorCollection().setQuadraturePosition(0, 0);
+    gyro.setYaw(0);
+    gyro.setAccumZAngle(0);
   }
 
   @Override
@@ -122,18 +134,26 @@ public class DriveSub extends Subsystem {
   public void PIDDrive(double speed, double turn) {
     //double speedTicksPer100ms = Robot.OI.getDriverController().getAButton() ? 400 : 200;// calcMotorControlSpeed(speed);
     //double speedTicksPer100ms = (Robot.OI.getDriverController().getAButton() ? 400 : 200) * -Robot.OI.getDriverController().getY(Hand.kLeft);
-    double speedTicksPer100ms = calcMotorControlSpeed(speed);
+    // double speedTicksPer100ms = calcMotorControlSpeed(speed);
 
-    // get the gyro yaw
+    // // get the gyro yaw
     double heading = rightMaster.getSelectedSensorPosition(1);
     double headingDelta = turn * RobotMap.GYRO_UNITS_PER_ROTATION / 360.0 * Robot.getInstance().getPeriod();
 
-    // set the PID points on the right master
-    rightMaster.set(ControlMode.Velocity, speedTicksPer100ms, DemandType.AuxPID, heading + headingDelta);
-    //leftMaster.set(ControlMode.PercentOutput, 1);
+    // // set the PID points on the right master
+    // rightMaster.set(ControlMode.Velocity, speedTicksPer100ms, DemandType.AuxPID, heading + headingDelta);
+    // //leftMaster.set(ControlMode.PercentOutput, 1);
 
+    if(Robot.OI.getDriverController().getAButton()) {
+      resetSensors();
+    }
+
+    //speed = Utility.clamp(-Robot.OI.getDriverController().getY(Hand.kLeft), -1, 1);
+    turn = Utility.clamp(Robot.OI.getDriverController().getX(Hand.kRight), -1, 1);
+    rightMaster.set(ControlMode.Velocity, calcMotorControlSpeed(speed), DemandType.AuxPID, 1024 * turn); // Robot.OI.getDriverController().getBButton() ? 1024 : 0 );
     // tell the left master to use the right's conjugate PID output
     leftMaster.follow(rightMaster, FollowerType.AuxOutput1);
+    
   }
 
   /**
