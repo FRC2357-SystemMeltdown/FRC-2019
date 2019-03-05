@@ -4,6 +4,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Robot;
+import frc.robot.RobotMap;
 
 public class TestTab {
   private static final String TITLE = "Test Mode";
@@ -19,6 +20,7 @@ public class TestTab {
   private NetworkTableEntry cargoLimitLeft;
   private NetworkTableEntry cargoLimitRight;
   private NetworkTableEntry visionTarget;
+  private NetworkTableEntry visionTargetDistance;
 
   public TestTab() {
     tab = Shuffleboard.getTab(TITLE);
@@ -46,6 +48,7 @@ public class TestTab {
     hatchLimitRight = tab.add("Hatch Right", false).getEntry();
 
     visionTarget = tab.add("Target", "none").getEntry();
+    visionTargetDistance = tab.add("Distance", 0.0).getEntry();
   }
 
   public void show() {
@@ -70,14 +73,17 @@ public class TestTab {
     hatchLimitRight.setBoolean(Robot.HATCH_SUB.getRightLimit());
 
     String visionString = "none";
+    double visionDistance = 0.0;
 
     if (0 < Robot.VISION_SUB.getTV()) {
       double tx = Robot.VISION_SUB.getTX();
-      double ta = Robot.VISION_SUB.getTA();
+      double ty = Robot.VISION_SUB.getTY();
       double ts = Robot.VISION_SUB.getTS();
-      visionString = "x=" + tx + " a=" + ta + " s=" + ts;
+      visionString = "y=" + ty + " x=" + tx + " s=" + ts;
+      visionDistance = Robot.VISION_SUB.getInchesFromTarget(RobotMap.FIELD_HATCH_TARGET_CENTER_FROM_FLOOR);
     }
 
     visionTarget.setString(visionString);
+    visionTargetDistance.setDouble(visionDistance);
   }
 }
