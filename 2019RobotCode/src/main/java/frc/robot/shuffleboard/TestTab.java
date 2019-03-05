@@ -82,7 +82,7 @@ public class TestTab {
       double tx = Robot.VISION_SUB.getTX();
       double ts = Robot.VISION_SUB.getTS();
       visionString = "s=" + ts + " x=" + tx;
-      visionDistance = Robot.VISION_SUB.getInchesFromTarget(RobotMap.FIELD_HATCH_TARGET_CENTER_FROM_FLOOR);
+      visionDistance = Robot.VISION_SUB.getInchesFromTarget(RobotMap.FIELD_HATCH_TARGET_TOP_FROM_FLOOR);
       visionRotation = Robot.VISION_SUB.getTargetRotationDegrees();
     }
 
