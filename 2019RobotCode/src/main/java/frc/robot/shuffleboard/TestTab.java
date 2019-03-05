@@ -21,6 +21,7 @@ public class TestTab {
   private NetworkTableEntry cargoLimitRight;
   private NetworkTableEntry visionTarget;
   private NetworkTableEntry visionTargetDistance;
+  private NetworkTableEntry visionTargetRotation;
 
   public TestTab() {
     tab = Shuffleboard.getTab(TITLE);
@@ -48,7 +49,8 @@ public class TestTab {
     hatchLimitRight = tab.add("Hatch Right", false).getEntry();
 
     visionTarget = tab.add("Target", "none").getEntry();
-    visionTargetDistance = tab.add("Distance", 0.0).getEntry();
+    visionTargetDistance = tab.add("T Distance", 0.0).getEntry();
+    visionTargetRotation = tab.add("T Rotation", 0.0).getEntry();
   }
 
   public void show() {
@@ -74,16 +76,18 @@ public class TestTab {
 
     String visionString = "none";
     double visionDistance = 0.0;
+    double visionRotation = 0.0;
 
     if (0 < Robot.VISION_SUB.getTV()) {
       double tx = Robot.VISION_SUB.getTX();
-      double ty = Robot.VISION_SUB.getTY();
       double ts = Robot.VISION_SUB.getTS();
-      visionString = "y=" + ty + " x=" + tx + " s=" + ts;
-      visionDistance = Robot.VISION_SUB.getInchesFromTarget(RobotMap.FIELD_HATCH_TARGET_CENTER_FROM_FLOOR);
+      visionString = "s=" + ts + " x=" + tx;
+      visionDistance = Robot.VISION_SUB.getInchesFromTarget(RobotMap.FIELD_HATCH_TARGET_TOP_FROM_FLOOR);
+      visionRotation = Robot.VISION_SUB.getTargetRotationDegrees();
     }
 
     visionTarget.setString(visionString);
     visionTargetDistance.setDouble(visionDistance);
+    visionTargetRotation.setDouble(visionRotation);
   }
 }
