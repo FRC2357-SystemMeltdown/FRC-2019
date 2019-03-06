@@ -14,6 +14,7 @@ public class DriveTab {
   private NetworkTableEntry gunnerMode;
   private ToggleButton driverFailsafeButton;
   private ToggleButton gunnerFailsafeButton;
+  private NetworkTableEntry yaw;
 
   public DriveTab() {
     tab = Shuffleboard.getTab(TITLE);
@@ -23,6 +24,8 @@ public class DriveTab {
 
     driverFailsafeButton = new ToggleButton(tab, "D-FAILSAFE");
     gunnerFailsafeButton = new ToggleButton(tab, "G-FAILSAFE");
+
+    yaw = tab.add("Yaw", 0).getEntry();
   }
 
   public void show() {
@@ -38,6 +41,8 @@ public class DriveTab {
 
     updateFailsafeButton(driverFailsafeButton, driverModeMgr);
     updateFailsafeButton(gunnerFailsafeButton, gunnerModeMgr);
+
+    yaw.setDouble(Robot.DRIVE_SUB.getYaw(false));
   }
 
   /**

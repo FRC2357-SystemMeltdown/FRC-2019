@@ -58,9 +58,26 @@ public class RobotMap {
   public static final double FAILSAFE_TRIM_REVERSE_DEFAULT = 0.0;
 
   //Drive PID Values
-  public static final PIDValues PID_LEFT_DRIVE = new PIDValues(0, 0, 0, 1023.0 / 750.0, 0);
-  public static final PIDValues PID_RIGHT_DRIVE = new PIDValues(2, 0, 0, 1023.0 / 750.0, 0);
-  public static final PIDValues PID_GYRO = new PIDValues(0.6, 0, 0, 0, 0);
+  /*
+  Feed forward value is derived from motor speed at maximum controller output. Run the
+  Phoenix Tuner self-test for each motor while driving it at maximum speed. Look at the encoder
+  velocity under PID0:
+
+  PID0 (primary)
+  Feedback: Quad/MagEnc(rel)
+  Pos: 347u   |   Vel: 0u/100ms
+                       ^-- This value
+
+  The feed forward is 1023 / <maximum speed>
+  */
+  public static final PIDValues PID_SPEED_LEFT_DRIVE = new PIDValues(2, 0, 0, 1023.0 / 900.0, 0);
+  public static final PIDValues PID_SPEED_RIGHT_DRIVE = new PIDValues(2, 0, 0, 1023.0 / 900.0, 0);
+
+  // PID values for position based movement
+  public static final PIDValues PID_POS_LEFT_DRIVE = new PIDValues(0.6 * 1023 / ENCODER_TICKS_PER_ROTATION, 0, 0, 0, 0);
+  public static final PIDValues PID_POS_RIGHT_DRIVE = new PIDValues(0.6 * 1023 / ENCODER_TICKS_PER_ROTATION, 0, 0, 0, 0);
+  
+  public static final PIDValues PID_GYRO = new PIDValues(0.001 / 90.0, 0, 0.03 / 90.0, 0, 0);
   public static final PIDValues PID_ARM = new PIDValues(0, 0, 0, 0, 0);
   public static final double DRIVE_TRAIN_SAMPLE_PERIOD = 1 / 5;
 

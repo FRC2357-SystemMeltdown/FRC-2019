@@ -9,6 +9,6 @@ public class DriverModeManager extends DPadModeManager {
 
   public DriverModeManager() {
     // failsafe, up, right, down, left, initial
-    super( failsafeMode, pidMode, null, null, null, pidMode );
+    super( failsafeMode, pidMode, null, null, null, failsafeMode );
   }
 }

@@ -25,6 +25,10 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -40,78 +44,79 @@ public class DriveSub extends Subsystem {
   public WPI_TalonSRX leftSlave = new WPI_TalonSRX(RobotMap.CAN_ID_LEFT_DRIVE_SLAVE);
   public WPI_TalonSRX rightMaster = new WPI_TalonSRX(RobotMap.CAN_ID_RIGHT_DRIVE);
   public WPI_TalonSRX rightSlave = new WPI_TalonSRX(RobotMap.CAN_ID_RIGHT_DRIVE_SLAVE);
-  public DifferentialDrive drive;// = new DifferentialDrive(leftMaster, rightMaster);
 
   private PigeonIMU gyro = new PigeonIMU(RobotMap.CAN_ID_PIGEON_IMU);
   private double[] yawPitchRoll = new double[RobotMap.GYRO_AXIS_TOTAL];
+  private GyroPIDInterface gyroPidIntf;
+  private PIDController gyroPid;
 
-  private static final int DRIVE_PID_SLOT = 0;
-  private static final int TURN_PID_SLOT = 1;
+  private static final int SPEED_PID_SLOT = 0;
+  private static final int POS_PID_SLOT = 1;
+
+  private class GyroPIDInterface implements PIDSource, PIDOutput {
+    public double output = 0;
+
+    @Override
+    public void pidWrite(double output) {
+      this.output = output;
+    }
+
+    @Override
+    public void setPIDSourceType(PIDSourceType pidSource) {
+
+    }
+
+    @Override
+    public PIDSourceType getPIDSourceType() {
+      return PIDSourceType.kDisplacement;
+    }
+
+    @Override
+    public double pidGet() {
+      return getYaw(false);
+    }
+  }
 
   public DriveSub(){
     leftSlave.follow(leftMaster);
     rightSlave.follow(rightMaster);
-    rightSlave.setInverted(true);
 
-    /*
-    This sets up the left and right Talons to use their encoders and the Pigeon yaw.
-
-    The right Talon runs two PIDs. PID0 uses the average of the left and right
-    encoder counts as feedback, and PID1 uses the Pigeon yaw as feedback. This
-    gives two PID outputs, PID0 + PID1 and PID0 - PID1. We assign one to each Talon
-    master.
-    */
-
+    leftMaster.configFactoryDefault();
     rightMaster.configFactoryDefault();
 
-    // The left feedback sensor will be transmitted to the right controller
-    leftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-
-    // set right remote0 to the left encoder
-    rightMaster.configRemoteFeedbackFilter(
-      leftMaster.getDeviceID(),
-      RemoteSensorSource.TalonSRX_SelectedSensor,
-      0
-    );
-
-    // set the right feedback to (remote0 - its encoder)/2
-    rightMaster.configSensorTerm(SensorTerm.Diff0, FeedbackDevice.RemoteSensor0);
-    rightMaster.configSensorTerm(SensorTerm.Diff1, FeedbackDevice.QuadEncoder);
-    rightMaster.configSelectedFeedbackSensor(FeedbackDevice.SensorDifference);
-    rightMaster.configSelectedFeedbackCoefficient(0.5);
-
-    rightMaster.setSensorPhase(true);
     rightMaster.setInverted(true);
-    rightMaster.configAuxPIDPolarity(false);
+    rightSlave.setInverted(true);
 
-    // set right aux PID feedback to the Pigeon yaw
-    rightMaster.configRemoteFeedbackFilter(
-      gyro.getDeviceID(),
-      RemoteSensorSource.Pigeon_Yaw,
-      1
-    );
-    rightMaster.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor1, 1, 0);
-    rightMaster.configSelectedFeedbackCoefficient(1, 1, 0);
+    leftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    rightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
 
-    rightMaster.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 5);
-    rightMaster.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20);
-    rightMaster.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 20);
+    rightMaster.setSensorPhase(false);
+
+    rightMaster.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5);
     leftMaster.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5);
     gyro.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR, 5);
 
     // configure PIDs
-    Utility.configTalonPID(leftMaster, RobotMap.PID_LEFT_DRIVE);
-    Utility.configTalonPID(rightMaster, DRIVE_PID_SLOT, RobotMap.PID_RIGHT_DRIVE);
-    Utility.configTalonPID(rightMaster, TURN_PID_SLOT, RobotMap.PID_GYRO);
-    rightMaster.selectProfileSlot(DRIVE_PID_SLOT, 0);
-    rightMaster.selectProfileSlot(TURN_PID_SLOT, 1);
+    Utility.configTalonPID(leftMaster, SPEED_PID_SLOT, RobotMap.PID_SPEED_LEFT_DRIVE);
+    //Utility.configTalonPID(leftMaster, POS_PID_SLOT, RobotMap.PID_POS_LEFT_DRIVE);
+    Utility.configTalonPID(rightMaster, SPEED_PID_SLOT, RobotMap.PID_SPEED_RIGHT_DRIVE);
+    //Utility.configTalonPID(rightMaster, POS_PID_SLOT, RobotMap.PID_POS_RIGHT_DRIVE);
 
+    // leftMaster.selectProfileSlot(SPEED_PID_SLOT, 0);
+    // rightMaster.selectProfileSlot(SPEED_PID_SLOT, 0);
+
+    leftMaster.configClosedloopRamp(5);
     rightMaster.configClosedloopRamp(5);
 
     resetSensors();
+
+    gyroPidIntf = new GyroPIDInterface();
+    gyroPid = new PIDController(RobotMap.PID_GYRO.kp, RobotMap.PID_GYRO.ki, RobotMap.PID_GYRO.kd, gyroPidIntf, gyroPidIntf, 0.01);
+    gyroPid.setOutputRange(-0.4, 0.4);
+    gyroPid.enable();
   }
 
-  private void resetSensors() {
+  public void resetSensors() {
     // reset sensors
     rightMaster.getSensorCollection().setQuadraturePosition(0, 0);
     leftMaster.getSensorCollection().setQuadraturePosition(0, 0);
@@ -123,7 +128,7 @@ public class DriveSub extends Subsystem {
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
-    setDefaultCommand(new EncoderBasedDrive()); // ProportionalDriveCommand());
+    setDefaultCommand(new ProportionalDriveCommand());
   }
 
   /**
@@ -132,42 +137,46 @@ public class DriveSub extends Subsystem {
    * @param turn The desired turn rate in degrees/sec
    */
   public void PIDDrive(double speed, double turn) {
-    //double speedTicksPer100ms = Robot.OI.getDriverController().getAButton() ? 400 : 200;// calcMotorControlSpeed(speed);
-    //double speedTicksPer100ms = (Robot.OI.getDriverController().getAButton() ? 400 : 200) * -Robot.OI.getDriverController().getY(Hand.kLeft);
-    // double speedTicksPer100ms = calcMotorControlSpeed(speed);
+    double degrees = 90 * (Robot.OI.getDriverController().getBButton() ? 1 : 0);
+    gyroPid.setSetpoint(degrees);
+    double turnFeedback = gyroPidIntf.output;
+    leftMaster.set(ControlMode.Velocity, 0, DemandType.ArbitraryFeedForward, -turnFeedback * 1023);
+    rightMaster.set(ControlMode.Velocity, 0, DemandType.ArbitraryFeedForward, turnFeedback * 1023);
+  }
 
-    // // get the gyro yaw
-    double heading = rightMaster.getSelectedSensorPosition(1);
-    double headingDelta = turn * RobotMap.GYRO_UNITS_PER_ROTATION / 360.0 * Robot.getInstance().getPeriod();
+  public void rotateToAngle(double degrees) {
+    leftMaster.selectProfileSlot(SPEED_PID_SLOT, 0);
+    rightMaster.selectProfileSlot(SPEED_PID_SLOT, 0);
 
-    // // set the PID points on the right master
-    // rightMaster.set(ControlMode.Velocity, speedTicksPer100ms, DemandType.AuxPID, heading + headingDelta);
-    // //leftMaster.set(ControlMode.PercentOutput, 1);
+    gyroPid.setSetpoint(degrees);
+    double turnFeedback = gyroPidIntf.output;
+    leftMaster.set(ControlMode.Velocity, 0, DemandType.ArbitraryFeedForward, -turnFeedback * 1023);
+    rightMaster.set(ControlMode.Velocity, 0, DemandType.ArbitraryFeedForward, turnFeedback * 1023);
+  }
 
-    if(Robot.OI.getDriverController().getAButton()) {
-      resetSensors();
-    }
-
-    //speed = Utility.clamp(-Robot.OI.getDriverController().getY(Hand.kLeft), -1, 1);
-    turn = Utility.clamp(Robot.OI.getDriverController().getX(Hand.kRight), -1, 1);
-    rightMaster.set(ControlMode.Velocity, calcMotorControlSpeed(speed), DemandType.AuxPID, 1024 * turn); // Robot.OI.getDriverController().getBButton() ? 1024 : 0 );
-    // tell the left master to use the right's conjugate PID output
-    leftMaster.follow(rightMaster, FollowerType.AuxOutput1);
-    
+  public void moveForwardDistance(double inches) {
+    resetSensors();
+    leftMaster.selectProfileSlot(POS_PID_SLOT, 0);
+    rightMaster.selectProfileSlot(POS_PID_SLOT, 0);
+    double encoderPosition = inches * RobotMap.ENCODER_TICKS_PER_ROTATION / RobotMap.WHEEL_CIRCUMFERENCE_INCHES;
+    leftMaster.set(ControlMode.Position, encoderPosition);
+    rightMaster.set(ControlMode.Position, encoderPosition);
   }
 
   /**
    *
    * @return The gyro's current yaw value in degrees
    */
-  public double getYaw() {
+  public double getYaw(boolean moduloOutput) {
     gyro.getYawPitchRoll(yawPitchRoll);
     double yaw = yawPitchRoll[RobotMap.GYRO_AXIS_YAW];
-    if(yaw >= 180){
-      yaw -= 360;
-    }
-    if(yaw <= -180){
-      yaw += 360;
+    if(moduloOutput) {
+      if(yaw >= 180){
+        yaw -= 360;
+      }
+      if(yaw <= -180){
+        yaw += 360;
+      }
     }
     return yaw;
   }
@@ -181,5 +190,10 @@ public class DriveSub extends Subsystem {
     double speedRotationsPer100ms = speedInchesPer100ms / RobotMap.WHEEL_CIRCUMFERENCE_INCHES;
     double speedTicksPer100ms = speedRotationsPer100ms * RobotMap.ENCODER_TICKS_PER_ROTATION;
     return speedTicksPer100ms;
+  }
+
+  public void tankDrive(double leftSpeed, double rightSpeed) {
+    leftMaster.set(ControlMode.PercentOutput, leftSpeed);
+    rightMaster.set(ControlMode.PercentOutput, rightSpeed);
   }
 }
