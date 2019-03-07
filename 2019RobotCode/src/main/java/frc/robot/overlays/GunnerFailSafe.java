@@ -10,6 +10,7 @@ import frc.robot.Commands.CargoRollerStopCommand;
 import frc.robot.Commands.HatchDirectMoveCommand;
 import frc.robot.Commands.HatchStopCommand;
 import frc.robot.Commands.MoveArmDirectCommand;
+import frc.robot.Commands.NullCommand;
 import frc.robot.Other.XboxRaw;
 import frc.robot.Subsystems.ArmSub;
 
@@ -51,22 +52,44 @@ public class GunnerFailSafe
     hatchStopCommand = new HatchStopCommand();
 
     cargoRollerButton = new JoystickButton(controller, XboxRaw.A.value);
+    armUpButton = new JoystickButton(controller, XboxRaw.BumperRight.value);
+    armDownButton = new JoystickButton(controller, XboxRaw.BumperLeft.value);
+    hatchMoveButton = new JoystickButton(controller, XboxRaw.X.value);
+    hatchOpenCloseButton = new JoystickButton(controller, XboxRaw.Y.value);
+  }
+
+  @Override
+  public void activate() {
     cargoRollerButton.whenPressed(cargoRollerCommand);
     cargoRollerButton.whenReleased(cargoRollerStopCommand);
 
-    armUpButton = new JoystickButton(controller, XboxRaw.BumperRight.value);
     armUpButton.whileHeld(armUpCommand);
 
-    armDownButton = new JoystickButton(controller, XboxRaw.BumperLeft.value);
     armDownButton.whileHeld(armDownCommand);
 
-    hatchMoveButton = new JoystickButton(controller, XboxRaw.X.value);
     hatchMoveButton.whenPressed(hatchMoveCommand);
     hatchMoveButton.whenReleased(hatchStopCommand);
 
-    hatchOpenCloseButton = new JoystickButton(controller, XboxRaw.Y.value);
     hatchOpenCloseButton.whenPressed(hatchOpenCloseCommand);
     hatchOpenCloseButton.whenReleased(hatchStopCommand);
+  }
+
+  @Override
+  public void deactivate() {
+    NullCommand nullCommand = new NullCommand();
+
+    cargoRollerButton.whenPressed(nullCommand);
+    cargoRollerButton.whenReleased(nullCommand);
+
+    armUpButton.whileHeld(nullCommand);
+
+    armDownButton.whileHeld(nullCommand);
+
+    hatchMoveButton.whenPressed(nullCommand);
+    hatchMoveButton.whenReleased(nullCommand);
+
+    hatchOpenCloseButton.whenPressed(nullCommand);
+    hatchOpenCloseButton.whenReleased(nullCommand);
   }
 
   @Override

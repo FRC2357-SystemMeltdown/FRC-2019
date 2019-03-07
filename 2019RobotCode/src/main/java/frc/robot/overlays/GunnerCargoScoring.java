@@ -18,11 +18,22 @@ public class GunnerCargoScoring extends GunnerScoring implements CargoControl {
     );
 
     cargoControlCommand = new CargoRollerDirectCommand(this);
-    cargoControlCommand.start();
   }
 
   @Override
   public double getCargoRollerSpeed() {
     return controller.getTriggerAxis(Hand.kLeft) - controller.getTriggerAxis(Hand.kRight);
+  }
+
+  @Override
+  public void activate() {
+    super.activate();
+    cargoControlCommand.start();
+  }
+
+  @Override
+  public void deactivate() {
+    super.deactivate();
+    cargoControlCommand.cancel();
   }
 }

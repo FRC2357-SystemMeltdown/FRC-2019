@@ -13,7 +13,18 @@ public class GunnerCargoFromFloor extends GunnerLoading implements CargoControl 
     super(controller, RobotMap.ARM_CARGO_PICKUP_ANGLE);
 
     cargoControlCommand = new CargoRollerDirectCommand(this);
+  }
+
+  @Override
+  public void activate() {
+    super.activate();
     cargoControlCommand.start();
+  }
+
+  @Override
+  public void deactivate() {
+    super.deactivate();
+    cargoControlCommand.cancel();
   }
 
   @Override

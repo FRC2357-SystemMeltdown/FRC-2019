@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.robot.RobotMap;
 import frc.robot.Commands.HatchDirectMoveCommand;
 import frc.robot.Commands.HatchDirectOpenCloseCommand;
+import frc.robot.Commands.NullCommand;
 import frc.robot.Other.XboxRaw;
 
 /**
@@ -30,10 +31,26 @@ public class GunnerHatchScoring extends GunnerScoring implements HatchControl {
     hatchMoveCommand = new HatchDirectMoveCommand(this);
 
     hatchMoveButton = new JoystickButton(controller, XboxRaw.X.value);
+  }
+
+  @Override
+  public void activate() {
+    super.activate();
     hatchMoveButton.whenPressed(hatchMoveCommand);
     hatchMoveButton.whenReleased(hatchOpenCloseCommand);
 
     hatchOpenCloseCommand.start();
+  }
+
+  @Override
+  public void deactivate() {
+    super.deactivate();
+    NullCommand nullCommand = new NullCommand();
+
+    hatchMoveButton.whenPressed(nullCommand);
+    hatchMoveButton.whenReleased(nullCommand);
+
+    hatchOpenCloseCommand.cancel();
   }
 
   @Override

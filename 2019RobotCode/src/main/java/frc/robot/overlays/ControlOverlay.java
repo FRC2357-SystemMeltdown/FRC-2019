@@ -8,4 +8,8 @@ public abstract class ControlOverlay {
   public ControlOverlay(XboxController controller) {
     this.controller = controller;
   }
+
+  public abstract void activate();
+
+  public abstract void deactivate();
 }

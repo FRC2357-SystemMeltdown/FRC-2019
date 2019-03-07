@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.robot.Commands.ChangeArmStateCommand;
 import frc.robot.Commands.MoveArmDirectCommand;
+import frc.robot.Commands.NullCommand;
 import frc.robot.Other.XboxRaw;
 import frc.robot.Subsystems.ArmSub;
 
@@ -30,21 +31,30 @@ public class GunnerScoring extends GunnerCreepDrive {
     armHighCommand = new ChangeArmStateCommand(armHigh);
 
     armUpCommand = new MoveArmDirectCommand(ArmSub.Direction.UP);
-    armDownCommand = new MoveArmDirectCommand(ArmSub.Direction.DOWN);
-
     armLowButton = new JoystickButton(controller, XboxRaw.A.value);
-    armLowButton.whenPressed(armLowCommand);
-
     armMidButton = new JoystickButton(controller, XboxRaw.B.value);
-    armMidButton.whenPressed(armMidCommand);
-
     armHighButton = new JoystickButton(controller, XboxRaw.Y.value);
-    armHighButton.whenPressed(armHighCommand);
-
     armUpButton = new JoystickButton(controller, XboxRaw.BumperRight.value);
-    armUpButton.whileHeld(armUpCommand);
-
     armDownButton = new JoystickButton(controller, XboxRaw.BumperLeft.value);
+  }
+
+  @Override
+  public void activate() {
+    armLowButton.whenPressed(armLowCommand);
+    armMidButton.whenPressed(armMidCommand);
+    armHighButton.whenPressed(armHighCommand);
+    armUpButton.whileHeld(armUpCommand);
     armDownButton.whileHeld(armDownCommand);
+  }
+
+  @Override
+  public void deactivate() {
+    NullCommand nullCommand = new NullCommand();
+
+    armLowButton.whenPressed(nullCommand);
+    armMidButton.whenPressed(nullCommand);
+    armHighButton.whenPressed(nullCommand);
+    armUpButton.whileHeld(nullCommand);
+    armDownButton.whileHeld(nullCommand);
   }
 }

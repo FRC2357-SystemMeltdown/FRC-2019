@@ -24,4 +24,12 @@ public class DriverSlow extends ControlOverlay implements ProportionalDrive {
   public double getSpeed() {
       return - (controller.getY(Hand.kLeft) * SPEED_FACTOR);
   }
+
+  @Override
+  public void activate() {
+  }
+
+  @Override
+  public void deactivate() {
+  }
 }
