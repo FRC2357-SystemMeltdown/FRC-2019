@@ -22,10 +22,6 @@ public class GunnerHatchLoading extends GunnerLoading implements HatchControl {
     hatchMoveCommand = new HatchDirectMoveCommand(this);
 
     hatchMoveButton = new JoystickButton(controller, XboxRaw.X.value);
-    hatchMoveButton.whenPressed(hatchMoveCommand);
-    hatchMoveButton.whenReleased(hatchOpenCloseCommand);
-
-    hatchOpenCloseCommand.start();
   }
 
   @Override
