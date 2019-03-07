@@ -98,6 +98,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    shuffleboardController.drive();
     ARM_SUB.compressor.setClosedLoopControl(true);
   }
 
@@ -124,6 +125,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
+    shuffleboardController.periodic();
   }
 
   /**
