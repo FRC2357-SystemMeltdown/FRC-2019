@@ -17,7 +17,7 @@ public class GunnerModeManager extends DPadModeManager {
       hatchScoringMode, // right
       hatchLoadingMode, // down
       cargoScoringMode, // left
-      hatchScoringMode  // up
+      hatchScoringMode  // initial
     );
   }
 }

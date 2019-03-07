@@ -2,40 +2,49 @@ package frc.robot.overlays;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import frc.robot.RobotMap;
 import frc.robot.Commands.ChangeArmStateCommand;
+import frc.robot.Commands.MoveArmDirectCommand;
 import frc.robot.Other.XboxRaw;
+import frc.robot.Subsystems.ArmSub;
 
 public class GunnerScoring extends GunnerCreepDrive {
 
-  private ChangeArmStateCommand changeStateHigh;
-  private ChangeArmStateCommand changeStateMid;
-  private ChangeArmStateCommand changeStateLow;
-  private ChangeArmStateCommand changeStateMin;
+  private ChangeArmStateCommand armHighCommand;
+  private ChangeArmStateCommand armMidCommand;
+  private ChangeArmStateCommand armLowCommand;
 
-  private JoystickButton changeStateHighButton;
-  private JoystickButton changeStateMidButton;
-  private JoystickButton changeStateLowButton;
-  private JoystickButton changeStateMinButton;
+  private MoveArmDirectCommand armUpCommand;
+  private MoveArmDirectCommand armDownCommand;
 
-  public GunnerScoring(XboxController controller) {
+  private JoystickButton armLowButton;
+  private JoystickButton armMidButton;
+  private JoystickButton armHighButton;
+  private JoystickButton armUpButton;
+  private JoystickButton armDownButton;
+
+  public GunnerScoring(XboxController controller, double armLow, double armMid, double armHigh) {
     super(controller);
 
-    changeStateHigh = new ChangeArmStateCommand(RobotMap.ARM_HIGH_GOAL_ANGLE);
-    changeStateMid = new ChangeArmStateCommand(RobotMap.ARM_MID_GOAL_ANGLE);
-    changeStateLow = new ChangeArmStateCommand(RobotMap.ARM_LOW_GOAL_ANGLE);
-    changeStateMin = new ChangeArmStateCommand(RobotMap.ARM_MIN_ANGLE);
+    armLowCommand = new ChangeArmStateCommand(armLow);
+    armMidCommand = new ChangeArmStateCommand(armMid);
+    armHighCommand = new ChangeArmStateCommand(armHigh);
 
-    changeStateHighButton = new JoystickButton(controller, XboxRaw.Y.value);
-    changeStateHighButton.whenPressed(changeStateHigh);
+    armUpCommand = new MoveArmDirectCommand(ArmSub.Direction.UP);
+    armDownCommand = new MoveArmDirectCommand(ArmSub.Direction.DOWN);
 
-    changeStateMidButton = new JoystickButton(controller, XboxRaw.X.value);
-    changeStateMidButton.whenPressed(changeStateMid);
+    armLowButton = new JoystickButton(controller, XboxRaw.A.value);
+    armLowButton.whenPressed(armLowCommand);
 
-    changeStateLowButton = new JoystickButton(controller, XboxRaw.A.value);
-    changeStateLowButton.whenPressed(changeStateLow);
+    armMidButton = new JoystickButton(controller, XboxRaw.X.value);
+    armMidButton.whenPressed(armMidCommand);
 
-    changeStateMinButton = new JoystickButton(controller, XboxRaw.Start.value);
-    changeStateMinButton.whenPressed(changeStateMin);
+    armHighButton = new JoystickButton(controller, XboxRaw.Y.value);
+    armHighButton.whenPressed(armHighCommand);
+
+    armUpButton = new JoystickButton(controller, XboxRaw.BumperRight.value);
+    armUpButton.whileHeld(armUpCommand);
+
+    armDownButton = new JoystickButton(controller, XboxRaw.BumperLeft.value);
+    armDownButton.whileHeld(armDownCommand);
   }
 }
