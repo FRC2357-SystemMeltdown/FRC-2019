@@ -9,30 +9,34 @@ import frc.robot.modes.ModeManager;
 public class DriveTab {
   private static final String TITLE = "Drive";
 
-  private ShuffleboardTab tab;
+  private ShuffleboardTab tab = null;
   private NetworkTableEntry driverMode;
   private NetworkTableEntry gunnerMode;
   private ToggleButton driverFailsafeButton;
   private ToggleButton gunnerFailsafeButton;
   private NetworkTableEntry yaw;
 
-  public DriveTab() {
-    tab = Shuffleboard.getTab(TITLE);
-
-    driverMode = tab.add("Driver Mode", "").getEntry();
-    gunnerMode = tab.add("Gunner Mode", "").getEntry();
-
-    driverFailsafeButton = new ToggleButton(tab, "D-FAILSAFE");
-    gunnerFailsafeButton = new ToggleButton(tab, "G-FAILSAFE");
-
-    yaw = tab.add("Yaw", 0).getEntry();
-  }
-
   public void show() {
+    if (tab == null) {
+      tab = Shuffleboard.getTab(TITLE);
+
+      driverMode = tab.add("Driver Mode", "").getEntry();
+      gunnerMode = tab.add("Gunner Mode", "").getEntry();
+
+      driverFailsafeButton = new ToggleButton(tab, "D-FAILSAFE");
+      gunnerFailsafeButton = new ToggleButton(tab, "G-FAILSAFE");
+
+      yaw = tab.add("Yaw", 0).getEntry();
+    }
+
     Shuffleboard.selectTab(TITLE);
   }
 
   public void periodic() {
+    if (tab == null) {
+      return;
+    }
+
     ModeManager driverModeMgr = Robot.getInstance().getDriverModeManager();
     ModeManager gunnerModeMgr = Robot.getInstance().getGunnerModeManager();
 

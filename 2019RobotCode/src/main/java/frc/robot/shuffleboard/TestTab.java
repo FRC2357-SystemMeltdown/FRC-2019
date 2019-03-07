@@ -9,7 +9,7 @@ import frc.robot.RobotMap;
 public class TestTab {
   private static final String TITLE = "Test Mode";
 
-  private ShuffleboardTab tab;
+  private ShuffleboardTab tab = null;
   private NetworkTableEntry compressorEnabled;
   private NetworkTableEntry pressureLow;
   private NetworkTableEntry encoderLeft;
@@ -23,41 +23,45 @@ public class TestTab {
   private NetworkTableEntry visionTargetDistance;
   private NetworkTableEntry visionTargetRotation;
 
-  public TestTab() {
-    tab = Shuffleboard.getTab(TITLE);
-
-    tab.add("Drive - Left", Robot.DRIVE_SUB.leftMaster);
-    tab.add("Drive - Right", Robot.DRIVE_SUB.rightMaster);
-
-    encoderLeft = tab.add("Drive Left", 0).getEntry();
-    encoderRight = tab.add("Drive Right", 0).getEntry();
-
-    compressorEnabled = tab.add("Compressor", false).getEntry();
-    pressureLow = tab.add("Pressure", false).getEntry();
-
-    armPotentiometer = tab.add("Arm Pot", 0).getEntry();
-
-    tab.add("Arm Up", Robot.ARM_SUB.upSolenoid);
-    tab.add("Arm Down", Robot.ARM_SUB.downSolenoid);
-
-    tab.add("Cargo", Robot.CARGO_SUB.roller);
-
-    cargoLimitLeft = tab.add("Cargo Left", false).getEntry();
-    cargoLimitRight = tab.add("Cargo Right", false).getEntry();
-
-    hatchLimitLeft = tab.add("Hatch Left", false).getEntry();
-    hatchLimitRight = tab.add("Hatch Right", false).getEntry();
-
-    visionTarget = tab.add("Target", "none").getEntry();
-    visionTargetDistance = tab.add("T Distance", 0.0).getEntry();
-    visionTargetRotation = tab.add("T Rotation", 0.0).getEntry();
-  }
-
   public void show() {
+    if (tab == null) {
+      tab = Shuffleboard.getTab(TITLE);
+
+      tab.add("Drive - Left", Robot.DRIVE_SUB.leftMaster);
+      tab.add("Drive - Right", Robot.DRIVE_SUB.rightMaster);
+
+      encoderLeft = tab.add("Drive Left", 0).getEntry();
+      encoderRight = tab.add("Drive Right", 0).getEntry();
+
+      compressorEnabled = tab.add("Compressor", false).getEntry();
+      pressureLow = tab.add("Pressure", false).getEntry();
+
+      armPotentiometer = tab.add("Arm Pot", 0).getEntry();
+
+      tab.add("Arm Up", Robot.ARM_SUB.upSolenoid);
+      tab.add("Arm Down", Robot.ARM_SUB.downSolenoid);
+
+      tab.add("Cargo", Robot.CARGO_SUB.roller);
+
+      cargoLimitLeft = tab.add("Cargo Left", false).getEntry();
+      cargoLimitRight = tab.add("Cargo Right", false).getEntry();
+
+      hatchLimitLeft = tab.add("Hatch Left", false).getEntry();
+      hatchLimitRight = tab.add("Hatch Right", false).getEntry();
+
+      visionTarget = tab.add("Target", "none").getEntry();
+      visionTargetDistance = tab.add("T Distance", 0.0).getEntry();
+      visionTargetRotation = tab.add("T Rotation", 0.0).getEntry();
+    }
+
     Shuffleboard.selectTab(TITLE);
   }
 
   public void periodic() {
+    if (tab == null) {
+      return;
+    }
+
     int leftPosition = Robot.DRIVE_SUB.leftMaster.getSelectedSensorPosition();
     int rightPosition= Robot.DRIVE_SUB.rightMaster.getSelectedSensorPosition();
 
