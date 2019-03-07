@@ -30,6 +30,10 @@ import edu.wpi.first.wpilibj.PIDSourceType;
  * Drive subsystem, controls 4 motors, 2 encoders, and 1 gyro.
  */
 public class DriveSub extends SubsystemBase {
+  public enum TipReflexState {
+    DISABLED, ENABLED, ENGAGED,
+  };
+
   public WPI_TalonSRX leftMaster = new WPI_TalonSRX(RobotMap.CAN_ID_LEFT_DRIVE);
   public WPI_TalonSRX leftSlave = new WPI_TalonSRX(RobotMap.CAN_ID_LEFT_DRIVE_SLAVE);
   public WPI_TalonSRX rightMaster = new WPI_TalonSRX(RobotMap.CAN_ID_RIGHT_DRIVE);
@@ -40,8 +44,7 @@ public class DriveSub extends SubsystemBase {
   private GyroPIDInterface gyroPidIntf;
   private PIDController gyroPid;
 
-  private double tipPitchThreshold = Double.NaN;
-  private double tipReflexSpeed = 0;
+  private TipReflexState tipReflexState = TipReflexState.DISABLED;
 
   private static final int SPEED_PID_SLOT = 0;
   private static final int POS_PID_SLOT = 1;
@@ -130,13 +133,39 @@ public class DriveSub extends SubsystemBase {
   }
 
   /**
-   * Sets the tipping reflex.
-   * @param pitchThreshold The angle at which the reflex kicks in, or NaN to cancel.
-   * @param speed The speed applied to the robot (should be a negative value)
+   * Checks if the robot is tipping.
+   * @return True if the robot is over the tipping threshopld.
    */
-  public void setTipReflex(double pitchThreshold, double speed) {
-    this.tipPitchThreshold = pitchThreshold;
-    this.tipReflexSpeed = speed;
+  public boolean isTipping() {
+    double pitch = getPitch();
+    return pitch > RobotMap.TIP_REFLEX_TIPPING;
+  }
+
+  /**
+   * Checks if the robot is at a stable pitch.
+   * @return True if the robot is under the stable threshold.
+   */
+  public boolean isStable() {
+    double pitch = getPitch();
+    return pitch < RobotMap.TIP_REFLEX_STABLE;
+  }
+
+  /**
+   * Sets the tipping reflex.
+   * Only sets if not actively engaged.
+   * @param enabled Sets the enabled state of the reflex.
+   * @return True if successfully set, false if ignored.
+   */
+  public boolean setTipReflex(boolean enabled) {
+    if (enabled && tipReflexState == TipReflexState.DISABLED) {
+      tipReflexState = TipReflexState.ENABLED;
+      return true;
+    }
+    if (!enabled && tipReflexState == TipReflexState.ENABLED) {
+      tipReflexState = TipReflexState.DISABLED;
+      return true;
+    }
+    return false;
   }
 
   @Override
@@ -234,18 +263,6 @@ public class DriveSub extends SubsystemBase {
   }
 
   /**
-   * Checks if the robot is tipping.
-   * @return True if a tip threshold is set and we're over it.
-   */
-  public boolean isTipping() {
-    if (tipPitchThreshold != Double.NaN) {
-      double pitch = getPitch();
-      return pitch > tipPitchThreshold;
-    }
-    return false;
-  }
-
-  /**
    * @param speedInchesPerSecond The desired speed in inches/sec
    * @return The speed converted to encoder ticks/100ms
    */
@@ -256,11 +273,29 @@ public class DriveSub extends SubsystemBase {
     return speedTicksPer100ms;
   }
 
-  public void tankDrive(double leftSpeed, double rightSpeed) {
-    if (isTipping()) {
-      leftSpeed += tipReflexSpeed;
-      rightSpeed += tipReflexSpeed;
+  private double calcTipReflex() {
+    if (tipReflexState == TipReflexState.DISABLED) {
+      return 0.0;
     }
+
+    if (isTipping()) {
+      tipReflexState = TipReflexState.ENGAGED;
+    }
+
+    boolean isEngaged = tipReflexState == TipReflexState.ENGAGED;
+
+    if (isEngaged && isStable()) {
+      tipReflexState = TipReflexState.ENABLED;
+    }
+
+    return isEngaged ? RobotMap.TIP_REFLEX_SPEED : 0.0;
+  }
+
+  public void tankDrive(double leftSpeed, double rightSpeed) {
+    double speedAdjust = calcTipReflex();
+
+    leftSpeed += speedAdjust;
+    rightSpeed += speedAdjust;
 
     leftMaster.set(ControlMode.PercentOutput, leftSpeed);
     rightMaster.set(ControlMode.PercentOutput, rightSpeed);

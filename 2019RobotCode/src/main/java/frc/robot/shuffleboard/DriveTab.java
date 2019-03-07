@@ -1,7 +1,5 @@
 package frc.robot.shuffleboard;
 
-import static org.junit.Assume.assumeTrue;
-
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -26,7 +24,6 @@ public class DriveTab {
 
 
   public DriveTab() {
-
     tab = Shuffleboard.getTab(TITLE);
 
     tipReflex = tab.add("Reflex Enable", true).getEntry();
@@ -54,11 +51,8 @@ public class DriveTab {
         .getEntry();
 
         tipReflexTrigger = new ToggleTrigger(tipReflex);
-        tipReflexTrigger.whenActive(new TipReflexSetCommand(
-          RobotMap.TIP_REFLEX_THRESHOLD,
-          RobotMap.TIP_REFLEX_SPEED
-        ) );
-        tipReflexTrigger.whenInactive(new TipReflexSetCommand(Double.NaN, 0) );
+        tipReflexTrigger.whenActive(new TipReflexSetCommand(true));
+        tipReflexTrigger.whenInactive(new TipReflexSetCommand(false));
     }
 
     failsafe.setBoolean(Robot.getInstance().isFailsafeActive());

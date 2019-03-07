@@ -4,17 +4,14 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
 public class TipReflexSetCommand extends Command {
-  private double pitchThreshold;
-  private double speed;
+  private boolean enabled;
 
   /**
    * Creates a command to set the reflex mode.
-   * @param pitchThreshold The angle at which to kick in, or NaN to cancel.
-   * @param speed The speed to apply to the motors (should be negative)
+   * @param enabled True if the reflex should be enabled, false otherwise.
    */
-  public TipReflexSetCommand(double pitchThreshold, double speed) {
-    this.pitchThreshold = pitchThreshold;
-    this.speed = speed;
+  public TipReflexSetCommand(boolean enabled) {
+    this.enabled = enabled;
   }
 
   // Called just before this Command runs the first time
@@ -25,7 +22,7 @@ public class TipReflexSetCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.DRIVE_SUB.setTipReflex(pitchThreshold, speed);
+    Robot.DRIVE_SUB.setTipReflex(enabled);
   }
 
   // Make this return true when this Command no longer needs to run execute()
