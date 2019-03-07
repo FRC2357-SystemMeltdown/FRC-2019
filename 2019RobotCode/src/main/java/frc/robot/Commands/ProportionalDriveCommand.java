@@ -48,7 +48,7 @@ public class ProportionalDriveCommand extends Command {
       leftSpeed *= (1 + trim);
     }
 
-    Robot.DRIVE_SUB.drive.tankDrive(leftSpeed, rightSpeed);
+    Robot.DRIVE_SUB.tankDrive(leftSpeed, rightSpeed);
   }
 
   // Make this return true when this Command no longer needs to run execute()

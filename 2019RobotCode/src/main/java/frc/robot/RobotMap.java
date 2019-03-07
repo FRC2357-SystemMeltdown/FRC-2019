@@ -6,6 +6,8 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot;
 
+import frc.robot.Other.PIDValues;
+
 /**
  * Add your docs here.
  */
@@ -36,11 +38,12 @@ public class RobotMap {
   public static final int PCM_PORT_UP = 1;
 
   // Drive System
+  public static final int GYRO_UNITS_PER_ROTATION = 8192; // Pigeon IMU
   public static final int GYRO_AXIS_YAW = 0;
   public static final int GYRO_AXIS_PITCH = 1;
   public static final int GYRO_AXIS_ROLL = 2;
   public static final int GYRO_AXIS_TOTAL = 3;
-  public static final int ENCODER_TICKS_PER_ROTATION = 256;
+  public static final int ENCODER_TICKS_PER_ROTATION = 1024;
   public static final double WHEEL_CIRCUMFERENCE_INCHES = 6 * Math.PI;
   public static final double MOTOR_MINIMUM_POWER = 0.05;
 
@@ -50,25 +53,32 @@ public class RobotMap {
   public static final double GUNNER_SPEED_PROPORTION = 0.5;
   public static final double GUNNER_TURN_PROPORTION = 0.5;
   public static final double MAX_TURN_RATE_DEGREES_PER_SECOND = 180;
-  public static final double MAX_VELOCITY_INCHES_PER_SECOND = 10;
+  public static final double MAX_VELOCITY_INCHES_PER_SECOND = 40;
   public static final double FAILSAFE_TRIM_FORWARD_DEFAULT = 0.0;
   public static final double FAILSAFE_TRIM_REVERSE_DEFAULT = 0.0;
 
   //Drive PID Values
-  public static final double PID_P_LEFT_DRIVE = 0.0;
-  public static final double PID_I_LEFT_DRIVE = 0.0;
-  public static final double PID_D_LEFT_DRIVE = 0.0;
-  public static final double PID_F_LEFT_DRIVE = 0.0;
-  public static final double PID_P_RIGHT_DRIVE = 0.0;
-  public static final double PID_I_RIGHT_DRIVE = 0.0;
-  public static final double PID_D_RIGHT_DRIVE = 0.0;
-  public static final double PID_F_RIGHT_DRIVE = 0.0;
-  public static final double PID_P_GYRO = 0.0;
-  public static final double PID_I_GYRO = 0.0;
-  public static final double PID_D_GYRO = 0.0;
-  public static final double PID_P_ARM = 0.0;
-  public static final double PID_I_ARM = 0.0;
-  public static final double PID_D_ARM = 0.0;
+  /*
+  Feed forward value is derived from motor speed at maximum controller output. Run the
+  Phoenix Tuner self-test for each motor while driving it at maximum speed. Look at the encoder
+  velocity under PID0:
+
+  PID0 (primary)
+  Feedback: Quad/MagEnc(rel)
+  Pos: 347u   |   Vel: 0u/100ms
+                       ^-- This value
+
+  The feed forward is 1023 / <maximum speed>
+  */
+  public static final PIDValues PID_SPEED_LEFT_DRIVE = new PIDValues(2, 0, 0, 1023.0 / 900.0, 0);
+  public static final PIDValues PID_SPEED_RIGHT_DRIVE = new PIDValues(2, 0, 0, 1023.0 / 900.0, 0);
+
+  // PID values for position based movement
+  public static final PIDValues PID_POS_LEFT_DRIVE = new PIDValues(0.6 * 1023 / ENCODER_TICKS_PER_ROTATION, 0, 0, 0, 0);
+  public static final PIDValues PID_POS_RIGHT_DRIVE = new PIDValues(0.6 * 1023 / ENCODER_TICKS_PER_ROTATION, 0, 0, 0, 0);
+  
+  public static final PIDValues PID_GYRO = new PIDValues(0.001 / 90.0, 0, 0.03 / 90.0, 0, 0);
+  public static final PIDValues PID_ARM = new PIDValues(0, 0, 0, 0, 0);
   public static final double DRIVE_TRAIN_SAMPLE_PERIOD = 1 / 5;
 
   // Arm
@@ -95,6 +105,12 @@ public class RobotMap {
 
   // Hatch
   public static final double HATCH_FAILSAFE_MOVEMENT_SPEED = 0.7;
+  public static final double HATCH_ENCODER_TICKS_PER_ROTATION = 256;
+  public static final double HATCH_INCHES_PER_ROTATION = 3; // ?? wild guess
+  public static final PIDValues HATCH_LEFT_PID = new PIDValues(0, 0, 0, 0, 0);
+  public static final PIDValues HATCH_RIGHT_PID = new PIDValues(0, 0, 0, 0, 0);
+  public static final double HATCH_ACCELERATION = 4; // inches/s/s
+  public static final double HATCH_MAX_VELOCITY = 8; // inches/s
 
   //--------
   // Vision

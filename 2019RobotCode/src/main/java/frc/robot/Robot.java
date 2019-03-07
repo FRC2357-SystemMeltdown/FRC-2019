@@ -42,6 +42,9 @@ public class Robot extends TimedRobot {
   private DPadModeManager driverModeMgr;
   private DPadModeManager gunnerModeMgr;
 
+  private boolean hatchLeftLimitClosed;
+  private boolean hatchRightLimitClosed;
+
   public Robot(){
     robotInstance = this;
     this.shuffleboardController = new ShuffleboardController();
@@ -51,6 +54,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+    hatchLeftLimitClosed = HATCH_SUB.isLeftLimitClosed();
+    hatchRightLimitClosed = HATCH_SUB.isRightLimitClosed();
   }
 
   /**
@@ -68,6 +73,16 @@ public class Robot extends TimedRobot {
     // Update the mode managers
     driverModeMgr.updateDPadValue(OI.getDriverDPadValue());
     gunnerModeMgr.updateDPadValue(OI.getGunnerDPadValue());
+
+    // If the hatch limit switch is closed, reset the encoder
+    if(HATCH_SUB.isLeftLimitClosed() && !hatchLeftLimitClosed) {
+      HATCH_SUB.resetLeftEncoder();
+    }
+    if(HATCH_SUB.isRightLimitClosed() && !hatchRightLimitClosed) {
+      HATCH_SUB.resetRightEncoder();
+    }
+    hatchLeftLimitClosed = HATCH_SUB.isLeftLimitClosed();
+    hatchRightLimitClosed = HATCH_SUB.isRightLimitClosed();
   }
 
   /**

@@ -71,8 +71,8 @@ public class TestTab {
     cargoLimitLeft.setBoolean(Robot.CARGO_SUB.limitLeft.get());
     cargoLimitRight.setBoolean(Robot.CARGO_SUB.limitRight.get());
 
-    hatchLimitLeft.setBoolean(Robot.HATCH_SUB.getLeftLimit());
-    hatchLimitRight.setBoolean(Robot.HATCH_SUB.getRightLimit());
+    hatchLimitLeft.setBoolean(Robot.HATCH_SUB.isLeftLimitClosed());
+    hatchLimitRight.setBoolean(Robot.HATCH_SUB.isRightLimitClosed());
 
     String visionString = "none";
     double visionDistance = 0.0;
