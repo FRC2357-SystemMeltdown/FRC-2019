@@ -35,7 +35,7 @@ public class GunnerScoring extends GunnerCreepDrive {
     armLowButton = new JoystickButton(controller, XboxRaw.A.value);
     armLowButton.whenPressed(armLowCommand);
 
-    armMidButton = new JoystickButton(controller, XboxRaw.X.value);
+    armMidButton = new JoystickButton(controller, XboxRaw.B.value);
     armMidButton.whenPressed(armMidCommand);
 
     armHighButton = new JoystickButton(controller, XboxRaw.Y.value);

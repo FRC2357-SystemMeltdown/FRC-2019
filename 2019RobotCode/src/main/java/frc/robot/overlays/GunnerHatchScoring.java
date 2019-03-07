@@ -6,16 +6,17 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.robot.RobotMap;
 import frc.robot.Commands.HatchDirectMoveCommand;
 import frc.robot.Commands.HatchDirectOpenCloseCommand;
-import frc.robot.Commands.HatchStopCommand;
 import frc.robot.Other.XboxRaw;
 
+/**
+ * Defaults triggers to open/close,
+ * move when X is held.
+ */
 public class GunnerHatchScoring extends GunnerScoring implements HatchControl {
 
   private HatchDirectOpenCloseCommand hatchOpenCloseCommand;
   private HatchDirectMoveCommand hatchMoveCommand;
-  private HatchStopCommand hatchStopCommand;
   private JoystickButton hatchMoveButton;
-  private JoystickButton hatchOpenCloseButton;
 
   public GunnerHatchScoring(XboxController controller) {
     super(
@@ -27,15 +28,12 @@ public class GunnerHatchScoring extends GunnerScoring implements HatchControl {
 
     hatchOpenCloseCommand = new HatchDirectOpenCloseCommand(this);
     hatchMoveCommand = new HatchDirectMoveCommand(this);
-    hatchStopCommand = new HatchStopCommand();
 
     hatchMoveButton = new JoystickButton(controller, XboxRaw.X.value);
     hatchMoveButton.whenPressed(hatchMoveCommand);
-    hatchMoveButton.whenReleased(hatchStopCommand);
+    hatchMoveButton.whenReleased(hatchOpenCloseCommand);
 
-    hatchOpenCloseButton = new JoystickButton(controller, XboxRaw.Y.value);
-    hatchOpenCloseButton.whenPressed(hatchOpenCloseCommand);
-    hatchOpenCloseButton.whenReleased(hatchStopCommand);
+    hatchOpenCloseCommand.start();
   }
 
   @Override
@@ -47,5 +45,4 @@ public class GunnerHatchScoring extends GunnerScoring implements HatchControl {
   public double getHatchOpenCloseSpeed() {
     return controller.getTriggerAxis(Hand.kLeft) - controller.getTriggerAxis(Hand.kRight);
   }
-
 }
