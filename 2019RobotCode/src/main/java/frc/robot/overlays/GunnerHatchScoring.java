@@ -29,7 +29,6 @@ public class GunnerHatchScoring extends GunnerScoring implements HatchControl {
 
     hatchOpenCloseCommand = new HatchDirectOpenCloseCommand(this);
     hatchMoveCommand = new HatchDirectMoveCommand(this);
-
     hatchMoveButton = new JoystickButton(controller, XboxRaw.X.value);
   }
 
