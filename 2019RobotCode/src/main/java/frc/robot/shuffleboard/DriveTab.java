@@ -1,5 +1,7 @@
 package frc.robot.shuffleboard;
 
+import static org.junit.Assume.assumeTrue;
+
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -9,6 +11,7 @@ import frc.robot.RobotMap;
 import frc.robot.Commands.ArmPresetCommand;
 import frc.robot.Commands.FailsafeSetCommand;
 import frc.robot.RobotMap.ArmPreset;
+import frc.robot.Commands.TipReflexSetCommand;
 
 public class DriveTab {
   private static final String TITLE = "Drive";
@@ -16,10 +19,18 @@ public class DriveTab {
   private ShuffleboardTab tab = null;
   private NetworkTableEntry failsafe;
   private NetworkTableEntry armHeight;
+  private NetworkTableEntry tipReflex;
+  private NetworkTableEntry tipWarning;
   private ToggleTrigger failsafeTrigger;
+  private ToggleTrigger tipReflexTrigger;
+
 
   public DriveTab() {
+
     tab = Shuffleboard.getTab(TITLE);
+
+    tipReflex = tab.add("Reflex Enable", true).getEntry();
+    tipWarning = tab.add("Tip Reflex", true).getEntry();
   }
 
   public void show() {
@@ -37,7 +48,21 @@ public class DriveTab {
       armHeight = tab.add("Arm", "").getEntry();
     }
 
+    if (tipReflex == null) {
+      tipReflex = tab.add("Tip Reflex", true)
+        .withWidget(BuiltInWidgets.kToggleButton)
+        .getEntry();
+
+        tipReflexTrigger = new ToggleTrigger(tipReflex);
+        tipReflexTrigger.whenActive(new TipReflexSetCommand(
+          RobotMap.TIP_REFLEX_THRESHOLD,
+          RobotMap.TIP_REFLEX_SPEED
+        ) );
+        tipReflexTrigger.whenInactive(new TipReflexSetCommand(Double.NaN, 0) );
+    }
+
     failsafe.setBoolean(Robot.getInstance().isFailsafeActive());
+    tipWarning.setBoolean(Robot.DRIVE_SUB.isTipping());
 
     Shuffleboard.selectTab(TITLE);
   }

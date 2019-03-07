@@ -40,6 +40,9 @@ public class DriveSub extends SubsystemBase {
   private GyroPIDInterface gyroPidIntf;
   private PIDController gyroPid;
 
+  private double tipPitchThreshold = Double.NaN;
+  private double tipReflexSpeed = 0;
+
   private static final int SPEED_PID_SLOT = 0;
   private static final int POS_PID_SLOT = 1;
 
@@ -124,6 +127,16 @@ public class DriveSub extends SubsystemBase {
     leftMaster.getSensorCollection().setQuadraturePosition(0, 0);
     gyro.setYaw(0);
     gyro.setAccumZAngle(0);
+  }
+
+  /**
+   * Sets the tipping reflex.
+   * @param pitchThreshold The angle at which the reflex kicks in, or NaN to cancel.
+   * @param speed The speed applied to the robot (should be a negative value)
+   */
+  public void setTipReflex(double pitchThreshold, double speed) {
+    this.tipPitchThreshold = pitchThreshold;
+    this.tipReflexSpeed = speed;
   }
 
   @Override
@@ -212,6 +225,27 @@ public class DriveSub extends SubsystemBase {
   }
 
   /**
+   * Gets the current pitch of the robot.
+   */
+  public double getPitch() {
+    gyro.getYawPitchRoll(yawPitchRoll);
+    double pitch = yawPitchRoll[RobotMap.GYRO_AXIS_PITCH];
+    return pitch;
+  }
+
+  /**
+   * Checks if the robot is tipping.
+   * @return True if a tip threshold is set and we're over it.
+   */
+  public boolean isTipping() {
+    if (tipPitchThreshold != Double.NaN) {
+      double pitch = getPitch();
+      return pitch > tipPitchThreshold;
+    }
+    return false;
+  }
+
+  /**
    * @param speedInchesPerSecond The desired speed in inches/sec
    * @return The speed converted to encoder ticks/100ms
    */
@@ -223,6 +257,11 @@ public class DriveSub extends SubsystemBase {
   }
 
   public void tankDrive(double leftSpeed, double rightSpeed) {
+    if (isTipping()) {
+      leftSpeed += tipReflexSpeed;
+      rightSpeed += tipReflexSpeed;
+    }
+
     leftMaster.set(ControlMode.PercentOutput, leftSpeed);
     rightMaster.set(ControlMode.PercentOutput, rightSpeed);
   }
