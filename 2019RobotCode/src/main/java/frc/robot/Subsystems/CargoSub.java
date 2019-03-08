@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
 import frc.robot.Commands.CargoRollerStopCommand;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 /**
@@ -22,6 +23,10 @@ public class CargoSub extends Subsystem {
   public WPI_VictorSPX roller = new WPI_VictorSPX(RobotMap.CAN_ID_CARGO_INTAKE);
   public DigitalInput limitLeft = new DigitalInput(RobotMap.DIO_PORT_CARGO_LIMIT_LEFT);
   public DigitalInput limitRight = new DigitalInput(RobotMap.DIO_PORT_CARGO_LIMIT_RIGHT);
+
+  public CargoSub() {
+    roller.setNeutralMode(NeutralMode.Brake);
+  }
 
   @Override
   public void initDefaultCommand() {
