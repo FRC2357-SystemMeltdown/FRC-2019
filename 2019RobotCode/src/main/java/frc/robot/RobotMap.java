@@ -48,6 +48,8 @@ public class RobotMap {
   public static final double MOTOR_MINIMUM_POWER = 0.05;
 
   // Drive Controls
+  public static final int DRIVE_RAMP_SECONDS = 2;
+  public static final double DRIVE_MOTOR_DEADBAND = 0.04;
   public static final double DRIVER_SPEED_PROPORTION = 0.8;
   public static final double DRIVER_TURN_PROPORTION = 0.8;
   public static final double DRIVER_SPEED_PROPORTION_SLOW = 0.6;

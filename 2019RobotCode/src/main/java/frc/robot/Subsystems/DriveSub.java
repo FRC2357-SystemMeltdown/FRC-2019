@@ -18,6 +18,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.FollowerType;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.SensorTerm;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
@@ -107,6 +108,15 @@ public class DriveSub extends Subsystem {
 
     leftMaster.configClosedloopRamp(5);
     rightMaster.configClosedloopRamp(5);
+
+    leftMaster.configOpenloopRamp(RobotMap.DRIVE_RAMP_SECONDS);
+    rightMaster.configOpenloopRamp(RobotMap.DRIVE_RAMP_SECONDS);
+
+    leftMaster.setNeutralMode(NeutralMode.Brake);
+    rightMaster.setNeutralMode(NeutralMode.Brake);
+
+    leftMaster.configNeutralDeadband(RobotMap.DRIVE_MOTOR_DEADBAND);
+    rightMaster.configNeutralDeadband(RobotMap.DRIVE_MOTOR_DEADBAND);
 
     resetSensors();
 
