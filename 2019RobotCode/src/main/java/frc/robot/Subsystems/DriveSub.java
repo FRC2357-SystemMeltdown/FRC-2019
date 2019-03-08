@@ -9,17 +9,13 @@ package frc.robot.Subsystems;
 
 import frc.robot.Robot;
 import frc.robot.RobotMap;
-import frc.robot.Commands.EncoderBasedDrive;
 import frc.robot.Commands.ProportionalDriveCommand;
-import frc.robot.Other.PIDValues;
 import frc.robot.Other.Utility;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.FollowerType;
-import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
-import com.ctre.phoenix.motorcontrol.SensorTerm;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
@@ -29,9 +25,7 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 /**
  * Add your docs here.
@@ -107,6 +101,15 @@ public class DriveSub extends Subsystem {
 
     leftMaster.configClosedloopRamp(5);
     rightMaster.configClosedloopRamp(5);
+
+    leftMaster.configOpenloopRamp(RobotMap.DRIVE_RAMP_SECONDS);
+    rightMaster.configOpenloopRamp(RobotMap.DRIVE_RAMP_SECONDS);
+
+    leftMaster.setNeutralMode(NeutralMode.Brake);
+    rightMaster.setNeutralMode(NeutralMode.Brake);
+
+    leftMaster.configNeutralDeadband(RobotMap.DRIVE_MOTOR_DEADBAND);
+    rightMaster.configNeutralDeadband(RobotMap.DRIVE_MOTOR_DEADBAND);
 
     resetSensors();
 
