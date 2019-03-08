@@ -151,6 +151,10 @@ public class OI {
     return gunnerController;
   }
 
+  public boolean isArmLevelSelect() {
+    return gunnerController.getBButtonPressed();
+  }
+
   public void setDriverOverlay(ControlOverlay overlay) {
     if (this.driverOverlay != null) {
       this.driverOverlay.deactivate();
