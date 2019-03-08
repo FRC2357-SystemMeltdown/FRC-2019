@@ -29,7 +29,7 @@ public class CargoSub extends Subsystem {
   }
 
   public void cargoRollerDirect(double speed) {
-    roller.set(speed);
+    roller.set(-speed);
   }
 
   public void cargoRollerStop() {
