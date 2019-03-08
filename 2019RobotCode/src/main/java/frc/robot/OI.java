@@ -152,10 +152,26 @@ public class OI {
   }
 
   public void setDriverOverlay(ControlOverlay overlay) {
+    if (this.driverOverlay != null) {
+      this.driverOverlay.deactivate();
+    }
+
     driverOverlay = overlay;
+
+    if (this.driverOverlay != null) {
+      this.driverOverlay.activate();
+    }
   }
 
   public void setGunnerOverlay(ControlOverlay overlay) {
-    gunnerOverlay = overlay;
+    if (this.gunnerOverlay != null) {
+      this.gunnerOverlay.deactivate();
+    }
+
+    this.gunnerOverlay = overlay;
+
+    if (this.gunnerOverlay != null) {
+      this.gunnerOverlay.activate();
+    }
   }
 }

@@ -24,4 +24,12 @@ public class DriverVelocityDrive extends ControlOverlay implements VelocityDrive
     double speed = -input * RobotMap.MAX_VELOCITY_INCHES_PER_SECOND;
     return speed;
   }
+
+  @Override
+  public void activate() {
+  }
+
+  @Override
+  public void deactivate() {
+  }
 }

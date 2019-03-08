@@ -50,6 +50,8 @@ public class RobotMap {
   // Drive Controls
   public static final double DRIVER_SPEED_PROPORTION = 0.8;
   public static final double DRIVER_TURN_PROPORTION = 0.8;
+  public static final double DRIVER_SPEED_PROPORTION_SLOW = 0.6;
+  public static final double DRIVER_TURN_PROPORTION_SLOW = 0.6;
   public static final double GUNNER_SPEED_PROPORTION = 0.5;
   public static final double GUNNER_TURN_PROPORTION = 0.5;
   public static final double MAX_TURN_RATE_DEGREES_PER_SECOND = 180;
@@ -76,7 +78,7 @@ public class RobotMap {
   // PID values for position based movement
   public static final PIDValues PID_POS_LEFT_DRIVE = new PIDValues(0.6 * 1023 / ENCODER_TICKS_PER_ROTATION, 0, 0, 0, 0);
   public static final PIDValues PID_POS_RIGHT_DRIVE = new PIDValues(0.6 * 1023 / ENCODER_TICKS_PER_ROTATION, 0, 0, 0, 0);
-  
+
   public static final PIDValues PID_GYRO = new PIDValues(0.001 / 90.0, 0, 0.03 / 90.0, 0, 0);
   public static final PIDValues PID_ARM = new PIDValues(0, 0, 0, 0, 0);
   public static final double DRIVE_TRAIN_SAMPLE_PERIOD = 1 / 5;
@@ -89,9 +91,12 @@ public class RobotMap {
   public static final int ARM_POTENTIOMETER_MIN = 0;
   public static final int ARM_POTENTIOMETER_RANGE = ARM_POTENTIOMETER_MAX - ARM_POTENTIOMETER_MIN;
   public static final double ARM_ANGLE_FACTOR = ARM_POTENTIOMETER_RANGE / ARM_RANGE;
-  public static final double ARM_HIGH_GOAL_ANGLE = 70.0;
-  public static final double ARM_MID_GOAL_ANGLE = 40.0;
-  public static final double ARM_LOW_GOAL_ANGLE = 10.0;
+  public static final double ARM_CARGO_HIGH_GOAL_ANGLE = 70.0;
+  public static final double ARM_CARGO_MID_GOAL_ANGLE = 40.0;
+  public static final double ARM_CARGO_LOW_GOAL_ANGLE = 10.0;
+  public static final double ARM_HATCH_HIGH_GOAL_ANGLE = 70.0;
+  public static final double ARM_HATCH_MID_GOAL_ANGLE = 40.0;
+  public static final double ARM_HATCH_LOW_GOAL_ANGLE = 10.0;
   public static final double ARM_CARGO_PICKUP_ANGLE = 5.0;
   public static final double ARM_STARTING_ANGLE = 0.0;
   public static final double ARM_ANGLE_TOLERANCE = 1.0;

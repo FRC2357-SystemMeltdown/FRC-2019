@@ -5,10 +5,11 @@ package frc.robot.modes;
  */
 public class DriverModeManager extends DPadModeManager {
   private static ModeBase failsafeMode = new DriverFailsafeMode();
-  private static ModeBase pidMode = new DriverPIDMode();
+  private static ModeBase fastMode = new DriverFastMode();
+  private static ModeBase slowMode = new DriverSlowMode();
 
   public DriverModeManager() {
     // failsafe, up, right, down, left, initial
-    super( failsafeMode, pidMode, null, null, null, failsafeMode );
+    super( failsafeMode, fastMode, null, slowMode, null, failsafeMode );
   }
 }
