@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Robot;
 import frc.robot.modes.ModeManager;
+import frc.robot.modes.GunnerModeManager;
 
 public class DriveTab {
   private static final String TITLE = "Drive";
@@ -44,7 +45,7 @@ public class DriveTab {
     gunnerMode.setString(gunnerModeMgr.getCurrentMode().getModeName());
 
     updateFailsafeButton(driverFailsafeButton, driverModeMgr);
-    updateFailsafeButton(gunnerFailsafeButton, gunnerModeMgr);
+    updateGunnerFailsafe();
 
     yaw.setDouble(Robot.DRIVE_SUB.getYaw(false));
   }
@@ -62,6 +63,18 @@ public class DriveTab {
       mgr.activateFailsafeMode();
     } else {
       button.setValue(mgr.isFailsafeActive());
+    }
+  }
+
+  private void updateGunnerFailsafe() {
+    GunnerModeManager gunnerModeMgr = Robot.getInstance().getGunnerModeManager();
+
+    if (gunnerFailsafeButton.didValueChange()) {
+      if (gunnerFailsafeButton.getValue()) {
+        gunnerModeMgr.activateFailsafeMode();
+      } else {
+        gunnerModeMgr.activateNormalMode();
+      }
     }
   }
 }

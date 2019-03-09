@@ -15,10 +15,9 @@ import frc.robot.Subsystems.DriveSub;
 import frc.robot.Subsystems.ArmSub;
 import frc.robot.Subsystems.HatchSub;
 import frc.robot.Subsystems.VisionSub;
-import frc.robot.modes.DPadModeManager;
 import frc.robot.modes.DriverModeManager;
 import frc.robot.modes.GunnerModeManager;
-import frc.robot.modes.ModeManager;
+import frc.robot.overlays.GunnerFailSafe;
 import frc.robot.shuffleboard.ShuffleboardController;
 
 /**
@@ -39,8 +38,8 @@ public class Robot extends TimedRobot {
 
   private static Robot robotInstance;
   private ShuffleboardController shuffleboardController;
-  private DPadModeManager driverModeMgr;
-  private DPadModeManager gunnerModeMgr;
+  private DriverModeManager driverModeMgr;
+  private GunnerModeManager gunnerModeMgr;
 
   private boolean hatchLeftLimitClosed;
   private boolean hatchRightLimitClosed;
@@ -50,6 +49,7 @@ public class Robot extends TimedRobot {
     this.shuffleboardController = new ShuffleboardController();
     driverModeMgr = new DriverModeManager();
     gunnerModeMgr = new GunnerModeManager();
+    Robot.OI.setGunnerOverlay(new GunnerFailSafe(Robot.OI.getGunnerController()));
   }
 
   @Override
@@ -70,11 +70,8 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     Scheduler.getInstance().run();
 
-    // Update the mode managers
-    if (! OI.isArmLevelSelect()) {
-      driverModeMgr.updateDPadValue(OI.getDriverDPadValue());
-      gunnerModeMgr.updateDPadValue(OI.getGunnerDPadValue());
-    }
+    // Update the mode manager
+    driverModeMgr.updateDPadValue(OI.getDriverDPadValue());
 
     // If the hatch limit switch is closed, reset the encoder
     if(HATCH_SUB.isLeftLimitClosed() && !hatchLeftLimitClosed) {
@@ -158,11 +155,11 @@ public class Robot extends TimedRobot {
     return robotInstance;
   }
 
-  public ModeManager getDriverModeManager() {
+  public DriverModeManager getDriverModeManager() {
     return driverModeMgr;
   }
 
-  public ModeManager getGunnerModeManager() {
+  public GunnerModeManager getGunnerModeManager() {
     return gunnerModeMgr;
   }
 }
