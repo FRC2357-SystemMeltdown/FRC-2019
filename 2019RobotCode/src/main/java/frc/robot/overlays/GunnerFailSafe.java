@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.robot.RobotMap;
 import frc.robot.Commands.HatchDirectOpenCloseCommand;
 import frc.robot.Commands.CargoRollerDirectCommand;
+import frc.robot.Commands.CargoRollerLimitCommand;
 import frc.robot.Commands.CargoRollerStopCommand;
 import frc.robot.Commands.HatchDirectMoveCommand;
 import frc.robot.Commands.HatchStopCommand;
@@ -25,7 +26,7 @@ public class GunnerFailSafe
   public static final double TURN_FACTOR = RobotMap.GUNNER_TURN_PROPORTION;
   public static final double SPEED_FACTOR = RobotMap.GUNNER_SPEED_PROPORTION;
 
-  private CargoRollerDirectCommand cargoRollerCommand;
+  private CargoRollerLimitCommand cargoRollerCommand;
   private CargoRollerStopCommand cargoRollerStopCommand;
   private JoystickButton cargoRollerButton;
 
@@ -43,7 +44,7 @@ public class GunnerFailSafe
   public GunnerFailSafe(XboxController controller) {
     super(controller);
 
-    cargoRollerCommand = new CargoRollerDirectCommand(this);
+    cargoRollerCommand = new CargoRollerLimitCommand(this);
     cargoRollerStopCommand = new CargoRollerStopCommand();
     armUpCommand = new MoveArmDirectCommand(ArmSub.Direction.UP);
     armDownCommand = new MoveArmDirectCommand(ArmSub.Direction.DOWN);

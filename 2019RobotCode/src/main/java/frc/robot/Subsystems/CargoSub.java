@@ -28,6 +28,18 @@ public class CargoSub extends Subsystem {
     roller.setNeutralMode(NeutralMode.Brake);
   }
 
+  public boolean isLimit() {
+    return isLimitLeft() || isLimitRight();
+  }
+
+  public boolean isLimitLeft() {
+    return limitLeft.get();
+  }
+
+  public boolean isLimitRight() {
+    return limitRight.get();
+  }
+
   @Override
   public void initDefaultCommand() {
     setDefaultCommand(new CargoRollerStopCommand());
