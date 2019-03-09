@@ -71,8 +71,10 @@ public class Robot extends TimedRobot {
     Scheduler.getInstance().run();
 
     // Update the mode managers
-    driverModeMgr.updateDPadValue(OI.getDriverDPadValue());
-    gunnerModeMgr.updateDPadValue(OI.getGunnerDPadValue());
+    if (! OI.isArmLevelSelect()) {
+      driverModeMgr.updateDPadValue(OI.getDriverDPadValue());
+      gunnerModeMgr.updateDPadValue(OI.getGunnerDPadValue());
+    }
 
     // If the hatch limit switch is closed, reset the encoder
     if(HATCH_SUB.isLeftLimitClosed() && !hatchLeftLimitClosed) {
