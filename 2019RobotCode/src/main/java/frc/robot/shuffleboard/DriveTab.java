@@ -4,6 +4,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Robot;
+import frc.robot.RobotMap;
 import frc.robot.modes.ModeManager;
 import frc.robot.modes.GunnerModeManager;
 
@@ -16,6 +17,7 @@ public class DriveTab {
   private ToggleButton driverFailsafeButton;
   private ToggleButton gunnerFailsafeButton;
   private NetworkTableEntry yaw;
+  private NetworkTableEntry armHeight;
 
   public void show() {
     if (tab == null) {
@@ -28,6 +30,7 @@ public class DriveTab {
       gunnerFailsafeButton = new ToggleButton(tab, "G-FAILSAFE");
 
       yaw = tab.add("Yaw", 0).getEntry();
+      armHeight = tab.add("Arm", "").getEntry();
     }
 
     Shuffleboard.selectTab(TITLE);
@@ -48,6 +51,14 @@ public class DriveTab {
     updateGunnerFailsafe();
 
     yaw.setDouble(Robot.DRIVE_SUB.getYaw(false));
+
+    int armAngleIndex = Robot.OI.getGunnerOverlay().getArmAngleIndex();
+    int armAdjust = Robot.OI.getGunnerOverlay().getArmAdjust();
+    String armString = RobotMap.ARM_ANGLE_NAMES[armAngleIndex];
+    if (armAdjust != 0) {
+      armString += " " + (armAdjust > 0 ? "+" : "") + armAdjust;
+    }
+    armHeight.setString(armString);
   }
 
   /**

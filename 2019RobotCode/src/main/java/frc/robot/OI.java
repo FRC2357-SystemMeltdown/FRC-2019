@@ -10,7 +10,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.overlays.ProportionalDrive;
 import frc.robot.overlays.VelocityDrive;
 import frc.robot.Other.Utility;
+import frc.robot.modes.GunnerFailsafeMode;
 import frc.robot.overlays.ControlOverlay;
+import frc.robot.overlays.GunnerFailSafe;
 
 /**
  * Operator Interface
@@ -21,27 +23,23 @@ public class OI {
 
   // D-pad values (probably move this somewhere else)
   public enum DPadValue {
-    Up(0),
-    Right(1),
-    Down(2),
-    Left(3),
-    Unpressed(4);
+    Up(0), Right(1), Down(2), Left(3), Unpressed(4);
 
     public final int value;
 
     // Convert a POV value from GenericHID to the enum.
     // Snaps to a quadrant in case a diagonal is pressed.
     public static DPadValue fromPOV(int povVal) {
-      if(povVal < 0) {
+      if (povVal < 0) {
         return Unpressed;
       }
-      if(povVal < 45 || povVal >= 315) {
-          return Up;
+      if (povVal < 45 || povVal >= 315) {
+        return Up;
       }
-      if(povVal < 135) {
+      if (povVal < 135) {
         return Right;
       }
-      if(povVal < 225) {
+      if (povVal < 225) {
         return Down;
       }
       return Left;
@@ -63,7 +61,7 @@ public class OI {
     this.gunnerController = new XboxController(CONTROLLER_ID_GUNNER);
   }
 
-  public double getProportionalTurn(){
+  public double getProportionalTurn() {
     double turn = 0;
 
     if (driverOverlay instanceof ProportionalDrive) {
@@ -100,10 +98,10 @@ public class OI {
   public double getGyroBasedTurn() {
     double turn = 0.0;
 
-    if(driverOverlay instanceof VelocityDrive) {
+    if (driverOverlay instanceof VelocityDrive) {
       turn += ((VelocityDrive) driverOverlay).getTurnDegreesPerSecond();
     }
-    if(gunnerOverlay instanceof VelocityDrive) {
+    if (gunnerOverlay instanceof VelocityDrive) {
       turn += ((VelocityDrive) gunnerOverlay).getTurnDegreesPerSecond();
     }
 
@@ -118,10 +116,10 @@ public class OI {
   public double getEncoderBasedSpeed() {
     double speed = 0.0;
 
-    if(driverOverlay instanceof VelocityDrive) {
+    if (driverOverlay instanceof VelocityDrive) {
       speed += ((VelocityDrive) driverOverlay).getSpeedInchesPerSecond();
     }
-    if(gunnerOverlay instanceof VelocityDrive) {
+    if (gunnerOverlay instanceof VelocityDrive) {
       speed += ((VelocityDrive) gunnerOverlay).getSpeedInchesPerSecond();
     }
 
@@ -160,6 +158,10 @@ public class OI {
     if (this.driverOverlay != null) {
       this.driverOverlay.activate();
     }
+  }
+
+  public GunnerFailSafe getGunnerOverlay() {
+    return (GunnerFailSafe) gunnerOverlay;
   }
 
   public void setGunnerOverlay(ControlOverlay overlay) {

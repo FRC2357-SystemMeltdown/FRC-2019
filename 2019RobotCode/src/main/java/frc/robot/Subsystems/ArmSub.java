@@ -35,9 +35,6 @@ public class ArmSub extends Subsystem {
   private AnalogInput potentiometer = new AnalogInput(RobotMap.ANALOG_PORT_ARM_POTENTIOMETER);
   private Direction currentDirection = null;
 
-  // TODO: Make this private
-  public double targetAngle = 0.0;
-
   @Override
   public void initDefaultCommand() {
     // Default command sets the arm speed to zero
@@ -50,16 +47,6 @@ public class ArmSub extends Subsystem {
    */
   public int getPotentiometerValue() {
     return potentiometer.getValue();
-  }
-
-  /**
-   *
-   * @return The angle of the arm in degrees relative to its lowest possible state.
-   */
-  public double getPotentiometerAngle() {
-    double angle = potentiometer.getValue() * RobotMap.ARM_ANGLE_FACTOR;
-    double angleFromBase = angle - RobotMap.ARM_MIN_ANGLE;
-    return angleFromBase;
   }
 
   /**
