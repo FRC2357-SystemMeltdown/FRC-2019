@@ -1,8 +1,8 @@
 package frc.robot.modes;
 
-public class GunnerFailsafeMode extends ModeBase {
-  public GunnerFailsafeMode() {
-    super("FAILSAFE");
+public class GunnerNormalMode extends ModeBase {
+  public GunnerNormalMode() {
+    super("NORMAL");
   }
 
   @Override

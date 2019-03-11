@@ -130,11 +130,6 @@ public class OI {
     return speed;
   }
 
-  public double getArmSpeed() {
-    //double speed = gunner.getRawAxis(2) - gunner.getRawAxis(3);
-    return 0;
-  }
-
   public DPadValue getDriverDPadValue() {
     return DPadValue.fromPOV(driverController.getPOV(0));
   }
