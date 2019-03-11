@@ -1,19 +1,20 @@
 package frc.robot.overlays;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.Commands.HatchDirectOpenCloseCommand;
-import frc.robot.Commands.CargoRollerDirectCommand;
+import frc.robot.Commands.ArmSetPositionCommand;
 import frc.robot.Commands.CargoRollerLimitCommand;
 import frc.robot.Commands.CargoRollerStopCommand;
 import frc.robot.Commands.HatchDirectMoveCommand;
 import frc.robot.Commands.HatchStopCommand;
-import frc.robot.Commands.MoveArmDirectCommand;
 import frc.robot.Commands.NullCommand;
+import frc.robot.OI.DPadValue;
 import frc.robot.Other.XboxRaw;
-import frc.robot.Subsystems.ArmSub;
 
 /**
  * The GunnerFailSafe overlay is the least complex control system
@@ -21,7 +22,7 @@ import frc.robot.Subsystems.ArmSub;
  */
 public class GunnerFailSafe
   extends GunnerCreepDrive
-  implements ProportionalDrive, HatchControl, CargoControl
+  implements ProportionalDrive, HatchControl, CargoControl, ArmControl
 {
   public static final double TURN_FACTOR = RobotMap.GUNNER_TURN_PROPORTION;
   public static final double SPEED_FACTOR = RobotMap.GUNNER_SPEED_PROPORTION;
@@ -30,10 +31,7 @@ public class GunnerFailSafe
   private CargoRollerStopCommand cargoRollerStopCommand;
   private JoystickButton cargoRollerButton;
 
-  private MoveArmDirectCommand armUpCommand;
-  private MoveArmDirectCommand armDownCommand;
-  private JoystickButton armUpButton;
-  private JoystickButton armDownButton;
+  private ArmSetPositionCommand armSetPositionCommand;
 
   private HatchDirectOpenCloseCommand hatchOpenCloseCommand;
   private HatchDirectMoveCommand hatchMoveCommand;
@@ -41,38 +39,55 @@ public class GunnerFailSafe
   private JoystickButton hatchMoveButton;
   private JoystickButton hatchOpenCloseButton;
 
+  private DPadValue lastDPadValue;
+  private boolean lastBumperLeft;
+  private boolean lastBumperRight;
+  private int armAngleIndex;
+  private int armAdjust;
+
   public GunnerFailSafe(XboxController controller) {
     super(controller);
 
+    lastDPadValue = DPadValue.Unpressed;
+    lastBumperLeft = false;
+    lastBumperRight = false;
+    armAngleIndex = 0;
+    armAdjust = 0;
+
     cargoRollerCommand = new CargoRollerLimitCommand(this);
     cargoRollerStopCommand = new CargoRollerStopCommand();
-    armUpCommand = new MoveArmDirectCommand(ArmSub.Direction.UP);
-    armDownCommand = new MoveArmDirectCommand(ArmSub.Direction.DOWN);
+    armSetPositionCommand = new ArmSetPositionCommand(this);
     hatchOpenCloseCommand = new HatchDirectOpenCloseCommand(this);
     hatchMoveCommand = new HatchDirectMoveCommand(this);
     hatchStopCommand = new HatchStopCommand();
 
     cargoRollerButton = new JoystickButton(controller, XboxRaw.A.value);
-    armUpButton = new JoystickButton(controller, XboxRaw.BumperRight.value);
-    armDownButton = new JoystickButton(controller, XboxRaw.BumperLeft.value);
     hatchMoveButton = new JoystickButton(controller, XboxRaw.X.value);
     hatchOpenCloseButton = new JoystickButton(controller, XboxRaw.Y.value);
   }
 
+  public int getArmAngleIndex() {
+    return armAngleIndex;
+  }
+
+  public int getArmAdjust() {
+    return armAdjust;
+  }
+
   @Override
   public void activate() {
+    armAngleIndex = 0;
+
     cargoRollerButton.whenPressed(cargoRollerCommand);
     cargoRollerButton.whenReleased(cargoRollerStopCommand);
-
-    armUpButton.whileHeld(armUpCommand);
-
-    armDownButton.whileHeld(armDownCommand);
 
     hatchMoveButton.whenPressed(hatchMoveCommand);
     hatchMoveButton.whenReleased(hatchStopCommand);
 
     hatchOpenCloseButton.whenPressed(hatchOpenCloseCommand);
     hatchOpenCloseButton.whenReleased(hatchStopCommand);
+
+    armSetPositionCommand.start();
   }
 
   @Override
@@ -82,15 +97,13 @@ public class GunnerFailSafe
     cargoRollerButton.whenPressed(nullCommand);
     cargoRollerButton.whenReleased(nullCommand);
 
-    armUpButton.whileHeld(nullCommand);
-
-    armDownButton.whileHeld(nullCommand);
-
     hatchMoveButton.whenPressed(nullCommand);
     hatchMoveButton.whenReleased(nullCommand);
 
     hatchOpenCloseButton.whenPressed(nullCommand);
     hatchOpenCloseButton.whenReleased(nullCommand);
+
+    armSetPositionCommand.cancel();
   }
 
   @Override
@@ -116,5 +129,53 @@ public class GunnerFailSafe
   @Override
   public double getCargoRollerSpeed() {
     return controller.getTriggerAxis(Hand.kLeft) - controller.getTriggerAxis(Hand.kRight);
+  }
+
+  @Override
+  public int getArmTargetValue() {
+    updateAngleIndex();
+    return RobotMap.ARM_ANGLES[armAngleIndex] + armAdjust;
+  }
+
+  private void updateAngleIndex() {
+    DPadValue dPadValue = Robot.OI.getGunnerDPadValue();
+
+    if (dPadValue != lastDPadValue) {
+      switch(dPadValue) {
+        case Up:
+          if (armAngleIndex < RobotMap.ARM_ANGLES.length - 1) {
+            armAngleIndex++;
+            armAdjust = 0;
+          }
+          break;
+        case Down:
+          if (armAngleIndex > 0) {
+            armAngleIndex--;
+            armAdjust = 0;
+          }
+          break;
+        default:
+          // Do nothing.
+          break;
+      }
+      lastDPadValue = dPadValue;
+    }
+
+    boolean bumperLeft = Robot.OI.getGunnerController().getBumperPressed(Hand.kLeft);
+    boolean bumperRight = Robot.OI.getGunnerController().getBumperPressed(Hand.kRight);
+
+    if (bumperLeft != lastBumperLeft) {
+      if (bumperLeft) {
+        armAdjust += RobotMap.ARM_ADJUST_DOWN;
+      }
+      lastBumperLeft = bumperLeft;
+    }
+
+    if (bumperRight != lastBumperRight) {
+      if (bumperRight) {
+        armAdjust -= RobotMap.ARM_ADJUST_UP;
+      }
+      lastBumperRight = bumperRight;
+    }
   }
 }

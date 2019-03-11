@@ -85,26 +85,47 @@ public class RobotMap {
   public static final PIDValues PID_ARM = new PIDValues(0, 0, 0, 0, 0);
   public static final double DRIVE_TRAIN_SAMPLE_PERIOD = 1 / 5;
 
+  //=====
   // Arm
-  public static final int ARM_MAX_ANGLE = 270;
-  public static final int ARM_MIN_ANGLE = 0;
-  public static final int ARM_RANGE = ARM_MAX_ANGLE - ARM_MIN_ANGLE;
-  public static final int ARM_POTENTIOMETER_MAX = 4096;
-  public static final int ARM_POTENTIOMETER_MIN = 0;
-  public static final int ARM_POTENTIOMETER_RANGE = ARM_POTENTIOMETER_MAX - ARM_POTENTIOMETER_MIN;
-  public static final double ARM_ANGLE_FACTOR = ARM_POTENTIOMETER_RANGE / ARM_RANGE;
-  public static final double ARM_CARGO_HIGH_GOAL_ANGLE = 70.0;
-  public static final double ARM_CARGO_MID_GOAL_ANGLE = 40.0;
-  public static final double ARM_CARGO_LOW_GOAL_ANGLE = 10.0;
-  public static final double ARM_HATCH_HIGH_GOAL_ANGLE = 70.0;
-  public static final double ARM_HATCH_MID_GOAL_ANGLE = 40.0;
-  public static final double ARM_HATCH_LOW_GOAL_ANGLE = 10.0;
-  public static final double ARM_CARGO_PICKUP_ANGLE = 5.0;
-  public static final double ARM_STARTING_ANGLE = 0.0;
-  public static final double ARM_ANGLE_TOLERANCE = 1.0;
-  public static final double ARM_COASTING_PERCENTAGE = 0.1;
-  public static final double SERVO_LOCK_POSITION = 1.0;
-  public static final double SERVO_RETRACTED_POSITION = 0.0;
+  //=====
+  // The starting angle is absolute from the potentiometer at resting position.
+  // Adjust this whenever we remove and reinstall the potentiometer.
+  public static final int ARM_STARTING_ANGLE = 3424;
+
+  // The rest of these values are relative to the starting angle
+  // They should only need to be tweaked, not when the potentiometer is changed.
+  // TODO: Change these values to the accurate measurements
+  public static final int[] ARM_ANGLES = {
+    ARM_STARTING_ANGLE,                        // START
+    ARM_STARTING_ANGLE - 34,   // CARGO PICKUP
+    ARM_STARTING_ANGLE - 280,   // HATCH LOW
+    ARM_STARTING_ANGLE - 280,   // CARGO LOW
+    ARM_STARTING_ANGLE - 760,   // CARGO SHIP
+    ARM_STARTING_ANGLE - 1040,   // HATCH MID
+    ARM_STARTING_ANGLE - 1040,   // CARGO MID
+    ARM_STARTING_ANGLE - 1980,  // HATCH HIGH
+    ARM_STARTING_ANGLE - 1980,  // CARGO HIGH
+  };
+
+  public static final String[] ARM_ANGLE_NAMES = {
+    "START",
+    "CARGO PICKUP",
+    "HATCH LOW",
+    "CARGO LOW",
+    "CARGO SHIP",
+    "HATCH MID",
+    "CARGO MID",
+    "HATCH HIGH",
+    "CARGO HIGH"
+  };
+
+  // TODO: Calibrate these values to match the overshoot on movement.
+  public static final int ARM_UP_OVERSHOOT = 50;
+  public static final int ARM_DOWN_OVERSHOOT = 50;
+  public static final int ARM_TARGET_TOLERANCE = 100;
+
+  public static final int ARM_ADJUST_UP = 30;
+  public static final int ARM_ADJUST_DOWN = 30;
 
   // Cargo
   public static final double INTAKE_IN_SPEED = -1.0;

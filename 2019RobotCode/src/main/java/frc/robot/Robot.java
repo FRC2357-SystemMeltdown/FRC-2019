@@ -99,12 +99,14 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     shuffleboardController.drive();
     ARM_SUB.compressor.setClosedLoopControl(true);
+    OI.getGunnerOverlay().activate();
   }
 
   @Override
   public void teleopInit() {
     shuffleboardController.drive();
     ARM_SUB.compressor.setClosedLoopControl(true);
+    OI.getGunnerOverlay().activate();
   }
 
   @Override
