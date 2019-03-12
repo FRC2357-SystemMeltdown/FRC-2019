@@ -90,7 +90,12 @@ public class RobotMap {
   //=====
   // The starting angle is absolute from the potentiometer at resting position.
   // Adjust this whenever we remove and reinstall the potentiometer.
-  public static final int ARM_STARTING_ANGLE = 3424;
+
+  // Practice Robot
+  public static final int ARM_STARTING_ANGLE = 3033;
+
+  // Competition Robot
+  //public static final int ARM_STARTING_ANGLE = 3424;
 
   // The rest of these values are relative to the starting angle
   // They should only need to be tweaked, not when the potentiometer is changed.
