@@ -14,7 +14,6 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
 import frc.robot.Commands.HatchStopCommand;
 import frc.robot.Other.Utility;
@@ -22,7 +21,7 @@ import frc.robot.Other.Utility;
 /**
  * Hatch Gantry Subsystem
  */
-public class HatchSub extends Subsystem {
+public class HatchSub extends SubsystemBase {
   public DigitalInput leftLimitSwitch;
   public DigitalInput rightLimitSwitch;
 

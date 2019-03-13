@@ -10,7 +10,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.robot.Subsystems.CargoSub;
-import frc.robot.Subsystems.ClimberSub;
 import frc.robot.Subsystems.DriveSub;
 import frc.robot.Subsystems.ArmSub;
 import frc.robot.Subsystems.HatchSub;
@@ -32,7 +31,6 @@ public class Robot extends TimedRobot {
    public static final ArmSub ARM_SUB = new ArmSub();
    public static final CargoSub CARGO_SUB = new CargoSub();
    public static final HatchSub HATCH_SUB = new HatchSub();
-   public static final ClimberSub CLIMBER_SUB = new ClimberSub();
    public static final VisionSub VISION_SUB = new VisionSub();
    public static final OI OI = new OI();
 
@@ -41,15 +39,38 @@ public class Robot extends TimedRobot {
   private DriverModeManager driverModeMgr;
   private GunnerModeManager gunnerModeMgr;
 
+  private boolean failsafeActive;
   private boolean hatchLeftLimitClosed;
   private boolean hatchRightLimitClosed;
 
   public Robot(){
     robotInstance = this;
-    this.shuffleboardController = new ShuffleboardController();
+    failsafeActive = false;
+    shuffleboardController = new ShuffleboardController();
     driverModeMgr = new DriverModeManager();
     gunnerModeMgr = new GunnerModeManager();
     Robot.OI.setGunnerOverlay(new GunnerFailSafe(Robot.OI.getGunnerController()));
+  }
+
+  /**
+   * Checks if failsafe is active
+   * @return True if failsafe is active, false if normal.
+   */
+  public boolean isFailsafeActive() {
+    return failsafeActive;
+  }
+
+  /**
+   * Sets the failsafe status.
+   * @param failsafeActive True if failsafe should be on, false if it should be normal.
+   */
+  public void setFailsafeActive(boolean failsafeActive) {
+    this.failsafeActive = failsafeActive;
+    DRIVE_SUB.setFailsafeActive(failsafeActive);
+    ARM_SUB.setFailsafeActive(failsafeActive);
+    CARGO_SUB.setFailsafeActive(failsafeActive);
+    HATCH_SUB.setFailsafeActive(failsafeActive);
+    VISION_SUB.setFailsafeActive(failsafeActive);
   }
 
   @Override

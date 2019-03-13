@@ -25,12 +25,11 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
-import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  * Add your docs here.
  */
-public class DriveSub extends Subsystem {
+public class DriveSub extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 

@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.overlays.ProportionalDrive;
 import frc.robot.overlays.VelocityDrive;
 import frc.robot.Other.Utility;
-import frc.robot.modes.GunnerFailsafeMode;
 import frc.robot.overlays.ControlOverlay;
 import frc.robot.overlays.GunnerFailSafe;
 

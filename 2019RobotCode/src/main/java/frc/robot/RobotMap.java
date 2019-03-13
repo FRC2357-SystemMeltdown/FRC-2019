@@ -88,6 +88,9 @@ public class RobotMap {
   //=====
   // Arm
   //=====
+  // Constant for failsafe, not a real angle.
+  public static final int ARM_FAILSAFE_ANGLE = -1;
+
   // The starting angle is absolute from the potentiometer at resting position.
   // Adjust this whenever we remove and reinstall the potentiometer.
 
@@ -100,29 +103,76 @@ public class RobotMap {
   // The rest of these values are relative to the starting angle
   // They should only need to be tweaked, not when the potentiometer is changed.
   // TODO: Change these values to the accurate measurements
-  public static final int[] ARM_ANGLES = {
-    ARM_STARTING_ANGLE,                        // START
-    ARM_STARTING_ANGLE - 34,   // CARGO PICKUP
-    ARM_STARTING_ANGLE - 280,   // HATCH LOW
-    ARM_STARTING_ANGLE - 280,   // CARGO LOW
-    ARM_STARTING_ANGLE - 760,   // CARGO SHIP
-    ARM_STARTING_ANGLE - 1040,   // HATCH MID
-    ARM_STARTING_ANGLE - 1040,   // CARGO MID
-    ARM_STARTING_ANGLE - 1980,  // HATCH HIGH
-    ARM_STARTING_ANGLE - 1980,  // CARGO HIGH
-  };
+  public enum ArmPreset {
+    Failsafe(        "FAILSAFE",     -1),
+    Start(           "START",        ARM_STARTING_ANGLE),
+    CargoPickup(     "CARGO PICKUP", ARM_STARTING_ANGLE - 34),
+    HatchLow(        "HATCH LOW",    ARM_STARTING_ANGLE - 280),
+    CargoLow(        "CARGO LOW",    ARM_STARTING_ANGLE - 280),
+    CargoShip(       "CARGO SHIP",   ARM_STARTING_ANGLE - 760),
+    HatchMid(        "HATCH MID",    ARM_STARTING_ANGLE - 1040),
+    CargoMid(        "CARGO MID",    ARM_STARTING_ANGLE - 1040),
+    HatchHigh(       "HATCH HIGH",   ARM_STARTING_ANGLE - 1980),
+    CargoHigh(       "CARGO HIGH",   ARM_STARTING_ANGLE - 1980);
 
-  public static final String[] ARM_ANGLE_NAMES = {
-    "START",
-    "CARGO PICKUP",
-    "HATCH LOW",
-    "CARGO LOW",
-    "CARGO SHIP",
-    "HATCH MID",
-    "CARGO MID",
-    "HATCH HIGH",
-    "CARGO HIGH"
-  };
+    public final int value;
+    public final String name;
+
+    private ArmPreset(String name, int value) {
+      this.value = value;
+      this.name = name;
+    }
+
+    public static ArmPreset getNearestPreset(int value) {
+      ArmPreset nearest = ArmPreset.Start;
+      int nearestDiff = Integer.MAX_VALUE;
+
+      for (ArmPreset preset : ArmPreset.values()) {
+        if (preset == ArmPreset.Failsafe) {
+          continue;
+        }
+
+        int diff = Math.abs(value - preset.value);
+        if (diff < nearestDiff) {
+          nearest = preset;
+          nearestDiff = diff;
+        }
+      }
+      return nearest;
+    }
+
+    /**
+     * Gets a string representation of the current arm preset value.
+     * @return A string with the preset and adjustment.
+     */
+    public static String getPresetString(int value) {
+      ArmPreset preset = getNearestPreset(value);
+
+      if (value < preset.value) {
+        return preset.name + " " + (value - preset.value);
+      } else if (value > preset.value) {
+        return preset.name + " +" + (value - preset.value);
+      } else {
+        return preset.name;
+      }
+    }
+
+    public static ArmPreset getNext(ArmPreset preset) {
+      int index = preset.ordinal();
+      if (index < values().length - 1) {
+        return values()[index + 1];
+      }
+      return preset;
+    }
+
+    public static ArmPreset getPrevious(ArmPreset preset) {
+      int index = preset.ordinal();
+      if (index > Failsafe.ordinal() + 1) {
+        return values()[index - 1];
+      }
+      return preset;
+    }
+  }
 
   // TODO: Calibrate these values to match the overshoot on movement.
   public static final int ARM_UP_OVERSHOOT = 50;
@@ -131,6 +181,7 @@ public class RobotMap {
 
   public static final int ARM_ADJUST_UP = 30;
   public static final int ARM_ADJUST_DOWN = 30;
+  public static final int ARM_ADJUST_MAX = 1000;
 
   // Cargo
   public static final double INTAKE_IN_SPEED = -1.0;

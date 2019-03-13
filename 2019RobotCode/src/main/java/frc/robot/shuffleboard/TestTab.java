@@ -71,7 +71,7 @@ public class TestTab {
     compressorEnabled.setBoolean(Robot.ARM_SUB.compressor.enabled());
     pressureLow.setBoolean(Robot.ARM_SUB.compressor.getPressureSwitchValue());
 
-    armPotentiometer.setNumber(Robot.ARM_SUB.getPotentiometerValue());
+    armPotentiometer.setNumber(Robot.ARM_SUB.potentiometer.getValue());
     cargoLimitLeft.setBoolean(Robot.CARGO_SUB.limitLeft.get());
     cargoLimitRight.setBoolean(Robot.CARGO_SUB.limitRight.get());
 

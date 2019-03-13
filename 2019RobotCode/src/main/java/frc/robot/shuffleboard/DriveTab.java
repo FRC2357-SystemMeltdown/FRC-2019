@@ -52,13 +52,8 @@ public class DriveTab {
 
     yaw.setDouble(Robot.DRIVE_SUB.getYaw(false));
 
-    int armAngleIndex = Robot.OI.getGunnerOverlay().getArmAngleIndex();
-    int armAdjust = Robot.OI.getGunnerOverlay().getArmAdjust();
-    String armString = RobotMap.ARM_ANGLE_NAMES[armAngleIndex];
-    if (armAdjust != 0) {
-      armString += " " + (armAdjust > 0 ? "+" : "") + armAdjust;
-    }
-    armHeight.setString(armString);
+    int armValue = Robot.ARM_SUB.getValue();
+    armHeight.setString(RobotMap.ArmPreset.getPresetString(armValue));
   }
 
   /**

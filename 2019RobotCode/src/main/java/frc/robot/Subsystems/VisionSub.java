@@ -10,13 +10,12 @@ package frc.robot.Subsystems;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
 
 /**
  * Add your docs here.
  */
-public class VisionSub extends Subsystem {
+public class VisionSub extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 

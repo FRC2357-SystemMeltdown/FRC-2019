@@ -4,17 +4,19 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.buttons.Trigger;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.Commands.HatchDirectOpenCloseCommand;
-import frc.robot.Commands.ArmSetPositionCommand;
+import frc.robot.Commands.ArmAdjustCommand;
+import frc.robot.Commands.ArmPresetCycleCommand;
 import frc.robot.Commands.CargoRollerLimitCommand;
 import frc.robot.Commands.CargoRollerStopCommand;
 import frc.robot.Commands.HatchDirectMoveCommand;
 import frc.robot.Commands.HatchStopCommand;
-import frc.robot.Commands.NullCommand;
 import frc.robot.OI.DPadValue;
 import frc.robot.Other.XboxRaw;
+import frc.robot.Subsystems.ArmSub;
 
 /**
  * The GunnerFailSafe overlay is the least complex control system
@@ -22,8 +24,28 @@ import frc.robot.Other.XboxRaw;
  */
 public class GunnerFailSafe
   extends GunnerCreepDrive
-  implements ProportionalDrive, HatchControl, CargoControl, ArmControl
+  implements ProportionalDrive, HatchControl, CargoControl
 {
+  private class DPadTrigger extends Trigger {
+    DPadValue triggerValue;
+    DPadValue lastValue;
+
+    public DPadTrigger(DPadValue triggerValue) {
+      this.triggerValue = triggerValue;
+    }
+
+    @Override
+    public boolean get() {
+      DPadValue dPadValue = Robot.OI.getGunnerDPadValue();
+
+      if (dPadValue != lastValue) {
+        lastValue = dPadValue;
+        return (dPadValue == triggerValue);
+      }
+      return false;
+    }
+  }
+
   public static final double TURN_FACTOR = RobotMap.GUNNER_TURN_PROPORTION;
   public static final double SPEED_FACTOR = RobotMap.GUNNER_SPEED_PROPORTION;
 
@@ -31,53 +53,48 @@ public class GunnerFailSafe
   private CargoRollerStopCommand cargoRollerStopCommand;
   private JoystickButton cargoRollerButton;
 
-  private ArmSetPositionCommand armSetPositionCommand;
+  private ArmPresetCycleCommand armUpCommand;
+  private ArmPresetCycleCommand armDownCommand;
+  private ArmAdjustCommand armAdjustUpCommand;
+  private ArmAdjustCommand armAdjustDownCommand;
+  private JoystickButton armAdjustUpButton;
+  private JoystickButton armAdjustDownButton;
 
   private HatchDirectOpenCloseCommand hatchOpenCloseCommand;
   private HatchDirectMoveCommand hatchMoveCommand;
   private HatchStopCommand hatchStopCommand;
+
   private JoystickButton hatchMoveButton;
   private JoystickButton hatchOpenCloseButton;
 
-  private DPadValue lastDPadValue;
-  private boolean lastBumperLeft;
-  private boolean lastBumperRight;
-  private int armAngleIndex;
-  private int armAdjust;
+  private DPadTrigger upTrigger;
+  private DPadTrigger downTrigger;
 
   public GunnerFailSafe(XboxController controller) {
     super(controller);
 
-    lastDPadValue = DPadValue.Unpressed;
-    lastBumperLeft = false;
-    lastBumperRight = false;
-    armAngleIndex = 0;
-    armAdjust = 0;
-
     cargoRollerCommand = new CargoRollerLimitCommand(this);
     cargoRollerStopCommand = new CargoRollerStopCommand();
-    armSetPositionCommand = new ArmSetPositionCommand(this);
     hatchOpenCloseCommand = new HatchDirectOpenCloseCommand(this);
     hatchMoveCommand = new HatchDirectMoveCommand(this);
     hatchStopCommand = new HatchStopCommand();
+    armUpCommand = new ArmPresetCycleCommand(ArmSub.Direction.UP);
+    armDownCommand = new ArmPresetCycleCommand(ArmSub.Direction.DOWN);
+    armAdjustUpCommand = new ArmAdjustCommand(RobotMap.ARM_ADJUST_UP);
+    armAdjustDownCommand = new ArmAdjustCommand(RobotMap.ARM_ADJUST_DOWN);
 
     cargoRollerButton = new JoystickButton(controller, XboxRaw.A.value);
     hatchMoveButton = new JoystickButton(controller, XboxRaw.X.value);
     hatchOpenCloseButton = new JoystickButton(controller, XboxRaw.Y.value);
-  }
+    armAdjustUpButton = new JoystickButton(controller, XboxRaw.BumperRight.value);
+    armAdjustDownButton = new JoystickButton(controller, XboxRaw.BumperLeft.value);
 
-  public int getArmAngleIndex() {
-    return armAngleIndex;
-  }
-
-  public int getArmAdjust() {
-    return armAdjust;
+    upTrigger = new DPadTrigger(DPadValue.Up);
+    downTrigger = new DPadTrigger(DPadValue.Down);
   }
 
   @Override
   public void activate() {
-    armAngleIndex = 0;
-
     cargoRollerButton.whenPressed(cargoRollerCommand);
     cargoRollerButton.whenReleased(cargoRollerStopCommand);
 
@@ -87,23 +104,15 @@ public class GunnerFailSafe
     hatchOpenCloseButton.whenPressed(hatchOpenCloseCommand);
     hatchOpenCloseButton.whenReleased(hatchStopCommand);
 
-    armSetPositionCommand.start();
+    armAdjustUpButton.whenPressed(armAdjustUpCommand);
+    armAdjustDownButton.whenPressed(armAdjustDownCommand);
+
+    upTrigger.whenActive(armUpCommand);
+    downTrigger.whenActive(armDownCommand);
   }
 
   @Override
   public void deactivate() {
-    NullCommand nullCommand = new NullCommand();
-
-    cargoRollerButton.whenPressed(nullCommand);
-    cargoRollerButton.whenReleased(nullCommand);
-
-    hatchMoveButton.whenPressed(nullCommand);
-    hatchMoveButton.whenReleased(nullCommand);
-
-    hatchOpenCloseButton.whenPressed(nullCommand);
-    hatchOpenCloseButton.whenReleased(nullCommand);
-
-    armSetPositionCommand.cancel();
   }
 
   @Override
@@ -129,53 +138,5 @@ public class GunnerFailSafe
   @Override
   public double getCargoRollerSpeed() {
     return controller.getTriggerAxis(Hand.kLeft) - controller.getTriggerAxis(Hand.kRight);
-  }
-
-  @Override
-  public int getArmTargetValue() {
-    updateAngleIndex();
-    return RobotMap.ARM_ANGLES[armAngleIndex] + armAdjust;
-  }
-
-  private void updateAngleIndex() {
-    DPadValue dPadValue = Robot.OI.getGunnerDPadValue();
-
-    if (dPadValue != lastDPadValue) {
-      switch(dPadValue) {
-        case Up:
-          if (armAngleIndex < RobotMap.ARM_ANGLES.length - 1) {
-            armAngleIndex++;
-            armAdjust = 0;
-          }
-          break;
-        case Down:
-          if (armAngleIndex > 0) {
-            armAngleIndex--;
-            armAdjust = 0;
-          }
-          break;
-        default:
-          // Do nothing.
-          break;
-      }
-      lastDPadValue = dPadValue;
-    }
-
-    boolean bumperLeft = Robot.OI.getGunnerController().getBumperPressed(Hand.kLeft);
-    boolean bumperRight = Robot.OI.getGunnerController().getBumperPressed(Hand.kRight);
-
-    if (bumperLeft != lastBumperLeft) {
-      if (bumperLeft) {
-        armAdjust += RobotMap.ARM_ADJUST_DOWN;
-      }
-      lastBumperLeft = bumperLeft;
-    }
-
-    if (bumperRight != lastBumperRight) {
-      if (bumperRight) {
-        armAdjust -= RobotMap.ARM_ADJUST_UP;
-      }
-      lastBumperRight = bumperRight;
-    }
   }
 }

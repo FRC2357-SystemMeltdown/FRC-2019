@@ -10,20 +10,22 @@ package frc.robot.Subsystems;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
-import frc.robot.Commands.MoveArmDirectCommand;
+import frc.robot.Commands.ArmStopCommand;
 
 /**
  * Add your docs here.
  */
-public class ArmSub extends Subsystem {
+public class ArmSub extends SubsystemBase {
+  public static int TARGET_VALUE_STOP = -1;
+
   public enum Direction {
     STOP,
     DOWN,
     UP,
   }
 
+  // TODO: Move Compressor to its own subsystem.
   public Compressor compressor = new Compressor(RobotMap.CAN_ID_PCM);
   public Solenoid downSolenoid = new Solenoid(
     RobotMap.CAN_ID_PCM,
@@ -32,43 +34,115 @@ public class ArmSub extends Subsystem {
     RobotMap.CAN_ID_PCM,
     RobotMap.PCM_PORT_UP);
 
-  private AnalogInput potentiometer = new AnalogInput(RobotMap.ANALOG_PORT_ARM_POTENTIOMETER);
-  private Direction currentDirection = null;
+  public AnalogInput potentiometer = new AnalogInput(RobotMap.ANALOG_PORT_ARM_POTENTIOMETER);
+
+  private Direction manualDirection = Direction.STOP;
+  private int targetValue = TARGET_VALUE_STOP;
 
   @Override
-  public void initDefaultCommand() {
-    // Default command sets the arm speed to zero
-    setDefaultCommand(new MoveArmDirectCommand(Direction.STOP));
+  public void setFailsafeActive(boolean failsafeActive) {
+    super.setFailsafeActive(failsafeActive);
+    manualDirection = Direction.STOP;
+    targetValue = TARGET_VALUE_STOP;
   }
 
   /**
-   * Gets the raw potentiometer value
-   * @return A value between 0 and 4096 (12-bit adc)
+   * Gets the current value of the arm position.
+   * @return int The potentiometer reading currently
    */
-  public int getPotentiometerValue() {
+  public int getValue() {
     return potentiometer.getValue();
   }
 
   /**
-   * Moves the arm in the direction desired, or stops it.
-   *
+   * Gets the current target value for the arm.
+   * @return The target potentiometer value.
+   */
+  public int getTargetValue() {
+    return targetValue;
+  }
+
+  /**
+   * Sets the current target value for the arm.
+   * @param targetValueAdjust the new potentiometer value for the arm.
+   */
+  public void setTargetValue(int targetValue) {
+    if (isFailsafeActive() && targetValue != TARGET_VALUE_STOP) {
+      System.err.println("ArmSub: Can't set target value while in failsafe");
+    }
+    this.targetValue = targetValue;
+  }
+
+  public boolean isInRange(int value) {
+    return Math.abs(getTargetValueError(value)) < RobotMap.ARM_TARGET_TOLERANCE;
+  }
+
+  private int getTargetValueError(int value) {
+    return targetValue - value;
+  }
+
+  @Override
+  public void initDefaultCommand() {
+    setDefaultCommand(new ArmStopCommand());
+  }
+
+  /**
+   * Failsafe only: move arm manually in given direction.
    * @param direction The direction to move the arm.
    */
   public void moveArmManual(Direction direction) {
-    if (currentDirection != direction) {
-      currentDirection = direction;
+    if (!isFailsafeActive()) {
+      System.err.println("moveArmManual called when not in failsafe");
+      return;
+    }
+    if (manualDirection != direction) {
+      manualDirection = direction;
+    }
+  }
 
-      switch(direction) {
-        case DOWN:
-          down();
-          break;
-        case UP:
-          up();
-          break;
-        default:
-          stop();
-          break;
+  private Direction getCurrentDirection() {
+    if (isFailsafeActive()) {
+      return manualDirection;
+    }
+    if (targetValue == TARGET_VALUE_STOP) {
+      return Direction.STOP;
+    }
+
+    int value = getValue();
+    int error = getTargetValueError(value);
+
+    if (isInRange(value)) {
+      return Direction.STOP;
+    }
+
+    if (error > 0) {
+      // DOWN
+      if (error < RobotMap.ARM_DOWN_OVERSHOOT) {
+        return Direction.STOP;
       }
+      return Direction.DOWN;
+    } else if (error < 0) {
+      // UP
+      if (-error < RobotMap.ARM_UP_OVERSHOOT) {
+        return Direction.STOP;
+      }
+      return Direction.UP;
+    }
+    return Direction.STOP;
+  }
+
+  @Override
+  public void periodic() {
+    switch(getCurrentDirection()) {
+      case DOWN:
+        down();
+        break;
+      case UP:
+        up();
+        break;
+      default:
+        stop();
+        break;
     }
   }
 
