@@ -8,7 +8,6 @@
 package frc.robot.Subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
 import frc.robot.Commands.CargoRollerStopCommand;
 
@@ -18,7 +17,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 /**
  * This subsystem manages the cargo intake motor.
  */
-public class CargoSub extends Subsystem {
+public class CargoSub extends SubsystemBase {
 
   public WPI_VictorSPX roller = new WPI_VictorSPX(RobotMap.CAN_ID_CARGO_INTAKE);
   public DigitalInput limitLeft = new DigitalInput(RobotMap.DIO_PORT_CARGO_LIMIT_LEFT);
@@ -42,10 +41,17 @@ public class CargoSub extends Subsystem {
 
   @Override
   public void initDefaultCommand() {
+    setFailsafeActive(isFailsafeActive());
+  }
+
+  @Override
+  public void setFailsafeActive(boolean failsafeActive) {
+    super.setFailsafeActive(failsafeActive);
     setDefaultCommand(new CargoRollerStopCommand());
   }
 
   public void cargoRollerDirect(double speed) {
+    System.out.println("Roller speed: " + speed);
     roller.set(-speed);
   }
 

@@ -88,11 +88,14 @@ public class RobotMap {
   //=====
   // Arm
   //=====
+  // Constant for failsafe, not a real angle.
+  public static final int ARM_FAILSAFE_ANGLE = -1;
+
   // The starting angle is absolute from the potentiometer at resting position.
   // Adjust this whenever we remove and reinstall the potentiometer.
 
   // Practice Robot
-  public static final int ARM_STARTING_ANGLE = 3033;
+  public static final int ARM_STARTING_ANGLE = 3015;
 
   // Competition Robot
   //public static final int ARM_STARTING_ANGLE = 3424;
@@ -100,37 +103,86 @@ public class RobotMap {
   // The rest of these values are relative to the starting angle
   // They should only need to be tweaked, not when the potentiometer is changed.
   // TODO: Change these values to the accurate measurements
-  public static final int[] ARM_ANGLES = {
-    ARM_STARTING_ANGLE,                        // START
-    ARM_STARTING_ANGLE - 34,   // CARGO PICKUP
-    ARM_STARTING_ANGLE - 280,   // HATCH LOW
-    ARM_STARTING_ANGLE - 280,   // CARGO LOW
-    ARM_STARTING_ANGLE - 760,   // CARGO SHIP
-    ARM_STARTING_ANGLE - 1040,   // HATCH MID
-    ARM_STARTING_ANGLE - 1040,   // CARGO MID
-    ARM_STARTING_ANGLE - 1980,  // HATCH HIGH
-    ARM_STARTING_ANGLE - 1980,  // CARGO HIGH
-  };
+  public enum ArmPreset {
+    //               Name            Potentiometer value          up  down (overshoots)
+    Failsafe(        "FAILSAFE",     -1,                           0,   0),
+    Start(           "START",        ARM_STARTING_ANGLE,           0,   5),
+    CargoPickup(     "CARGO PICKUP", ARM_STARTING_ANGLE - 70,     55,  40),
+    CargoLow(        "CARGO LOW",    ARM_STARTING_ANGLE - 280,    40,  30),
+    HatchLow(        "HATCH LOW",    ARM_STARTING_ANGLE - 320,    70,  20),
+    CargoShip(       "CARGO SHIP",   ARM_STARTING_ANGLE - 760,    40,  20),
+    CargoMid(        "CARGO MID",    ARM_STARTING_ANGLE - 1040,   55,  20),
+    HatchMid(        "HATCH MID",    ARM_STARTING_ANGLE - 1140,   80,  45),
+    CargoHigh(       "CARGO HIGH",   ARM_STARTING_ANGLE - 1900,   70,  30),
+    HatchHigh(       "HATCH HIGH",   ARM_STARTING_ANGLE - 1980,   10,   0);
 
-  public static final String[] ARM_ANGLE_NAMES = {
-    "START",
-    "CARGO PICKUP",
-    "HATCH LOW",
-    "CARGO LOW",
-    "CARGO SHIP",
-    "HATCH MID",
-    "CARGO MID",
-    "HATCH HIGH",
-    "CARGO HIGH"
-  };
+    public final int value;
+    public final String name;
+    public final int upOvershoot;
+    public final int downOvershoot;
 
-  // TODO: Calibrate these values to match the overshoot on movement.
-  public static final int ARM_UP_OVERSHOOT = 50;
-  public static final int ARM_DOWN_OVERSHOOT = 50;
-  public static final int ARM_TARGET_TOLERANCE = 100;
+    private ArmPreset(String name, int value, int upOvershoot, int downOvershoot) {
+      this.value = value;
+      this.name = name;
+      this.upOvershoot = upOvershoot;
+      this.downOvershoot = downOvershoot;
+    }
 
-  public static final int ARM_ADJUST_UP = 30;
-  public static final int ARM_ADJUST_DOWN = 30;
+    public static ArmPreset getNearestPreset(int value) {
+      ArmPreset nearest = ArmPreset.Start;
+      int nearestDiff = Integer.MAX_VALUE;
+
+      for (ArmPreset preset : ArmPreset.values()) {
+        if (preset == ArmPreset.Failsafe) {
+          continue;
+        }
+
+        int diff = Math.abs(value - preset.value);
+        if (diff < nearestDiff) {
+          nearest = preset;
+          nearestDiff = diff;
+        }
+      }
+      return nearest;
+    }
+
+    /**
+     * Gets a string representation of the current arm preset value.
+     * @param preset The preset the value should be relative to.
+     * @param value The potentiometer value.
+     * @return A string with the preset and adjustment.
+     */
+    public static String getPresetString(ArmPreset preset, int value) {
+      if (value < preset.value) {
+        return preset.name + " " + (value - preset.value);
+      } else if (value > preset.value) {
+        return preset.name + " +" + (value - preset.value);
+      } else {
+        return preset.name;
+      }
+    }
+
+    public static ArmPreset getNext(ArmPreset preset) {
+      int index = preset.ordinal();
+      if (index < values().length - 1) {
+        return values()[index + 1];
+      }
+      return preset;
+    }
+
+    public static ArmPreset getPrevious(ArmPreset preset) {
+      int index = preset.ordinal();
+      if (index > Failsafe.ordinal() + 1) {
+        return values()[index - 1];
+      }
+      return preset;
+    }
+  }
+
+  public static final int ARM_TARGET_TOLERANCE = 5;
+
+  public static final int ARM_ADJUST_UP = -10;
+  public static final int ARM_ADJUST_DOWN = 10;
 
   // Cargo
   public static final double INTAKE_IN_SPEED = -1.0;

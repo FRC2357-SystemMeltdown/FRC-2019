@@ -9,9 +9,9 @@ package frc.robot.Commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class EncoderBasedDrive extends Command {
+public class DriveWithEncoders extends Command {
 
-  public EncoderBasedDrive() {
+  public DriveWithEncoders() {
     requires(Robot.DRIVE_SUB);
   }
 
@@ -23,8 +23,8 @@ public class EncoderBasedDrive extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    double turn = Robot.OI.getGyroBasedTurn();
-    double speed = Robot.OI.getEncoderBasedSpeed();
+    double turn = Robot.OI.getTurnDegreesPerSecond();
+    double speed = Robot.OI.getSpeedInchesPerSecond();
     Robot.DRIVE_SUB.PIDDrive(speed, turn);
     // if(Robot.OI.getDriverController().getAButton()) {
     //   //Robot.DRIVE_SUB.resetSensors();

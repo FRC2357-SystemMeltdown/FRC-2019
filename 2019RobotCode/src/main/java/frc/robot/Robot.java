@@ -10,14 +10,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.robot.Subsystems.CargoSub;
-import frc.robot.Subsystems.ClimberSub;
 import frc.robot.Subsystems.DriveSub;
 import frc.robot.Subsystems.ArmSub;
-import frc.robot.Subsystems.HatchSub;
 import frc.robot.Subsystems.VisionSub;
-import frc.robot.modes.DriverModeManager;
-import frc.robot.modes.GunnerModeManager;
-import frc.robot.overlays.GunnerFailSafe;
 import frc.robot.shuffleboard.ShuffleboardController;
 
 /**
@@ -28,34 +23,50 @@ import frc.robot.shuffleboard.ShuffleboardController;
  * project.
  */
 public class Robot extends TimedRobot {
-   public static final DriveSub DRIVE_SUB = new DriveSub();
-   public static final ArmSub ARM_SUB = new ArmSub();
-   public static final CargoSub CARGO_SUB = new CargoSub();
-   public static final HatchSub HATCH_SUB = new HatchSub();
-   public static final ClimberSub CLIMBER_SUB = new ClimberSub();
-   public static final VisionSub VISION_SUB = new VisionSub();
-   public static final OI OI = new OI();
+  public static final DriveSub DRIVE_SUB = new DriveSub();
+  public static final ArmSub ARM_SUB = new ArmSub();
+  public static final CargoSub CARGO_SUB = new CargoSub();
+  public static final VisionSub VISION_SUB = new VisionSub();
+  public static final OI OI = new OI();
 
   private static Robot robotInstance;
+
   private ShuffleboardController shuffleboardController;
-  private DriverModeManager driverModeMgr;
-  private GunnerModeManager gunnerModeMgr;
+  private boolean failsafeActive;
 
-  private boolean hatchLeftLimitClosed;
-  private boolean hatchRightLimitClosed;
-
-  public Robot(){
+  public Robot() {
     robotInstance = this;
-    this.shuffleboardController = new ShuffleboardController();
-    driverModeMgr = new DriverModeManager();
-    gunnerModeMgr = new GunnerModeManager();
-    Robot.OI.setGunnerOverlay(new GunnerFailSafe(Robot.OI.getGunnerController()));
+    failsafeActive = false;
+  }
+
+  /**
+   * Checks if failsafe is active
+   * @return True if failsafe is active, false if normal.
+   */
+  public boolean isFailsafeActive() {
+    return failsafeActive;
+  }
+
+  /**
+   * Sets the failsafe status.
+   * @param failsafeActive True if failsafe should be on, false if it should be normal.
+   */
+  public void setFailsafeActive(boolean failsafeActive) {
+    this.failsafeActive = failsafeActive;
+
+    // Shut it all down, for safety.
+    Scheduler.getInstance().removeAll();
+
+    DRIVE_SUB.setFailsafeActive(failsafeActive);
+    ARM_SUB.setFailsafeActive(failsafeActive);
+    CARGO_SUB.setFailsafeActive(failsafeActive);
+    VISION_SUB.setFailsafeActive(failsafeActive);
   }
 
   @Override
   public void robotInit() {
-    hatchLeftLimitClosed = HATCH_SUB.isLeftLimitClosed();
-    hatchRightLimitClosed = HATCH_SUB.isRightLimitClosed();
+    setFailsafeActive(failsafeActive);
+    shuffleboardController = new ShuffleboardController();
   }
 
   /**
@@ -68,20 +79,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    Scheduler.getInstance().run();
-
-    // Update the mode manager
-    driverModeMgr.updateDPadValue(OI.getDriverDPadValue());
-
-    // If the hatch limit switch is closed, reset the encoder
-    if(HATCH_SUB.isLeftLimitClosed() && !hatchLeftLimitClosed) {
-      HATCH_SUB.resetLeftEncoder();
-    }
-    if(HATCH_SUB.isRightLimitClosed() && !hatchRightLimitClosed) {
-      HATCH_SUB.resetRightEncoder();
-    }
-    hatchLeftLimitClosed = HATCH_SUB.isLeftLimitClosed();
-    hatchRightLimitClosed = HATCH_SUB.isRightLimitClosed();
   }
 
   /**
@@ -99,14 +96,12 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     shuffleboardController.drive();
     ARM_SUB.compressor.setClosedLoopControl(true);
-    OI.getGunnerOverlay().activate();
   }
 
   @Override
   public void teleopInit() {
     shuffleboardController.drive();
     ARM_SUB.compressor.setClosedLoopControl(true);
-    OI.getGunnerOverlay().activate();
   }
 
   @Override
@@ -117,8 +112,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
-    // @todo: Put some code in here to decelerate gracefully
-    // because this will happen between auto and teleop
   }
 
   /**
@@ -126,6 +119,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
+    Scheduler.getInstance().run();
     shuffleboardController.periodic();
   }
 
@@ -134,6 +128,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    Scheduler.getInstance().run();
     shuffleboardController.periodic();
   }
 
@@ -142,6 +137,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+    Scheduler.getInstance().run();
     shuffleboardController.periodic();
   }
 
@@ -150,18 +146,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledPeriodic() {
-    // @todo: See what we need to do here.
+    shuffleboardController.periodic();
   }
 
   public static Robot getInstance() {
     return robotInstance;
-  }
-
-  public DriverModeManager getDriverModeManager() {
-    return driverModeMgr;
-  }
-
-  public GunnerModeManager getGunnerModeManager() {
-    return gunnerModeMgr;
   }
 }

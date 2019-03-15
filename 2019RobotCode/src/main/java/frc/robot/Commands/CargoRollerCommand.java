@@ -9,38 +9,64 @@ package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
-import frc.robot.overlays.CargoControl;
+import frc.robot.controls.CargoControl;
 
-public class CargoRollerDirectCommand extends Command {
+// TODO: Move switch logic into subsystem so this command can be simpler and not loop execute.
+public class CargoRollerCommand extends Command {
   private CargoControl controller;
+  private boolean reset;
 
-  public CargoRollerDirectCommand(CargoControl controller) {
+  public CargoRollerCommand(CargoControl controller) {
     requires(Robot.CARGO_SUB);
     this.controller = controller;
+  }
+
+  public boolean isFailsafe() {
+    return Robot.getInstance().isFailsafeActive();
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    this.reset = false;
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    if (isFailsafe()) {
+      executeFailsafe();
+    } else {
+      executeWithLimits();
+    }
+  }
+
+  private void executeFailsafe() {
     double speed = controller.getCargoRollerSpeed();
     Robot.CARGO_SUB.cargoRollerDirect(speed);
   }
 
-  // Make this return true when this Command no longer needs to run execute()
+  private void executeWithLimits() {
+    double speed = controller.getCargoRollerSpeed();
+
+    if (Robot.CARGO_SUB.isLimit()) {
+      if (speed == 0.0) {
+        reset = true;
+      }
+
+      if (!reset) {
+        speed = 0.0;
+      }
+    } else {
+      reset = false;
+    }
+
+    Robot.CARGO_SUB.cargoRollerDirect(speed);
+  }
+
   @Override
   protected boolean isFinished() {
     return false;
-  }
-
-  // Called once after isFinished returns true
-  @Override
-  protected void end() {
-    Robot.CARGO_SUB.cargoRollerStop();
   }
 
   // Called when another command which requires one or more of the same

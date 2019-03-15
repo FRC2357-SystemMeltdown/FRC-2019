@@ -10,15 +10,11 @@ package frc.robot.Subsystems;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
 
 /**
- * Add your docs here.
  */
-public class VisionSub extends Subsystem {
-  // Put methods for controlling this subsystem
-  // here. Call these from Commands.
+public class VisionSub extends SubsystemBase {
 
   private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
   private NetworkTableEntry tv = table.getEntry("tv");
@@ -30,9 +26,7 @@ public class VisionSub extends Subsystem {
   private NetworkTableEntry tvert = table.getEntry("tvert");
 
   @Override
-  public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
+  protected void initDefaultCommand() {
   }
 
   public double getTV() {
