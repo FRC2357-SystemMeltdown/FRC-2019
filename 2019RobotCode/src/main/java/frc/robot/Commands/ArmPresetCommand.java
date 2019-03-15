@@ -5,27 +5,47 @@ import frc.robot.Robot;
 import frc.robot.RobotMap.ArmPreset;
 
 public class ArmPresetCommand extends Command {
-  private ArmPreset preset;
+  // This is tracked amongst all preset commands to keep them them same.
+  private static ArmPreset lastPreset = ArmPreset.Start;
+
+  public static ArmPreset getLastPreset() {
+    return lastPreset;
+  }
+
+  private ArmPreset preset = null;
+
+  public ArmPresetCommand() {
+    requires(Robot.ARM_SUB);
+  }
+
+  public boolean isFailsafe() {
+    return Robot.getInstance().isFailsafeActive();
+  }
 
   public ArmPresetCommand(ArmPreset preset) {
     requires(Robot.ARM_SUB);
+    setPreset(preset);
+  }
 
+  protected void setPreset(ArmPreset preset) {
     if (preset == ArmPreset.Failsafe) {
       System.err.println("ArmPresetCommand doesn't support Failsafe preset.");
+      this.preset = null;
+    } else {
+      this.preset = preset;
     }
-    this.preset = preset;
   }
 
   @Override
-  protected void execute() {
-    if (preset == ArmPreset.Failsafe) {
-      return;
+  protected void initialize() {
+    if (! isFailsafe()) {
+      Robot.ARM_SUB.setTargetValue(preset.value);
+      lastPreset = this.preset;
     }
-    Robot.ARM_SUB.setTargetValue(preset.value);
   }
 
   @Override
   protected boolean isFinished() {
-    return Robot.ARM_SUB.isInRange(preset.value);
+    return true;
   }
 }

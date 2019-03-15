@@ -1,4 +1,4 @@
-package frc.robot.Other;
+package frc.robot.controls;
 
 // Constants for the raw button and axis values of the XBox controller
 public enum XboxRaw
@@ -10,7 +10,7 @@ public enum XboxRaw
 
   BumperLeft(5),
   BumperRight(6),
-  
+
   Back(7),
   Start(8),
 

@@ -2,7 +2,6 @@ package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
-import frc.robot.Subsystems.ArmSub;
 
 public class ArmStopCommand extends Command {
 
@@ -12,11 +11,12 @@ public class ArmStopCommand extends Command {
 
   @Override
   protected void execute() {
-    Robot.ARM_SUB.setTargetValue(ArmSub.TARGET_VALUE_STOP);
+    Robot.ARM_SUB.stop();
   }
 
   @Override
   protected boolean isFinished() {
-    return true;
+    // This never returns true, because it's the default command for ArmSub
+    return false;
   }
 }

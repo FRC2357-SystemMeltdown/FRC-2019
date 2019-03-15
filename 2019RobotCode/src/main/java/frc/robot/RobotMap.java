@@ -95,7 +95,7 @@ public class RobotMap {
   // Adjust this whenever we remove and reinstall the potentiometer.
 
   // Practice Robot
-  public static final int ARM_STARTING_ANGLE = 3033;
+  public static final int ARM_STARTING_ANGLE = 3015;
 
   // Competition Robot
   //public static final int ARM_STARTING_ANGLE = 3424;
@@ -104,23 +104,28 @@ public class RobotMap {
   // They should only need to be tweaked, not when the potentiometer is changed.
   // TODO: Change these values to the accurate measurements
   public enum ArmPreset {
-    Failsafe(        "FAILSAFE",     -1),
-    Start(           "START",        ARM_STARTING_ANGLE),
-    CargoPickup(     "CARGO PICKUP", ARM_STARTING_ANGLE - 34),
-    HatchLow(        "HATCH LOW",    ARM_STARTING_ANGLE - 280),
-    CargoLow(        "CARGO LOW",    ARM_STARTING_ANGLE - 280),
-    CargoShip(       "CARGO SHIP",   ARM_STARTING_ANGLE - 760),
-    HatchMid(        "HATCH MID",    ARM_STARTING_ANGLE - 1040),
-    CargoMid(        "CARGO MID",    ARM_STARTING_ANGLE - 1040),
-    HatchHigh(       "HATCH HIGH",   ARM_STARTING_ANGLE - 1980),
-    CargoHigh(       "CARGO HIGH",   ARM_STARTING_ANGLE - 1980);
+    //               Name            Potentiometer value          up  down (overshoots)
+    Failsafe(        "FAILSAFE",     -1,                           0,   0),
+    Start(           "START",        ARM_STARTING_ANGLE,           0,   5),
+    CargoPickup(     "CARGO PICKUP", ARM_STARTING_ANGLE - 70,     55,  40),
+    CargoLow(        "CARGO LOW",    ARM_STARTING_ANGLE - 280,    40,  30),
+    HatchLow(        "HATCH LOW",    ARM_STARTING_ANGLE - 320,    70,  20),
+    CargoShip(       "CARGO SHIP",   ARM_STARTING_ANGLE - 760,    40,  20),
+    CargoMid(        "CARGO MID",    ARM_STARTING_ANGLE - 1040,   55,  20),
+    HatchMid(        "HATCH MID",    ARM_STARTING_ANGLE - 1140,   80,  45),
+    CargoHigh(       "CARGO HIGH",   ARM_STARTING_ANGLE - 1900,   70,  30),
+    HatchHigh(       "HATCH HIGH",   ARM_STARTING_ANGLE - 1980,   10,   0);
 
     public final int value;
     public final String name;
+    public final int upOvershoot;
+    public final int downOvershoot;
 
-    private ArmPreset(String name, int value) {
+    private ArmPreset(String name, int value, int upOvershoot, int downOvershoot) {
       this.value = value;
       this.name = name;
+      this.upOvershoot = upOvershoot;
+      this.downOvershoot = downOvershoot;
     }
 
     public static ArmPreset getNearestPreset(int value) {
@@ -143,11 +148,11 @@ public class RobotMap {
 
     /**
      * Gets a string representation of the current arm preset value.
+     * @param preset The preset the value should be relative to.
+     * @param value The potentiometer value.
      * @return A string with the preset and adjustment.
      */
-    public static String getPresetString(int value) {
-      ArmPreset preset = getNearestPreset(value);
-
+    public static String getPresetString(ArmPreset preset, int value) {
       if (value < preset.value) {
         return preset.name + " " + (value - preset.value);
       } else if (value > preset.value) {
@@ -174,14 +179,10 @@ public class RobotMap {
     }
   }
 
-  // TODO: Calibrate these values to match the overshoot on movement.
-  public static final int ARM_UP_OVERSHOOT = 50;
-  public static final int ARM_DOWN_OVERSHOOT = 50;
-  public static final int ARM_TARGET_TOLERANCE = 100;
+  public static final int ARM_TARGET_TOLERANCE = 5;
 
-  public static final int ARM_ADJUST_UP = 30;
-  public static final int ARM_ADJUST_DOWN = 30;
-  public static final int ARM_ADJUST_MAX = 1000;
+  public static final int ARM_ADJUST_UP = -10;
+  public static final int ARM_ADJUST_DOWN = 10;
 
   // Cargo
   public static final double INTAKE_IN_SPEED = -1.0;

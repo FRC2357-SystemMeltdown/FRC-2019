@@ -12,12 +12,13 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Solenoid;
 import frc.robot.RobotMap;
 import frc.robot.Commands.ArmStopCommand;
+import frc.robot.RobotMap.ArmPreset;
 
 /**
  * Add your docs here.
  */
 public class ArmSub extends SubsystemBase {
-  public static int TARGET_VALUE_STOP = -1;
+  private static int TARGET_VALUE_STOP = -1;
 
   public enum Direction {
     STOP,
@@ -36,14 +37,18 @@ public class ArmSub extends SubsystemBase {
 
   public AnalogInput potentiometer = new AnalogInput(RobotMap.ANALOG_PORT_ARM_POTENTIOMETER);
 
+  private Direction lastDirection = Direction.STOP;
   private Direction manualDirection = Direction.STOP;
   private int targetValue = TARGET_VALUE_STOP;
 
   @Override
+  protected void initDefaultCommand() {
+    setFailsafeActive(isFailsafeActive());
+  }
+
+  @Override
   public void setFailsafeActive(boolean failsafeActive) {
     super.setFailsafeActive(failsafeActive);
-    manualDirection = Direction.STOP;
-    targetValue = TARGET_VALUE_STOP;
   }
 
   /**
@@ -55,10 +60,21 @@ public class ArmSub extends SubsystemBase {
   }
 
   /**
+   * Checks if a target value is in range of the current value.
+   * @param targetValue The target value to check against the current potentiometer value.
+   */
+  public boolean isInRange(int targetValue) {
+    return Math.abs(getValue() - targetValue) < RobotMap.ARM_TARGET_TOLERANCE;
+  }
+
+  /**
    * Gets the current target value for the arm.
    * @return The target potentiometer value.
    */
   public int getTargetValue() {
+    if (targetValue == TARGET_VALUE_STOP) {
+      return getValue();
+    }
     return targetValue;
   }
 
@@ -68,22 +84,10 @@ public class ArmSub extends SubsystemBase {
    */
   public void setTargetValue(int targetValue) {
     if (isFailsafeActive() && targetValue != TARGET_VALUE_STOP) {
-      System.err.println("ArmSub: Can't set target value while in failsafe");
+      System.err.println("ArmSub: Can't setTargetValue while in failsafe");
+      return;
     }
     this.targetValue = targetValue;
-  }
-
-  public boolean isInRange(int value) {
-    return Math.abs(getTargetValueError(value)) < RobotMap.ARM_TARGET_TOLERANCE;
-  }
-
-  private int getTargetValueError(int value) {
-    return targetValue - value;
-  }
-
-  @Override
-  public void initDefaultCommand() {
-    setDefaultCommand(new ArmStopCommand());
   }
 
   /**
@@ -92,7 +96,7 @@ public class ArmSub extends SubsystemBase {
    */
   public void moveArmManual(Direction direction) {
     if (!isFailsafeActive()) {
-      System.err.println("moveArmManual called when not in failsafe");
+      System.err.println("ArmSub: Can't moveArmManual when not in failsafe");
       return;
     }
     if (manualDirection != direction) {
@@ -100,7 +104,7 @@ public class ArmSub extends SubsystemBase {
     }
   }
 
-  private Direction getCurrentDirection() {
+  private Direction calculateCurrentDirection() {
     if (isFailsafeActive()) {
       return manualDirection;
     }
@@ -109,21 +113,21 @@ public class ArmSub extends SubsystemBase {
     }
 
     int value = getValue();
-    int error = getTargetValueError(value);
+    ArmPreset nearestPreset = ArmPreset.getNearestPreset(targetValue);
 
-    if (isInRange(value)) {
+    if (isInRange(targetValue)) {
       return Direction.STOP;
     }
 
-    if (error > 0) {
+    if (targetValue > value) {
       // DOWN
-      if (error < RobotMap.ARM_DOWN_OVERSHOOT) {
+      if (targetValue - value < nearestPreset.downOvershoot) {
         return Direction.STOP;
       }
       return Direction.DOWN;
-    } else if (error < 0) {
+    } else if (targetValue < value) {
       // UP
-      if (-error < RobotMap.ARM_UP_OVERSHOOT) {
+      if (value - targetValue < nearestPreset.upOvershoot) {
         return Direction.STOP;
       }
       return Direction.UP;
@@ -133,31 +137,45 @@ public class ArmSub extends SubsystemBase {
 
   @Override
   public void periodic() {
-    switch(getCurrentDirection()) {
-      case DOWN:
-        down();
-        break;
-      case UP:
-        up();
-        break;
-      default:
-        stop();
-        break;
+    Direction currentDirection = calculateCurrentDirection();
+
+    if (currentDirection != lastDirection) {
+      switch(currentDirection) {
+        case DOWN:
+          down();
+          break;
+        case UP:
+          up();
+          break;
+        default:
+          stop();
+          break;
+      }
+    }
+  }
+
+  /**
+   * Stops the arm, regardless of mode.
+   */
+  public void stop() {
+    if (lastDirection != Direction.STOP || downSolenoid.get() || upSolenoid.get()) {
+      this.targetValue = TARGET_VALUE_STOP;
+      this.manualDirection = Direction.STOP;
+      this.lastDirection = Direction.STOP;
+      downSolenoid.set(false);
+      upSolenoid.set(false);
     }
   }
 
   private void down() {
+    this.lastDirection = Direction.DOWN;
     downSolenoid.set(true);
     upSolenoid.set(false);
   }
 
   private void up() {
+    this.lastDirection = Direction.UP;
     downSolenoid.set(false);
     upSolenoid.set(true);
-  }
-
-  private void stop() {
-    downSolenoid.set(false);
-    upSolenoid.set(false);
   }
 }

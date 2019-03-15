@@ -3,27 +3,53 @@ package frc.robot.Commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
+import frc.robot.Subsystems.ArmSub.Direction;
 
 public class ArmAdjustCommand extends Command {
-  private int value;
+  private Direction direction;
+  private int targetValue;
 
-  public ArmAdjustCommand(int adjustValue) {
+  public ArmAdjustCommand(Direction direction) {
     requires(Robot.ARM_SUB);
+    this.direction = direction;
+  }
 
-    if (Math.abs(adjustValue) > RobotMap.ARM_ADJUST_MAX) {
-      System.err.println("ArmAdjustCommand: value exceeds max: " + adjustValue);
-      adjustValue = 0;
+  public boolean isFailsafe() {
+    return Robot.getInstance().isFailsafeActive();
+  }
+
+  public int getAdjustValue() {
+    switch(direction) {
+      case UP:
+        return RobotMap.ARM_ADJUST_UP;
+      case DOWN:
+        return RobotMap.ARM_ADJUST_DOWN;
+      default:
+        return 0;
     }
-    this.value = Robot.ARM_SUB.getValue() + adjustValue;
   }
 
   @Override
-  protected void execute() {
-    Robot.ARM_SUB.setTargetValue(value);
+  protected void initialize() {
+    super.initialize();
+
+    if (isFailsafe()) {
+      Robot.ARM_SUB.moveArmManual(direction);
+    } else {
+      this.targetValue = Robot.ARM_SUB.getTargetValue() + getAdjustValue();
+      Robot.ARM_SUB.setTargetValue(this.targetValue);
+    }
   }
 
   @Override
   protected boolean isFinished() {
-    return Robot.ARM_SUB.isInRange(value);
+    return ! isFailsafe();
+  }
+
+  @Override
+  protected void end() {
+    if (isFailsafe()) {
+      Robot.ARM_SUB.stop();
+    }
   }
 }

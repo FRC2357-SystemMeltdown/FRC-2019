@@ -12,8 +12,8 @@ import frc.robot.Robot;
 import frc.robot.Other.Utility;
 import frc.robot.shuffleboard.SettingsTab;
 
-public class ProportionalDriveCommand extends Command {
-  public ProportionalDriveCommand() {
+public class DriveProportional extends Command {
+  public DriveProportional() {
     requires(Robot.DRIVE_SUB);
   }
 
@@ -51,20 +51,9 @@ public class ProportionalDriveCommand extends Command {
     Robot.DRIVE_SUB.tankDrive(leftSpeed, rightSpeed);
   }
 
-  // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
+    // This is a default command, so it never finishes.
     return false;
-  }
-
-  // Called once after isFinished returns true
-  @Override
-  protected void end() {
-  }
-
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
   }
 }

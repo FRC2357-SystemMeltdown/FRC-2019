@@ -41,10 +41,17 @@ public class CargoSub extends SubsystemBase {
 
   @Override
   public void initDefaultCommand() {
+    setFailsafeActive(isFailsafeActive());
+  }
+
+  @Override
+  public void setFailsafeActive(boolean failsafeActive) {
+    super.setFailsafeActive(failsafeActive);
     setDefaultCommand(new CargoRollerStopCommand());
   }
 
   public void cargoRollerDirect(double speed) {
+    System.out.println("Roller speed: " + speed);
     roller.set(-speed);
   }
 

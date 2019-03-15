@@ -1,4 +1,4 @@
-package frc.robot.overlays;
+package frc.robot.controls;
 
 /**
  * A proportional drive control.
@@ -10,11 +10,11 @@ public interface ProportionalDrive {
    * Gets a proportional turn value.
    * @return A value between -1 (hard left), 0 (centered), and 1 (hard right)
    */
-  public double getTurn();
+  public double getProportionalTurn();
 
   /**
    * Gets a proportional speed value.
    * @return A value between -1 (full reverse), 0 (centered), and 1 (full ahead)
    */
-  public double getSpeed();
+  public double getProportionalSpeed();
 }

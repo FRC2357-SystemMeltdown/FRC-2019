@@ -1,4 +1,4 @@
-package frc.robot.overlays;
+package frc.robot.controls;
 
 /**
  * A proportional drive control.
@@ -8,7 +8,7 @@ package frc.robot.overlays;
 public interface VelocityDrive {
   /**
    * Gets a turn value in degrees/second.
-   * @return A value between -MAX_TURN_RATE_DEGREES_PER_SECOND (full left) and 
+   * @return A value between -MAX_TURN_RATE_DEGREES_PER_SECOND (full left) and
    * MAX_TURN_RATE_DEGREES_PER_SECOND (full right)
    */
   public double getTurnDegreesPerSecond();

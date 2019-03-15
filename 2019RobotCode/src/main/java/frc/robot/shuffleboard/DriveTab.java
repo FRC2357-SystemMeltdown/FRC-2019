@@ -1,86 +1,52 @@
 package frc.robot.shuffleboard;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
-import frc.robot.modes.ModeManager;
-import frc.robot.modes.GunnerModeManager;
+import frc.robot.Commands.ArmPresetCommand;
+import frc.robot.Commands.FailsafeSetCommand;
+import frc.robot.RobotMap.ArmPreset;
 
 public class DriveTab {
   private static final String TITLE = "Drive";
 
   private ShuffleboardTab tab = null;
-  private NetworkTableEntry driverMode;
-  private NetworkTableEntry gunnerMode;
-  private ToggleButton driverFailsafeButton;
-  private ToggleButton gunnerFailsafeButton;
-  private NetworkTableEntry yaw;
+  private NetworkTableEntry failsafe;
   private NetworkTableEntry armHeight;
+  private ToggleTrigger failsafeTrigger;
+
+  public DriveTab() {
+    tab = Shuffleboard.getTab(TITLE);
+  }
 
   public void show() {
-    if (tab == null) {
-      tab = Shuffleboard.getTab(TITLE);
+    if (failsafe == null) {
+      failsafe = tab.add("FAILSAFE", false)
+        .withWidget(BuiltInWidgets.kToggleButton)
+        .getEntry();
 
-      driverMode = tab.add("Driver Mode", "").getEntry();
-      gunnerMode = tab.add("Gunner Mode", "").getEntry();
+      failsafeTrigger = new ToggleTrigger(failsafe);
+      failsafeTrigger.whenActive(new FailsafeSetCommand(true));
+      failsafeTrigger.whenInactive(new FailsafeSetCommand(false));
+    }
 
-      driverFailsafeButton = new ToggleButton(tab, "D-FAILSAFE");
-      gunnerFailsafeButton = new ToggleButton(tab, "G-FAILSAFE");
-
-      yaw = tab.add("Yaw", 0).getEntry();
+    if (armHeight == null) {
       armHeight = tab.add("Arm", "").getEntry();
     }
+
+    failsafe.setBoolean(Robot.getInstance().isFailsafeActive());
 
     Shuffleboard.selectTab(TITLE);
   }
 
   public void periodic() {
-    if (tab == null) {
-      return;
-    }
-
-    ModeManager driverModeMgr = Robot.getInstance().getDriverModeManager();
-    ModeManager gunnerModeMgr = Robot.getInstance().getGunnerModeManager();
-
-    driverMode.setString(driverModeMgr.getCurrentMode().getModeName());
-    gunnerMode.setString(gunnerModeMgr.getCurrentMode().getModeName());
-
-    updateFailsafeButton(driverFailsafeButton, driverModeMgr);
-    updateGunnerFailsafe();
-
-    yaw.setDouble(Robot.DRIVE_SUB.getYaw(false));
-
-    int armValue = Robot.ARM_SUB.getValue();
-    armHeight.setString(RobotMap.ArmPreset.getPresetString(armValue));
-  }
-
-  /**
-   * Update the state of a failsafe button.
-   *
-   * If the button has changed to true the failsafe mode will
-   * be activated.
-   * @param button
-   * @param mgr
-   */
-  private void updateFailsafeButton(ToggleButton button, ModeManager mgr) {
-    if(button.didValueChange() && button.getValue()) {
-      mgr.activateFailsafeMode();
-    } else {
-      button.setValue(mgr.isFailsafeActive());
-    }
-  }
-
-  private void updateGunnerFailsafe() {
-    GunnerModeManager gunnerModeMgr = Robot.getInstance().getGunnerModeManager();
-
-    if (gunnerFailsafeButton.didValueChange()) {
-      if (gunnerFailsafeButton.getValue()) {
-        gunnerModeMgr.activateFailsafeMode();
-      } else {
-        gunnerModeMgr.activateNormalMode();
-      }
+    if (armHeight != null) {
+      ArmPreset preset = ArmPresetCommand.getLastPreset();
+      int armValue = Robot.ARM_SUB.getValue();
+      armHeight.setString(RobotMap.ArmPreset.getPresetString(preset, armValue));
     }
   }
 }

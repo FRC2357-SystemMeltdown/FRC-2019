@@ -1,42 +1,33 @@
 package frc.robot.Commands;
 
-import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.Robot;
 import frc.robot.RobotMap.ArmPreset;
 import frc.robot.Subsystems.ArmSub;
 
-public class ArmPresetCycleCommand extends Command {
-  private static ArmPreset preset = ArmPreset.Start;
+public class ArmPresetCycleCommand extends ArmPresetCommand {
 
   private ArmSub.Direction direction;
 
   public ArmPresetCycleCommand(ArmSub.Direction direction) {
-    requires(Robot.ARM_SUB);
-
     this.direction = direction;
   }
 
-  @Override
-  protected void initialize() {
-    super.initialize();
+  protected ArmPreset getNextPreset(ArmSub.Direction direction) {
     switch (direction) {
       case UP:
-        preset = ArmPreset.getNext(preset);
-        break;
+        return ArmPreset.getNext(getLastPreset());
       case DOWN:
-        preset = ArmPreset.getPrevious(preset);
-        break;
+        return ArmPreset.getPrevious(getLastPreset());
       default:
+        return ArmPreset.Start;
     }
   }
 
   @Override
-  protected void execute() {
-    Robot.ARM_SUB.setTargetValue(preset.value);
-  }
-
-  @Override
-  protected boolean isFinished() {
-    return Robot.ARM_SUB.isInRange(preset.value);
+  protected void initialize() {
+    // Update the preset before setting its value.
+    // Someone else may have changed the last preset
+    ArmPreset nextPreset = getNextPreset(this.direction);
+    setPreset(nextPreset);
+    super.initialize();
   }
 }

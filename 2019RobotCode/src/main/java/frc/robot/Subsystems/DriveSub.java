@@ -9,7 +9,7 @@ package frc.robot.Subsystems;
 
 import frc.robot.Robot;
 import frc.robot.RobotMap;
-import frc.robot.Commands.ProportionalDriveCommand;
+import frc.robot.Commands.DriveProportional;
 import frc.robot.Other.Utility;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -27,12 +27,9 @@ import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
 /**
- * Add your docs here.
+ * Drive subsystem, controls 4 motors, 2 encoders, and 1 gyro.
  */
 public class DriveSub extends SubsystemBase {
-  // Put methods for controlling this subsystem
-  // here. Call these from Commands.
-
   public WPI_TalonSRX leftMaster = new WPI_TalonSRX(RobotMap.CAN_ID_LEFT_DRIVE);
   public WPI_TalonSRX leftSlave = new WPI_TalonSRX(RobotMap.CAN_ID_LEFT_DRIVE_SLAVE);
   public WPI_TalonSRX rightMaster = new WPI_TalonSRX(RobotMap.CAN_ID_RIGHT_DRIVE);
@@ -70,7 +67,7 @@ public class DriveSub extends SubsystemBase {
     }
   }
 
-  public DriveSub(){
+  public DriveSub() {
     leftSlave.follow(leftMaster);
     rightSlave.follow(rightMaster);
 
@@ -91,10 +88,13 @@ public class DriveSub extends SubsystemBase {
 
     // configure PIDs
     Utility.configTalonPID(leftMaster, SPEED_PID_SLOT, RobotMap.PID_SPEED_LEFT_DRIVE);
-    //Utility.configTalonPID(leftMaster, POS_PID_SLOT, RobotMap.PID_POS_LEFT_DRIVE);
+    // Utility.configTalonPID(leftMaster, POS_PID_SLOT,
+    // RobotMap.PID_POS_LEFT_DRIVE);
     Utility.configTalonPID(rightMaster, SPEED_PID_SLOT, RobotMap.PID_SPEED_RIGHT_DRIVE);
-    //Utility.configTalonPID(rightMaster, POS_PID_SLOT, RobotMap.PID_POS_RIGHT_DRIVE);
+    // Utility.configTalonPID(rightMaster, POS_PID_SLOT,
+    // RobotMap.PID_POS_RIGHT_DRIVE);
 
+    // TODO: See if we need these lines here anymore.
     // leftMaster.selectProfileSlot(SPEED_PID_SLOT, 0);
     // rightMaster.selectProfileSlot(SPEED_PID_SLOT, 0);
 
@@ -113,13 +113,13 @@ public class DriveSub extends SubsystemBase {
     resetSensors();
 
     gyroPidIntf = new GyroPIDInterface();
-    gyroPid = new PIDController(RobotMap.PID_GYRO.kp, RobotMap.PID_GYRO.ki, RobotMap.PID_GYRO.kd, gyroPidIntf, gyroPidIntf, 0.01);
+    gyroPid = new PIDController(RobotMap.PID_GYRO.kp, RobotMap.PID_GYRO.ki, RobotMap.PID_GYRO.kd, gyroPidIntf,
+        gyroPidIntf, 0.01);
     gyroPid.setOutputRange(-0.4, 0.4);
     gyroPid.enable();
   }
 
   public void resetSensors() {
-    // reset sensors
     rightMaster.getSensorCollection().setQuadraturePosition(0, 0);
     leftMaster.getSensorCollection().setQuadraturePosition(0, 0);
     gyro.setYaw(0);
@@ -128,9 +128,19 @@ public class DriveSub extends SubsystemBase {
 
   @Override
   public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
-    setDefaultCommand(new ProportionalDriveCommand());
+    setFailsafeActive(isFailsafeActive());
+  }
+
+  @Override
+  public void setFailsafeActive(boolean failsafeActive) {
+    super.setFailsafeActive(failsafeActive);
+
+    if (failsafeActive) {
+      setDefaultCommand(new DriveProportional());
+    } else {
+      // TODO: Make this the encoder drive command when it's ready.
+      setDefaultCommand(new DriveProportional());
+    }
   }
 
   /**
@@ -139,14 +149,27 @@ public class DriveSub extends SubsystemBase {
    * @param turn The desired turn rate in degrees/sec
    */
   public void PIDDrive(double speed, double turn) {
+    if (Robot.getInstance().isFailsafeActive()) {
+      System.err.println("DriveSub: Cannot use PIDDrive while in failsafe");
+      return;
+    }
+
+    // TODO: Add this back in after refactoring.
+    /*
     double degrees = 90 * (Robot.OI.getDriverController().getBButton() ? 1 : 0);
     gyroPid.setSetpoint(degrees);
     double turnFeedback = gyroPidIntf.output;
     leftMaster.set(ControlMode.Velocity, 0, DemandType.ArbitraryFeedForward, -turnFeedback * 1023);
     rightMaster.set(ControlMode.Velocity, 0, DemandType.ArbitraryFeedForward, turnFeedback * 1023);
+    */
   }
 
   public void rotateToAngle(double degrees) {
+    if (Robot.getInstance().isFailsafeActive()) {
+      System.err.println("DriveSub: Cannot use rotateToAngle while in failsafe");
+      return;
+    }
+
     leftMaster.selectProfileSlot(SPEED_PID_SLOT, 0);
     rightMaster.selectProfileSlot(SPEED_PID_SLOT, 0);
 
@@ -157,6 +180,11 @@ public class DriveSub extends SubsystemBase {
   }
 
   public void moveForwardDistance(double inches) {
+    if (Robot.getInstance().isFailsafeActive()) {
+      System.err.println("DriveSub: Cannot use moveForwardDistance while in failsafe");
+      return;
+    }
+
     resetSensors();
     leftMaster.selectProfileSlot(POS_PID_SLOT, 0);
     rightMaster.selectProfileSlot(POS_PID_SLOT, 0);
