@@ -14,6 +14,7 @@ import frc.robot.controls.CargoControl;
 // TODO: Move switch logic into subsystem so this command can be simpler and not loop execute.
 public class CargoRollerCommand extends Command {
   private CargoControl controller;
+  private boolean triggered;
   private boolean reset;
 
   public CargoRollerCommand(CargoControl controller) {
@@ -29,6 +30,7 @@ public class CargoRollerCommand extends Command {
   @Override
   protected void initialize() {
     this.reset = false;
+    triggered = Robot.CARGO_SUB.isLimit();
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -49,16 +51,21 @@ public class CargoRollerCommand extends Command {
   private void executeWithLimits() {
     double speed = controller.getCargoRollerSpeed();
 
-    if (Robot.CARGO_SUB.isLimit()) {
-      if (speed == 0.0) {
-        reset = true;
-      }
-
-      if (!reset) {
-        speed = 0.0;
-      }
-    } else {
+    if (Robot.CARGO_SUB.isLimit() && !triggered) {
       reset = false;
+      triggered = true;
+    }
+    
+    if (speed == 0.0) {
+      reset = true;
+    }
+
+    if(reset && !Robot.CARGO_SUB.isLimit() && triggered) {
+      triggered = false;
+    }
+
+    if (!reset) {
+      speed = 0.0;
     }
 
     Robot.CARGO_SUB.cargoRollerDirect(speed);
