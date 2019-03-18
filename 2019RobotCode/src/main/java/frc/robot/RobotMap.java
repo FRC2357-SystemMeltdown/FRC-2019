@@ -115,7 +115,6 @@ public class RobotMap {
     HatchMid(        "HATCH MID",    ARM_STARTING_ANGLE - 1200,   80,  45),
 =======
     HatchMid(        "HATCH MID",    ARM_STARTING_ANGLE - 1140,   80,  45),
->>>>>>> Adjusted preset arm positions
     HatchHigh(       "HATCH HIGH",   ARM_STARTING_ANGLE - 1980,   10,   0),
     CargoHigh(       "CARGO HIGH",   ARM_STARTING_ANGLE - 2000,   70,  30);
 
