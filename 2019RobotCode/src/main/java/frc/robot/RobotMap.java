@@ -111,9 +111,6 @@ public class RobotMap {
     HatchLow(        "HATCH LOW",    ARM_STARTING_ANGLE - 390,    70,  20),
     CargoShip(       "CARGO SHIP",   ARM_STARTING_ANGLE - 760,    40,  20),
     CargoMid(        "CARGO MID",    ARM_STARTING_ANGLE - 1105,   55,  20),
-<<<<<<< HEAD
-    HatchMid(        "HATCH MID",    ARM_STARTING_ANGLE - 1200,   80,  45),
-=======
     HatchMid(        "HATCH MID",    ARM_STARTING_ANGLE - 1140,   80,  45),
     HatchHigh(       "HATCH HIGH",   ARM_STARTING_ANGLE - 1980,   10,   0),
     CargoHigh(       "CARGO HIGH",   ARM_STARTING_ANGLE - 2000,   70,  30);
