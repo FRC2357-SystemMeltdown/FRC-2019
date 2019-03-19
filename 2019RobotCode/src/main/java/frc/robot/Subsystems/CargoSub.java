@@ -51,7 +51,6 @@ public class CargoSub extends SubsystemBase {
   }
 
   public void cargoRollerDirect(double speed) {
-    System.out.println("Roller speed: " + speed);
     roller.set(-speed);
   }
 

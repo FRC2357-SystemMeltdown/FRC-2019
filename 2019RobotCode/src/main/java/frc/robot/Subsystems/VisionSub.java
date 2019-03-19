@@ -13,10 +13,32 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.RobotMap;
 
 /**
+ * Controls the limelight camera options.
  */
 public class VisionSub extends SubsystemBase {
+  public enum PipelineIndex {
+    UNKNOWN(-1),
+    VISION_TARGET(0),
+    HUMAN_VIEW(1);
+
+    public final int index;
+
+    private PipelineIndex(int index) {
+      this.index = index;
+    }
+
+    public static PipelineIndex getPipelineByIndex(int index) {
+      for (PipelineIndex i : PipelineIndex.values()) {
+        if (i.index == index) {
+          return i;
+        }
+      }
+      return UNKNOWN;
+    }
+  };
 
   private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+  private NetworkTableEntry pipeline = table.getEntry("pipeline");
   private NetworkTableEntry tv = table.getEntry("tv");
   private NetworkTableEntry tx = table.getEntry("tx");
   private NetworkTableEntry ty = table.getEntry("ty");
@@ -27,6 +49,19 @@ public class VisionSub extends SubsystemBase {
 
   @Override
   protected void initDefaultCommand() {
+  }
+
+  public PipelineIndex getPipeline() {
+    double value = pipeline.getDouble(Double.NaN);
+    if (value >= 0.0 && value <= 9.0) {
+      return PipelineIndex.getPipelineByIndex((int) value);
+    }
+    return PipelineIndex.UNKNOWN;
+  }
+
+  public void setPipeline(PipelineIndex p) {
+    System.out.println("Setting pipeline: " + p.index);
+    pipeline.setDouble(p.index);
   }
 
   public double getTV() {
