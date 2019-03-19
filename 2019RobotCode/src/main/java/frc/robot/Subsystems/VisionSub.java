@@ -60,7 +60,6 @@ public class VisionSub extends SubsystemBase {
   }
 
   public void setPipeline(PipelineIndex p) {
-    System.out.println("Setting pipeline: " + p.index);
     pipeline.setDouble(p.index);
   }
 
