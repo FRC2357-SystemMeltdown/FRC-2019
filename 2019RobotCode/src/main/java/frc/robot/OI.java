@@ -9,7 +9,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Commands.ArmAdjustCommand;
 import frc.robot.Commands.ArmPresetCycleCommand;
-import frc.robot.Commands.VisionPipelineSetCommand;
+import frc.robot.Commands.AutoHatchLoadingStationCommand;
+import frc.robot.Commands.AutoModePreviewCommand;
 import frc.robot.Commands.CargoRollerCommand;
 import frc.robot.Other.Utility;
 import frc.robot.Subsystems.ArmSub.Direction;
@@ -26,10 +27,12 @@ public class OI implements ProportionalDrive, VelocityDrive {
   public static final int CONTROLLER_ID_DRIVER = 0;
   public static final int CONTROLLER_ID_GUNNER = 1;
 
+  private boolean autoModePreview;
   private DriverControls driverControls;
   private GunnerControls gunnerControls;
 
   public OI() {
+    this.autoModePreview = false;
     this.driverControls = new DriverControls(new XboxController(CONTROLLER_ID_DRIVER));
     this.gunnerControls = new GunnerControls(new XboxController(CONTROLLER_ID_GUNNER));
 
@@ -41,8 +44,26 @@ public class OI implements ProportionalDrive, VelocityDrive {
     gunnerControls.armCycleDownTrigger.whenActive(new ArmPresetCycleCommand(Direction.DOWN));
     gunnerControls.armCycleUpTrigger.whenActive(new ArmPresetCycleCommand(Direction.UP));
 
-    gunnerControls.autoModeButton.whenPressed(new VisionPipelineSetCommand(PipelineIndex.VISION_TARGET));
-    gunnerControls.autoModeButton.whenReleased(new VisionPipelineSetCommand(PipelineIndex.HUMAN_VIEW));
+    gunnerControls.autoModeButton.whenPressed(new AutoModePreviewCommand(true));
+    gunnerControls.autoModeButton.whenReleased(new AutoModePreviewCommand(false));
+
+    gunnerControls.autoHatchLoadingStationTrigger.whileActive(new AutoHatchLoadingStationCommand());
+  }
+
+  public boolean isAutoModePreview() {
+    return autoModePreview;
+  }
+
+  public void setAutoModePreview(boolean autoModePreview) {
+    if (this.autoModePreview != autoModePreview) {
+      this.autoModePreview = autoModePreview;
+
+      if (autoModePreview) {
+        Robot.VISION_SUB.setPipeline(PipelineIndex.VISION_TARGET);
+      } else {
+        Robot.VISION_SUB.setPipeline(PipelineIndex.HUMAN_VIEW);
+      }
+    }
   }
 
   @Override

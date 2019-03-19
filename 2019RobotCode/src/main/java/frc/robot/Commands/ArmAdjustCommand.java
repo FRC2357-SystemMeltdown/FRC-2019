@@ -18,6 +18,10 @@ public class ArmAdjustCommand extends Command {
     return Robot.getInstance().isFailsafeActive();
   }
 
+  public boolean isAutoModePreview() {
+    return Robot.OI.isAutoModePreview();
+  }
+
   public int getAdjustValue() {
     switch(direction) {
       case UP:
@@ -31,6 +35,10 @@ public class ArmAdjustCommand extends Command {
 
   @Override
   protected void initialize() {
+    if (isAutoModePreview()) {
+      return;
+    }
+
     super.initialize();
 
     if (isFailsafe()) {
@@ -43,11 +51,15 @@ public class ArmAdjustCommand extends Command {
 
   @Override
   protected boolean isFinished() {
-    return ! isFailsafe();
+    return isAutoModePreview() || !isFailsafe();
   }
 
   @Override
   protected void end() {
+    if (isAutoModePreview()) {
+      return;
+    }
+
     if (isFailsafe()) {
       Robot.ARM_SUB.stop();
     }
