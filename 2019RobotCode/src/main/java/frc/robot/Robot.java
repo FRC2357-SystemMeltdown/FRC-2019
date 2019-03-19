@@ -13,6 +13,7 @@ import frc.robot.Subsystems.CargoSub;
 import frc.robot.Subsystems.DriveSub;
 import frc.robot.Subsystems.ArmSub;
 import frc.robot.Subsystems.VisionSub;
+import frc.robot.Subsystems.VisionSub.PipelineIndex;
 import frc.robot.shuffleboard.ShuffleboardController;
 
 /**
@@ -112,6 +113,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
+    VISION_SUB.setPipeline(PipelineIndex.HUMAN_VIEW);
   }
 
   /**

@@ -9,10 +9,11 @@ package frc.robot;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Commands.ArmAdjustCommand;
 import frc.robot.Commands.ArmPresetCycleCommand;
-import frc.robot.Commands.ArmStopCommand;
+import frc.robot.Commands.VisionPipelineSetCommand;
 import frc.robot.Commands.CargoRollerCommand;
 import frc.robot.Other.Utility;
 import frc.robot.Subsystems.ArmSub.Direction;
+import frc.robot.Subsystems.VisionSub.PipelineIndex;
 import frc.robot.controls.DriverControls;
 import frc.robot.controls.GunnerControls;
 import frc.robot.controls.ProportionalDrive;
@@ -39,6 +40,9 @@ public class OI implements ProportionalDrive, VelocityDrive {
 
     gunnerControls.armCycleDownTrigger.whenActive(new ArmPresetCycleCommand(Direction.DOWN));
     gunnerControls.armCycleUpTrigger.whenActive(new ArmPresetCycleCommand(Direction.UP));
+
+    gunnerControls.autoModeButton.whenPressed(new VisionPipelineSetCommand(PipelineIndex.VISION_TARGET));
+    gunnerControls.autoModeButton.whenReleased(new VisionPipelineSetCommand(PipelineIndex.HUMAN_VIEW));
   }
 
   @Override

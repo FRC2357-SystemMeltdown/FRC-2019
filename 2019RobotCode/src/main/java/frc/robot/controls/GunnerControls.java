@@ -13,6 +13,7 @@ public class GunnerControls extends Controls
   public JoystickButton cargoRollerButton;
   public JoystickButton armAdjustUpButton;
   public JoystickButton armAdjustDownButton;
+  public JoystickButton autoModeButton;
   public DPadTrigger armCycleUpTrigger;
   public DPadTrigger armCycleDownTrigger;
 
@@ -22,6 +23,7 @@ public class GunnerControls extends Controls
     cargoRollerButton = new JoystickButton(controller, XboxRaw.A.value);
     armAdjustUpButton = new JoystickButton(controller, XboxRaw.BumperRight.value);
     armAdjustDownButton = new JoystickButton(controller, XboxRaw.BumperLeft.value);
+    autoModeButton = new JoystickButton(controller, XboxRaw.Back.value);
     armCycleUpTrigger = new DPadTrigger(controller, DPadValue.Up);
     armCycleDownTrigger = new DPadTrigger(controller, DPadValue.Down);
   }
