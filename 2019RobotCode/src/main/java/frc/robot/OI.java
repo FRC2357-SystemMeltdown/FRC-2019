@@ -92,12 +92,20 @@ public class OI implements ProportionalDrive, VelocityDrive {
     return speed;
   }
 
+  public boolean isGunnerDriving() {
+    return gunnerControls.getEncoderTurnDifferential() != 0 || gunnerControls.getEncoderSpeed() != 0;
+  }
+
   @Override
   public int getEncoderTurnDifferential() {
     int turn = 0;
 
-    turn += driverControls.getEncoderTurnDifferential();
-    turn += gunnerControls.getEncoderTurnDifferential();
+    if (isGunnerDriving()) {
+      turn = gunnerControls.getEncoderTurnDifferential();
+    } else {
+      turn = driverControls.getEncoderTurnDifferential();
+    }
+
     turn = Utility.clamp(turn, -RobotMap.DRIVER_ENCODER_TURN_RATE, RobotMap.DRIVER_ENCODER_TURN_RATE);
 
     return turn;
@@ -107,8 +115,12 @@ public class OI implements ProportionalDrive, VelocityDrive {
   public int getEncoderSpeed() {
     int speed = 0;
 
-    speed += driverControls.getEncoderSpeed();
-    speed += gunnerControls.getEncoderSpeed();
+    if (isGunnerDriving()) {
+      speed = gunnerControls.getEncoderSpeed();
+    } else {
+      speed = driverControls.getEncoderSpeed();
+    }
+
     speed = Utility.clamp(speed, -RobotMap.DRIVER_ENCODER_SPEED, RobotMap.DRIVER_ENCODER_SPEED);
 
     // Limit the input speed on forward motion (to avoid tipping)
