@@ -68,6 +68,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     setFailsafeActive(failsafeActive);
     shuffleboardController = new ShuffleboardController();
+    DRIVE_SUB.configure();
   }
 
   /**

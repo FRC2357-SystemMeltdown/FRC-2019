@@ -7,16 +7,14 @@ package frc.robot.controls;
  */
 public interface VelocityDrive {
   /**
-   * Gets a turn value in degrees/second.
-   * @return A value between -MAX_TURN_RATE_DEGREES_PER_SECOND (full left) and
-   * MAX_TURN_RATE_DEGREES_PER_SECOND (full right)
+   * Gets a turn value in encocer click differential.
+   * @return Positive for clockwise, negative for counter-clockwise.
    */
-  public double getTurnDegreesPerSecond();
+  public int getEncoderTurnDifferential();
 
   /**
-   * Gets a proportional speed value.
-   * @return A value between -MAX_VELOCITY_INCHES_PER_SECOND (full reverse) and
-   * MAX_VELOCITY_INCHES_PER_SECOND (full forward)
+   * Gets a desired speed in encoder clicks.
+   * @return Positive for forward, negative for backward.
    */
-  public double getSpeedInchesPerSecond();
+  public int getEncoderSpeed();
 }
