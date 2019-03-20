@@ -10,6 +10,13 @@ public class Utility{
       return value;
   }
 
+  public static int clamp(int input, int min, int max){
+      int value = input;
+      value = Math.max(value, min);
+      value = Math.min(value, max);
+      return value;
+  }
+
   /**
    *
    * @param talon The talon SRX to config
@@ -40,5 +47,12 @@ public class Utility{
       sum += sample;
     }
     return sum / samples.length;
+  }
+
+  public static double deadband(double input, double deadband) {
+    if (Math.abs(input) < deadband) {
+      return 0.0;
+    }
+    return input;
   }
 }

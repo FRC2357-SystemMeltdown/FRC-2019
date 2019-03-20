@@ -10,10 +10,10 @@ package frc.robot.Subsystems;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.Commands.DriveProportional;
+import frc.robot.Commands.DriveWithEncoders;
 import frc.robot.Other.Utility;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.FollowerType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -38,20 +38,20 @@ public class DriveSub extends SubsystemBase {
 
   private PigeonIMU pidgey = new PigeonIMU(RobotMap.CAN_ID_PIGEON_IMU);
   private double[] yawPitchRoll = new double[RobotMap.GYRO_AXIS_TOTAL];
-  private GyroPIDInterface gyroPidIntf;
-  private PIDController gyroPid;
+  private YawPIDSource yawPIDSource;
+  private PIDController yawPID;
 
-  private class GyroPIDInterface implements PIDSource, PIDOutput {
+  private class YawPIDSource implements PIDSource, PIDOutput {
     public double output = 0;
 
     @Override
     public void pidWrite(double output) {
+      System.out.println("pidWrite: " + output);
       this.output = output;
     }
 
     @Override
     public void setPIDSourceType(PIDSourceType pidSource) {
-
     }
 
     @Override
@@ -61,6 +61,7 @@ public class DriveSub extends SubsystemBase {
 
     @Override
     public double pidGet() {
+      System.out.println("pidget: " + getYaw(false));
       return getYaw(false);
     }
   }
@@ -120,7 +121,9 @@ public class DriveSub extends SubsystemBase {
 		rightMaster.configPeakOutputForward(+1.0, timeout);
     rightMaster.configPeakOutputReverse(-1.0, timeout);
 
+    Utility.configTalonPID(leftMaster, RobotMap.TALON_SLOT_VELOCITY, RobotMap.PID_DRIVE_SPEED);
     Utility.configTalonPID(rightMaster, RobotMap.TALON_SLOT_VELOCITY, RobotMap.PID_DRIVE_SPEED);
+
     Utility.configTalonPID(rightMaster, RobotMap.TALON_SLOT_DISTANCE, RobotMap.PID_DRIVE_POS);
 
     /**
@@ -138,8 +141,9 @@ public class DriveSub extends SubsystemBase {
 
     resetSensors();
 
+    /*yawPIDSource = new YawPIDSource();*/
+
     /*
-    gyroPidIntf = new GyroPIDInterface();
     gyroPid = new PIDController(RobotMap.PID_GYRO.kp, RobotMap.PID_GYRO.ki, RobotMap.PID_GYRO.kd, gyroPidIntf,
         gyroPidIntf, 0.01);
     gyroPid.setOutputRange(-0.4, 0.4);
@@ -168,8 +172,7 @@ public class DriveSub extends SubsystemBase {
     if (failsafeActive) {
       setDefaultCommand(new DriveProportional());
     } else {
-      // TODO: Make this the encoder drive command when it's ready.
-      setDefaultCommand(new DriveProportional());
+      setDefaultCommand(new DriveWithEncoders());
     }
   }
 
@@ -177,32 +180,50 @@ public class DriveSub extends SubsystemBase {
     return rightMaster.getClosedLoopError();
   }
 
+  public double getRotationError() {
+    return 180.0;
+  }
+
   /**
    *
    * @param speed The desired speed in inches/sec
    * @param turn The desired turn rate in degrees/sec
    */
-  public void PIDDrive(double speed, double turn) {
+  public void PIDDrive(int speed, int turn) {
     if (Robot.getInstance().isFailsafeActive()) {
       System.err.println("DriveSub: Cannot use PIDDrive while in failsafe");
       return;
     }
 
-    // TODO: Add this back in after refactoring.
+    //System.out.println("PIDDrive: speed: " + speed + ", turn: " + turn);
+
+    leftMaster.selectProfileSlot(RobotMap.TALON_SLOT_VELOCITY, RobotMap.TALON_PID_PRIMARY);
+    rightMaster.selectProfileSlot(RobotMap.TALON_SLOT_VELOCITY, RobotMap.TALON_PID_PRIMARY);
+
+    int leftVelocity = speed + turn;
+    int rightVelocity = speed - turn;
+
+    Utility.clamp(leftVelocity, -RobotMap.MAX_ENCODER_VELOCITY, RobotMap.MAX_ENCODER_VELOCITY);
+    Utility.clamp(rightVelocity, -RobotMap.MAX_ENCODER_VELOCITY, RobotMap.MAX_ENCODER_VELOCITY);
+
+    leftMaster.set(ControlMode.Velocity, leftVelocity);
+    rightMaster.set(ControlMode.Velocity, rightVelocity);
+
     /*
-    double degrees = 90 * (Robot.OI.getDriverController().getBButton() ? 1 : 0);
-    gyroPid.setSetpoint(degrees);
-    double turnFeedback = gyroPidIntf.output;
     leftMaster.set(ControlMode.Velocity, 0, DemandType.ArbitraryFeedForward, -turnFeedback * 1023);
     rightMaster.set(ControlMode.Velocity, 0, DemandType.ArbitraryFeedForward, turnFeedback * 1023);
     */
   }
 
-  public void rotateToAngle(double degrees) {
+  public void rotateDegrees(double degrees) {
     if (Robot.getInstance().isFailsafeActive()) {
       System.err.println("DriveSub: Cannot use rotateToAngle while in failsafe");
       return;
     }
+
+    System.out.println("Rotating " + degrees + " degrees");
+
+    resetSensors();
 
     /*
     leftMaster.selectProfileSlot(SPEED_PID_SLOT, 0);
@@ -228,7 +249,6 @@ public class DriveSub extends SubsystemBase {
     double targetPosition = inches * RobotMap.ENCODER_TICKS_PER_ROTATION / RobotMap.WHEEL_CIRCUMFERENCE_INCHES;
     rightMaster.set(ControlMode.Position, targetPosition);
     leftMaster.follow(rightMaster, FollowerType.AuxOutput1);
-    //rightMaster.set(ControlMode.Position, targetPosition);
   }
 
   /**

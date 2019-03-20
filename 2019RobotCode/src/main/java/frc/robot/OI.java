@@ -91,23 +91,21 @@ public class OI implements ProportionalDrive, VelocityDrive {
   }
 
   @Override
-  public double getTurnDegreesPerSecond() {
-    double turn = 0.0;
+  public int getEncoderTurnDifferential() {
+    int turn = 0;
 
-    turn += driverControls.getTurnDegreesPerSecond();
-
-    turn = Utility.clamp(turn, -RobotMap.MAX_TURN_RATE_DEGREES_PER_SECOND, RobotMap.MAX_TURN_RATE_DEGREES_PER_SECOND);
+    turn += driverControls.getEncoderTurnDifferential();
+    turn = Utility.clamp(turn, -RobotMap.DRIVER_ENCODER_TURN_RATE, RobotMap.DRIVER_ENCODER_TURN_RATE);
 
     return turn;
   }
 
   @Override
-  public double getSpeedInchesPerSecond() {
-    double speed = 0.0;
+  public int getEncoderSpeed() {
+    int speed = 0;
 
-    speed += driverControls.getSpeedInchesPerSecond();
-
-    speed = Utility.clamp(speed, -RobotMap.MAX_VELOCITY_INCHES_PER_SECOND, RobotMap.MAX_VELOCITY_INCHES_PER_SECOND);
+    speed += driverControls.getEncoderSpeed();
+    speed = Utility.clamp(speed, -RobotMap.DRIVER_ENCODER_SPEED, RobotMap.DRIVER_ENCODER_SPEED);
 
     return speed;
   }

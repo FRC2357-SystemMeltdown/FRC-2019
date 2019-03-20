@@ -12,6 +12,11 @@ import frc.robot.Other.PIDValues;
  * Add your docs here.
  */
 public class RobotMap {
+  // General Purpose
+  public static final int MILLISECONDS_PER_SECOND = 1000;
+  public static final int MILLIS_PER_MINUTE = 60 * MILLISECONDS_PER_SECOND;
+  public static final double STOP_SPEED = 0.0;
+
   // CAN IDs
   public static final int CAN_ID_RIGHT_DRIVE        = 1;
   public static final int CAN_ID_RIGHT_DRIVE_SLAVE  = 2;
@@ -48,6 +53,7 @@ public class RobotMap {
   public static final double MOTOR_MINIMUM_POWER = 0.05;
 
   // Drive Controls
+  public static final double DRIVE_STICK_DEADBAND = 0.1;
   public static final double DRIVE_RAMP_SECONDS = 1.0;
   public static final double DRIVE_MOTOR_DEADBAND = 0.04;
   public static final double DRIVER_SPEED_PROPORTION = 1.0;
@@ -56,8 +62,6 @@ public class RobotMap {
   public static final double DRIVER_TURN_PROPORTION_SLOW = 0.6;
   public static final double GUNNER_SPEED_PROPORTION = 0.5;
   public static final double GUNNER_TURN_PROPORTION = 0.5;
-  public static final double MAX_TURN_RATE_DEGREES_PER_SECOND = 180;
-  public static final double MAX_VELOCITY_INCHES_PER_SECOND = 40;
   public static final double FAILSAFE_TRIM_FORWARD_DEFAULT = 0.0;
   public static final double FAILSAFE_TRIM_REVERSE_DEFAULT = 0.0;
 
@@ -74,16 +78,25 @@ public class RobotMap {
 
   The feed forward is 1023 / <maximum speed>
   */
+  public static final int DRIVE_MAX_RPMS = 900;
+  public static final double VEL_FEED_FWD = 1023.0 / DRIVE_MAX_RPMS;
+
+  public static final int VELOCITY_UNITS_PER_MIN = MILLIS_PER_MINUTE / 100;
+  public static final int MAX_ENCODER_VELOCITY = DRIVE_MAX_RPMS * ENCODER_TICKS_PER_ROTATION / VELOCITY_UNITS_PER_MIN;
+
+  public static final int DRIVER_ENCODER_TURN_RATE = (int)(MAX_ENCODER_VELOCITY * 0.75);
+  public static final int DRIVER_ENCODER_SPEED = MAX_ENCODER_VELOCITY;
+  public static final double DRIVER_ENCODER_MAX_FORWARD_LIMIT_FACTOR = 1.1;
+  public static final int DRIVER_ENCODER_MAX_DIFF = 75;
 
   // PID Values
-  //                                                                P        I       D    feed forward  izone  peak
-  public static final PIDValues PID_DRIVE_SPEED = new PIDValues(  2.0,     0.0,    0.0, 1023.0 / 900.0,     0,  1.0);
-  //public static final PIDValues PID_DRIVE_POS   = new PIDValues(  0.2, 0.0004,    0.5,            0.0,     0,  0.6);
-  //public static final PIDValues PID_DRIVE_POS   = new PIDValues( 0.22, 0.00009,    0.0,            0.0,     0,  0.5);
-  //public static final PIDValues PID_DRIVE_POS   = new PIDValues( 0.10,  0.0002,   25.0,            0.0,     0,  0.25);
-  public static final PIDValues PID_DRIVE_POS   = new PIDValues( 0.10,  0.0002,   10.0,            0.0,     0,  0.23);
+  //                                                                P       I       D    feed forward  izone  peak
+  public static final PIDValues PID_DRIVE_SPEED = new PIDValues( 0.50,    0.0,   40.0,            0.0,     0,  1.00);
+  public static final PIDValues PID_DRIVE_POS   = new PIDValues( 0.10, 0.0002,   10.0,            0.0,     0,  0.23);
+  public static final PIDValues PID_DRIVE_YAW   = new PIDValues( 0.10,    0.0,    0.0,            0.0,     0,  0.23);
 
   public static final int PID_DRIVE_POSITION_ACCURACY = 50;
+  public static final double PID_ROTATION_POSITION_ACCURACY = 5.0;
 
   public static final int TALON_TIMEOUT_MS = 30;
   public static final int TALON_PID_PRIMARY = 0;
@@ -114,14 +127,14 @@ public class RobotMap {
     //               Name            Potentiometer value          up  down (overshoots)
     Failsafe(        "FAILSAFE",     -1,                           0,   0),
     Start(           "START",        ARM_STARTING_ANGLE,           0,   5),
-    CargoPickup(     "C FLOOR", ARM_STARTING_ANGLE - 100,    55,  40),
-    CargoLow(        "C LOW",    ARM_STARTING_ANGLE - 375,    40,  30),
-    HatchLow(        "H LOW",    ARM_STARTING_ANGLE - 390,    70,  20),
-    CargoShip(       "C SHIP",   ARM_STARTING_ANGLE - 760,    40,  20),
-    CargoMid(        "C MID",    ARM_STARTING_ANGLE - 1105,   55,  20),
-    HatchMid(        "H MID",    ARM_STARTING_ANGLE - 1140,   80,  45),
-    HatchHigh(       "H HIGH",   ARM_STARTING_ANGLE - 1980,   10,   0),
-    CargoHigh(       "C HIGH",   ARM_STARTING_ANGLE - 2000,   70,  30);
+    CargoPickup(     "C FLOOR",      ARM_STARTING_ANGLE - 100,    55,  40),
+    CargoLow(        "C LOW",        ARM_STARTING_ANGLE - 375,    40,  30),
+    HatchLow(        "H LOW",        ARM_STARTING_ANGLE - 390,    70,  20),
+    CargoShip(       "C SHIP",       ARM_STARTING_ANGLE - 760,    40,  20),
+    CargoMid(        "C MID",        ARM_STARTING_ANGLE - 1105,   55,  20),
+    HatchMid(        "H MID",        ARM_STARTING_ANGLE - 1140,   80,  45),
+    HatchHigh(       "H HIGH",       ARM_STARTING_ANGLE - 1980,   10,   0),
+    CargoHigh(       "C HIGH",       ARM_STARTING_ANGLE - 2000,   70,  30);
 
     public final int value;
     public final String name;
@@ -226,8 +239,4 @@ public class RobotMap {
 
   // 3' 3 1/8"
   public static final double FIELD_CARGO_TARGET_TOP_FROM_FLOOR = 39.125;
-
-  // General Purpose
-  public static final int MILLISECONDS_PER_SECOND = 1000;
-  public static final double STOP_SPEED = 0.0;
 }
