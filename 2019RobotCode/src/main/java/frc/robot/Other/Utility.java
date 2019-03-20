@@ -31,5 +31,14 @@ public class Utility{
     talon.config_kD(slotIdx, pid.kd);
     talon.config_kF(slotIdx, pid.kf);
     talon.config_IntegralZone(slotIdx, pid.izone);
+    talon.configClosedLoopPeakOutput(slotIdx, pid.peak);
+  }
+
+  public static int getAverage(int[] samples) {
+    int sum = 0;
+    for(int sample : samples) {
+      sum += sample;
+    }
+    return sum / samples.length;
   }
 }

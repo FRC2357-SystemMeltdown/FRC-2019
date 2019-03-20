@@ -44,11 +44,11 @@ public class RobotMap {
   public static final int GYRO_AXIS_ROLL = 2;
   public static final int GYRO_AXIS_TOTAL = 3;
   public static final int ENCODER_TICKS_PER_ROTATION = 1024;
-  public static final double WHEEL_CIRCUMFERENCE_INCHES = 6 * Math.PI;
+  public static final double WHEEL_CIRCUMFERENCE_INCHES = 6.375 * Math.PI;
   public static final double MOTOR_MINIMUM_POWER = 0.05;
 
   // Drive Controls
-  public static final int DRIVE_RAMP_SECONDS = 1;
+  public static final double DRIVE_RAMP_SECONDS = 1.0;
   public static final double DRIVE_MOTOR_DEADBAND = 0.04;
   public static final double DRIVER_SPEED_PROPORTION = 1.0;
   public static final double DRIVER_TURN_PROPORTION = 1.0;
@@ -74,16 +74,24 @@ public class RobotMap {
 
   The feed forward is 1023 / <maximum speed>
   */
-  public static final PIDValues PID_SPEED_LEFT_DRIVE = new PIDValues(2, 0, 0, 1023.0 / 900.0, 0);
-  public static final PIDValues PID_SPEED_RIGHT_DRIVE = new PIDValues(2, 0, 0, 1023.0 / 900.0, 0);
 
-  // PID values for position based movement
-  public static final PIDValues PID_POS_LEFT_DRIVE = new PIDValues(0.6 * 1023 / ENCODER_TICKS_PER_ROTATION, 0, 0, 0, 0);
-  public static final PIDValues PID_POS_RIGHT_DRIVE = new PIDValues(0.6 * 1023 / ENCODER_TICKS_PER_ROTATION, 0, 0, 0, 0);
+  // PID Values
+  //                                                                P        I       D    feed forward  izone  peak
+  public static final PIDValues PID_DRIVE_SPEED = new PIDValues(  2.0,     0.0,    0.0, 1023.0 / 900.0,     0,  1.0);
+  //public static final PIDValues PID_DRIVE_POS   = new PIDValues(  0.2, 0.0004,    0.5,            0.0,     0,  0.6);
+  //public static final PIDValues PID_DRIVE_POS   = new PIDValues( 0.22, 0.00009,    0.0,            0.0,     0,  0.5);
+  //public static final PIDValues PID_DRIVE_POS   = new PIDValues( 0.10,  0.0002,   25.0,            0.0,     0,  0.25);
+  public static final PIDValues PID_DRIVE_POS   = new PIDValues( 0.10,  0.0002,   10.0,            0.0,     0,  0.23);
 
-  public static final PIDValues PID_GYRO = new PIDValues(0.001 / 90.0, 0, 0.03 / 90.0, 0, 0);
-  public static final PIDValues PID_ARM = new PIDValues(0, 0, 0, 0, 0);
-  public static final double DRIVE_TRAIN_SAMPLE_PERIOD = 1 / 5;
+  public static final int PID_DRIVE_POSITION_ACCURACY = 50;
+
+  public static final int TALON_TIMEOUT_MS = 30;
+  public static final int TALON_PID_PRIMARY = 0;
+  public static final int TALON_PID_SECONDARY = 1;
+  public final static int TALON_SLOT_DISTANCE = 0;
+	public final static int TALON_SLOT_TURNING = 1;
+	public final static int TALON_SLOT_VELOCITY = 2;
+	public final static int TALON_SLOT_MOTION_PROFILE = 3;
 
   //=====
   // Arm
@@ -106,14 +114,14 @@ public class RobotMap {
     //               Name            Potentiometer value          up  down (overshoots)
     Failsafe(        "FAILSAFE",     -1,                           0,   0),
     Start(           "START",        ARM_STARTING_ANGLE,           0,   5),
-    CargoPickup(     "CARGO PICKUP", ARM_STARTING_ANGLE - 100,     55,  40),
-    CargoLow(        "CARGO LOW",    ARM_STARTING_ANGLE - 375,    40,  30),
-    HatchLow(        "HATCH LOW",    ARM_STARTING_ANGLE - 390,    70,  20),
-    CargoShip(       "CARGO SHIP",   ARM_STARTING_ANGLE - 760,    40,  20),
-    CargoMid(        "CARGO MID",    ARM_STARTING_ANGLE - 1105,   55,  20),
-    HatchMid(        "HATCH MID",    ARM_STARTING_ANGLE - 1140,   80,  45),
-    HatchHigh(       "HATCH HIGH",   ARM_STARTING_ANGLE - 1980,   10,   0),
-    CargoHigh(       "CARGO HIGH",   ARM_STARTING_ANGLE - 2000,   70,  30);
+    CargoPickup(     "C FLOOR", ARM_STARTING_ANGLE - 100,    55,  40),
+    CargoLow(        "C LOW",    ARM_STARTING_ANGLE - 375,    40,  30),
+    HatchLow(        "H LOW",    ARM_STARTING_ANGLE - 390,    70,  20),
+    CargoShip(       "C SHIP",   ARM_STARTING_ANGLE - 760,    40,  20),
+    CargoMid(        "C MID",    ARM_STARTING_ANGLE - 1105,   55,  20),
+    HatchMid(        "H MID",    ARM_STARTING_ANGLE - 1140,   80,  45),
+    HatchHigh(       "H HIGH",   ARM_STARTING_ANGLE - 1980,   10,   0),
+    CargoHigh(       "C HIGH",   ARM_STARTING_ANGLE - 2000,   70,  30);
 
     public final int value;
     public final String name;
@@ -186,15 +194,6 @@ public class RobotMap {
   // Cargo
   public static final double INTAKE_IN_SPEED = -1.0;
   public static final double INTAKE_OUT_SPEED = 0.7;
-
-  // Hatch
-  public static final double HATCH_FAILSAFE_MOVEMENT_SPEED = 0.7;
-  public static final double HATCH_ENCODER_TICKS_PER_ROTATION = 256;
-  public static final double HATCH_INCHES_PER_ROTATION = 3; // ?? wild guess
-  public static final PIDValues HATCH_LEFT_PID = new PIDValues(0, 0, 0, 0, 0);
-  public static final PIDValues HATCH_RIGHT_PID = new PIDValues(0, 0, 0, 0, 0);
-  public static final double HATCH_ACCELERATION = 4; // inches/s/s
-  public static final double HATCH_MAX_VELOCITY = 8; // inches/s
 
   //--------
   // Vision

@@ -1,10 +1,13 @@
 package frc.robot.Commands;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class AutoHatchLoadingStationCommand extends Command {
+public class AutoHatchLoadingStationCommand extends CommandGroup {
   public AutoHatchLoadingStationCommand() {
     setName("HATCH LOAD");
+
+    addSequential(new AutoMoveForwardCommand(100));
+    addSequential(new DriveStopCommand());
   }
 
   @Override

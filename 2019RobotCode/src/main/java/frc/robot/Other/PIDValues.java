@@ -13,17 +13,22 @@ public class PIDValues {
   // Used in the Talon PID controller.
   public final int izone;
 
+  // This will be the maximum output value + or -
+  public final double peak;
+
   public PIDValues(
     double kp,
     double ki,
     double kd,
     double kf,
-    int izone
+    int izone,
+    double peak
   ) {
     this.kp = kp;
     this.ki = ki;
     this.kd = kd;
     this.kf = kf;
     this.izone = izone;
+    this.peak = peak;
   }
 }
