@@ -3,10 +3,11 @@ package frc.robot.controls;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import frc.robot.Other.Utility;
 import frc.robot.RobotMap;
 
 public class GunnerControls extends Controls
-    implements ProportionalDrive, CargoControl {
+    implements ProportionalDrive, VelocityDrive, CargoControl {
   public static final double TURN_FACTOR = RobotMap.GUNNER_TURN_PROPORTION;
   public static final double SPEED_FACTOR = RobotMap.GUNNER_SPEED_PROPORTION;
 
@@ -83,6 +84,20 @@ public class GunnerControls extends Controls
   @Override
   public double getProportionalSpeed() {
     return -(controller.getY(Hand.kLeft) * SPEED_FACTOR);
+  }
+
+  @Override
+  public int getEncoderTurnDifferential() {
+    double input = Utility.deadband(controller.getX(Hand.kRight), RobotMap.DRIVE_STICK_DEADBAND);
+    int turnRate = (int)(input * RobotMap.GUNNER_ENCODER_TURN_RATE);
+    return turnRate;
+  }
+
+  @Override
+  public int getEncoderSpeed() {
+    double input = Utility.deadband(controller.getY(Hand.kLeft), RobotMap.DRIVE_STICK_DEADBAND);
+    int speed = (int)(-input * RobotMap.GUNNER_ENCODER_SPEED);
+    return speed;
   }
 
   @Override

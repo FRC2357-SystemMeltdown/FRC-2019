@@ -86,6 +86,8 @@ public class RobotMap {
 
   public static final int DRIVER_ENCODER_TURN_RATE = (int)(MAX_ENCODER_VELOCITY * 0.75);
   public static final int DRIVER_ENCODER_SPEED = MAX_ENCODER_VELOCITY;
+  public static final int GUNNER_ENCODER_TURN_RATE = (int)(MAX_ENCODER_VELOCITY * 0.5);
+  public static final int GUNNER_ENCODER_SPEED = (int)(MAX_ENCODER_VELOCITY * 0.5);
   public static final double DRIVER_ENCODER_MAX_FORWARD_LIMIT_FACTOR = 1.1;
   public static final int DRIVER_ENCODER_MAX_DIFF = 75;
 

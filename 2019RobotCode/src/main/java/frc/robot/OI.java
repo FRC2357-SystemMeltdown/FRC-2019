@@ -27,11 +27,13 @@ public class OI implements ProportionalDrive, VelocityDrive {
   public static final int CONTROLLER_ID_DRIVER = 0;
   public static final int CONTROLLER_ID_GUNNER = 1;
 
+  private int lastEncoderSpeed;
   private boolean autoModePreview;
   private DriverControls driverControls;
   private GunnerControls gunnerControls;
 
   public OI() {
+    this.lastEncoderSpeed = 0;
     this.autoModePreview = false;
     this.driverControls = new DriverControls(new XboxController(CONTROLLER_ID_DRIVER));
     this.gunnerControls = new GunnerControls(new XboxController(CONTROLLER_ID_GUNNER));
@@ -95,6 +97,7 @@ public class OI implements ProportionalDrive, VelocityDrive {
     int turn = 0;
 
     turn += driverControls.getEncoderTurnDifferential();
+    turn += gunnerControls.getEncoderTurnDifferential();
     turn = Utility.clamp(turn, -RobotMap.DRIVER_ENCODER_TURN_RATE, RobotMap.DRIVER_ENCODER_TURN_RATE);
 
     return turn;
@@ -105,8 +108,35 @@ public class OI implements ProportionalDrive, VelocityDrive {
     int speed = 0;
 
     speed += driverControls.getEncoderSpeed();
+    speed += gunnerControls.getEncoderSpeed();
     speed = Utility.clamp(speed, -RobotMap.DRIVER_ENCODER_SPEED, RobotMap.DRIVER_ENCODER_SPEED);
 
+    // Limit the input speed on forward motion (to avoid tipping)
+    double limitFactor = RobotMap.DRIVER_ENCODER_MAX_FORWARD_LIMIT_FACTOR;
+
+    // Default is max from zero forward (reverse accel doesn't matter)
+    int maxDiff = RobotMap.DRIVER_ENCODER_MAX_DIFF;
+
+    if (speed - lastEncoderSpeed > maxDiff) {
+      // Forward accel is too fast.
+      int max = maxDiff;
+
+      if (lastEncoderSpeed > 0) {
+        // Limit forward acceleration.
+        max = (int)(lastEncoderSpeed * limitFactor);
+      } else if (lastEncoderSpeed < 0) {
+        // Limit reverse deceleration.
+        max = (int)(lastEncoderSpeed / limitFactor);
+        max = max > -maxDiff ? 0 : max;
+      }
+
+      if (speed > max) {
+        System.out.println("limit: " + speed + " to " + max + " (lastEncoderSpeed=" + lastEncoderSpeed + ")");
+        speed = max;
+      }
+    }
+
+    lastEncoderSpeed = speed;
     return speed;
   }
 }
