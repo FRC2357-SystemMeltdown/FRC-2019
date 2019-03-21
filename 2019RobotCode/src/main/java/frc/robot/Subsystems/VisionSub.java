@@ -16,6 +16,10 @@ import frc.robot.RobotMap;
  * Controls the limelight camera options.
  */
 public class VisionSub extends SubsystemBase {
+  public enum TargetType {
+    HATCH, CARGO
+  }
+
   public enum PipelineIndex {
     UNKNOWN(-1),
     VISION_TARGET(0),
@@ -35,7 +39,83 @@ public class VisionSub extends SubsystemBase {
       }
       return UNKNOWN;
     }
-  };
+  }
+
+  public static class VisionTarget {
+    public final TargetType type;
+    private final double ts;
+    private final double thor;
+    private final double tvert;
+    private final double tx;
+    private final double ty;
+
+    protected VisionTarget(TargetType type, double ts, double thor, double tvert, double tx, double ty) {
+      this.type = type;
+      this.ts = ts;
+      this.thor = thor;
+      this.tvert = tvert;
+      this.tx = tx;
+      this.ty = ty;
+    }
+
+    public double getX() {
+      return tx;
+    }
+
+    public boolean isHeadOn() {
+      return ts == 0.0;
+    }
+
+    public boolean isToLeft() {
+      return ts <= RobotMap.LIMELIGHT_SKEW_CLOCKWISE_MAX &&
+        ts >= RobotMap.LIMELIGHT_SKEW_CLOCKWISE_MIN;
+    }
+
+    public boolean isToRight() {
+      return ts >= RobotMap.LIMELIGHT_SKEW_COUNTERCLOCKWISE_MAX &&
+        ts <= RobotMap.LIMELIGHT_SKEW_COUNTERCLOCKWISE_MIN;
+    }
+
+    public double getTargetRotationDegrees() {
+      if (isHeadOn()) {
+        return 0.0;
+      }
+      if (isToLeft()) {
+        return - getRotationAngle();
+      }
+      if (isToRight()) {
+        return getRotationAngle();
+      }
+
+      return Double.NaN;
+    }
+
+    private double getRotationAngle() {
+      double proportion = thor / tvert;
+      double factor = proportion / RobotMap.FIELD_VISION_TARGET_PROPORTION;
+      return 90.0 - (factor * 90.0);
+    }
+
+    public double getTargetHeight() {
+      switch (type) {
+        case HATCH:
+          return RobotMap.FIELD_HATCH_TARGET_TOP_FROM_FLOOR;
+        case CARGO:
+          return RobotMap.FIELD_CARGO_TARGET_TOP_FROM_FLOOR;
+        default:
+          return 0;
+      }
+    }
+
+    public double getInchesFromTarget() {
+      double angleDegrees = Math.abs(ty) + RobotMap.LIMELIGHT_MOUNTING_ANGLE;
+
+      double heightDifference = RobotMap.LIMELIGHT_MOUNTING_HEIGHT_INCHES - getTargetHeight();
+      double distance = heightDifference / Math.tan(Math.toRadians(angleDegrees));
+
+      return distance;
+    }
+  }
 
   private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
   private NetworkTableEntry pipeline = table.getEntry("pipeline");
@@ -47,8 +127,29 @@ public class VisionSub extends SubsystemBase {
   private NetworkTableEntry thor = table.getEntry("thor");
   private NetworkTableEntry tvert = table.getEntry("tvert");
 
+  private VisionTarget currentTarget = null;
+  private VisionTarget lastVisibleTarget = null;
+
   @Override
   protected void initDefaultCommand() {
+  }
+
+  public VisionTarget getCurrentTarget() {
+    return currentTarget;
+  }
+
+  public VisionTarget getLastVisibleTarget() {
+    return lastVisibleTarget;
+  }
+
+  public VisionTarget acquireTarget(TargetType type) {
+    if (0 < getTV()) {
+      currentTarget = new VisionTarget(type, getTS(), getTHOR(), getTVERT(), getTX(), getTY());
+      lastVisibleTarget = currentTarget;
+    } else {
+      currentTarget = null;
+    }
+    return currentTarget;
   }
 
   public PipelineIndex getPipeline() {
@@ -89,50 +190,5 @@ public class VisionSub extends SubsystemBase {
 
   public double getTVERT() {
     return tvert.getDouble(RobotMap.VISION_DEFAULT_RETURN_VALUE);
-  }
-
-  public double getInchesFromTarget(double targetHeight) {
-    double angleDegrees = Math.abs(getTY()) + RobotMap.LIMELIGHT_MOUNTING_ANGLE;
-
-    double heightDifference = RobotMap.LIMELIGHT_MOUNTING_HEIGHT_INCHES - targetHeight;
-    double distance = heightDifference / Math.tan(Math.toRadians(angleDegrees));
-
-    return distance;
-  }
-
-  public boolean isHeadOnTarget() {
-    return getTS() == 0.0;
-  }
-
-  public boolean isRightOfTarget() {
-    double ts = getTS();
-    return ts <= RobotMap.LIMELIGHT_SKEW_CLOCKWISE_MAX &&
-      ts >= RobotMap.LIMELIGHT_SKEW_CLOCKWISE_MIN;
-  }
-
-  public boolean isLeftOfTarget() {
-    double ts = getTS();
-    return ts >= RobotMap.LIMELIGHT_SKEW_COUNTERCLOCKWISE_MAX &&
-      ts <= RobotMap.LIMELIGHT_SKEW_COUNTERCLOCKWISE_MIN;
-  }
-
-  public double getTargetRotationDegrees() {
-    if (isHeadOnTarget()) {
-      return 0.0;
-    }
-    if (isRightOfTarget()) {
-      return - getRotationAngle();
-    }
-    if (isLeftOfTarget()) {
-      return getRotationAngle();
-    }
-
-    return Double.NaN;
-  }
-
-  private double getRotationAngle() {
-    double proportion = getTHOR() / getTVERT();
-    double factor = proportion / RobotMap.FIELD_VISION_TARGET_PROPORTION;
-    return 90.0 - (factor * 90.0);
   }
 }
