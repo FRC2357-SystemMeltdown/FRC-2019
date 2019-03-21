@@ -40,8 +40,8 @@ public class OI implements ProportionalDrive, VelocityDrive {
 
     gunnerControls.cargoRollerButton.whileHeld(new CargoRollerCommand(gunnerControls));
 
-    gunnerControls.armAdjustDownButton.whileHeld(new ArmAdjustCommand(Direction.DOWN));
-    gunnerControls.armAdjustUpButton.whileHeld(new ArmAdjustCommand(Direction.UP));
+    gunnerControls.armAdjustDownTrigger.whileActive(new ArmAdjustCommand(Direction.DOWN));
+    gunnerControls.armAdjustUpTrigger.whileActive(new ArmAdjustCommand(Direction.UP));
 
     gunnerControls.armCycleDownTrigger.whenActive(new ArmPresetCycleCommand(Direction.DOWN));
     gunnerControls.armCycleUpTrigger.whenActive(new ArmPresetCycleCommand(Direction.UP));

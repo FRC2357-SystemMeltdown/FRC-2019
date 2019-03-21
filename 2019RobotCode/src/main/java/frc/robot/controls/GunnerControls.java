@@ -11,9 +11,10 @@ public class GunnerControls extends Controls
   public static final double TURN_FACTOR = RobotMap.GUNNER_TURN_PROPORTION;
   public static final double SPEED_FACTOR = RobotMap.GUNNER_SPEED_PROPORTION;
 
+  private final JoystickButton armAdjustUpButton;
+  private final JoystickButton armAdjustDownButton;
+
   public final JoystickButton cargoRollerButton;
-  public final JoystickButton armAdjustUpButton;
-  public final JoystickButton armAdjustDownButton;
   public final JoystickButton autoModeButton;
   public final JoystickButton autoHatchModeButton;
   public final JoystickButton autoCargoModeButton;
@@ -23,6 +24,8 @@ public class GunnerControls extends Controls
   public final JoystickButton autoLoadingStationButton;
   public final DPadTrigger armCycleUpTrigger;
   public final DPadTrigger armCycleDownTrigger;
+  public final NonAutoModeButtonTrigger armAdjustUpTrigger;
+  public final NonAutoModeButtonTrigger armAdjustDownTrigger;
   public final ButtonChordTrigger autoHatchLoadingStationTrigger;
   public final ButtonChordTrigger autoHatchScoreLowTrigger;
   public final ButtonChordTrigger autoHatchScoreMidTrigger;
@@ -45,6 +48,9 @@ public class GunnerControls extends Controls
     autoScoreMidButton = new JoystickButton(controller, XboxRaw.X.value);
     autoScoreHighButton = new JoystickButton(controller, XboxRaw.Y.value);
     autoLoadingStationButton = new JoystickButton(controller, XboxRaw.B.value);
+
+    armAdjustUpTrigger = new NonAutoModeButtonTrigger(armAdjustUpButton);
+    armAdjustDownTrigger = new NonAutoModeButtonTrigger(armAdjustDownButton);
 
     armCycleUpTrigger = new DPadTrigger(controller, DPadValue.Up);
     armCycleDownTrigger = new DPadTrigger(controller, DPadValue.Down);
