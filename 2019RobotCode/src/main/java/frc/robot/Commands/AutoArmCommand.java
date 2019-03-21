@@ -2,6 +2,7 @@ package frc.robot.Commands;
 
 import frc.robot.Robot;
 import frc.robot.RobotMap.ArmPreset;
+import frc.robot.Subsystems.ArmSub;
 
 public class AutoArmCommand extends ArmPresetCommand {
   private int adjust;
@@ -20,6 +21,6 @@ public class AutoArmCommand extends ArmPresetCommand {
 
   @Override
   protected boolean isFinished() {
-    return Robot.ARM_SUB.isInRange(preset.value + adjust);
+    return Robot.ARM_SUB.calculateCurrentDirection() == ArmSub.Direction.STOP;
   }
 }
