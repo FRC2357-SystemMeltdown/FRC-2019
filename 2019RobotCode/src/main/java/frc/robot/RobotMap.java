@@ -99,10 +99,10 @@ public class RobotMap {
   // Output units: drive encoder clicks (-1700 to 1700)             P       I       D    feed forward  izone   peak
   public static final PIDValues PID_DRIVE_YAW   = new PIDValues( 14.0,  0.620,  400.0,            0.0,     0,   950);
   public static final PIDValues PID_VISION_YAW  = new PIDValues(  3.0,  2.000,   80.0,            0.0,     0,   950);
-  public static final PIDValues PID_ADJUST_YAW  = new PIDValues( 40.0,    0.0,    0.0,            0.0,     0,   950);
+  public static final PIDValues PID_ADJUST_YAW  = new PIDValues( 45.0,    0.0,    0.0,            0.0,     0,   950);
 
   public static final double VISION_DISTANCE_TO_HATCH_LOAD = 28.0;
-  public static final double VISION_DISTANCE_TO_HATCH_LOW = 24.0;
+  public static final double VISION_DISTANCE_TO_HATCH_LOW = 23.0;
   public static final double VISION_DISTANCE_TO_HATCH_MID = 25.0;
   public static final double VISION_DISTANCE_TO_HATCH_HIGH = 23.0;
 

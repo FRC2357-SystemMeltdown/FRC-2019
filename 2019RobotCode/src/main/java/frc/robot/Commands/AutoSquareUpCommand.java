@@ -107,7 +107,7 @@ public class AutoSquareUpCommand extends Command {
     double setpoint = rotationMod;
 
     if (isClose()) {
-      setpoint = -0.5;
+      setpoint = -1.0;
     }
 
     //System.out.println("set: " + ((int)setpoint*100) + " rot: " + ((int)getTargetRotationAverage()*100) + " dist: " + ((int)targetDistance*100) + " err: " + turnPid.getError());
