@@ -78,17 +78,24 @@ public class RobotMap {
 
   The feed forward is 1023 / <maximum speed>
   */
-  public static final int DRIVE_MAX_RPMS = 900;
+
+  /*
+  209/170
+
+  Left 279, Right 322
+  */
+
+  public static final int DRIVE_MAX_RPMS = 1100;
   public static final double VEL_FEED_FWD = 1023.0 / DRIVE_MAX_RPMS;
 
   public static final int VELOCITY_UNITS_PER_MIN = MILLIS_PER_MINUTE / 100;
   public static final int MAX_ENCODER_VELOCITY = DRIVE_MAX_RPMS * ENCODER_TICKS_PER_ROTATION / VELOCITY_UNITS_PER_MIN;
 
-  public static final int DRIVER_ENCODER_TURN_RATE = (int)(MAX_ENCODER_VELOCITY * 0.75);
+  public static final int DRIVER_ENCODER_TURN_RATE = (int)(MAX_ENCODER_VELOCITY * 0.60);
   public static final int DRIVER_ENCODER_SPEED = MAX_ENCODER_VELOCITY;
   public static final int GUNNER_ENCODER_TURN_RATE = (int)(MAX_ENCODER_VELOCITY * 0.5);
   public static final int GUNNER_ENCODER_SPEED = (int)(MAX_ENCODER_VELOCITY * 0.5);
-  public static final double DRIVER_ENCODER_MAX_FORWARD_LIMIT_FACTOR = 1.1;
+  public static final double DRIVER_ENCODER_MAX_FORWARD_LIMIT_FACTOR = 1.07;
   public static final int DRIVER_ENCODER_MAX_DIFF = 75;
 
   // PID Values

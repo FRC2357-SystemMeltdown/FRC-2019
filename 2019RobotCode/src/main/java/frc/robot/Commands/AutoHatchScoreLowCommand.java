@@ -14,7 +14,7 @@ public class AutoHatchScoreLowCommand extends CommandGroup {
 
     // Push forward and drop.
     addSequential(new AutoVelocityMoveCommand(300, 0, 1.00));
-    addSequential(new AutoArmCommand(ArmPreset.Low, +400, false));
+    addSequential(new AutoArmCommand(ArmPreset.Low, +400, true));
     addSequential(new AutoVelocityMoveCommand(-450, 0, 0.75));
     addSequential(new DriveStopCommand());
   }
