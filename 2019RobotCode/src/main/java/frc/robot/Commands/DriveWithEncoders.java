@@ -15,37 +15,22 @@ public class DriveWithEncoders extends Command {
     requires(Robot.DRIVE_SUB);
   }
 
-  // Called just before this Command runs the first time
-  @Override
-  protected void initialize() {
-  }
-
-  // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    double turn = Robot.OI.getTurnDegreesPerSecond();
-    double speed = Robot.OI.getSpeedInchesPerSecond();
+    int turn = Robot.OI.getEncoderTurnDifferential();
+    int speed = Robot.OI.getEncoderSpeed();
     Robot.DRIVE_SUB.PIDDrive(speed, turn);
-    // if(Robot.OI.getDriverController().getAButton()) {
-    //   //Robot.DRIVE_SUB.resetSensors();
-    // }
-    // Robot.DRIVE_SUB.rotateToAngle(90 * (Robot.OI.getDriverController().getBButton() ? 1 : 0));
+
+    /*
+    System.out.println(
+      "left: " + Robot.DRIVE_SUB.leftMaster.getClosedLoopError() + "|" + ((int)(Robot.DRIVE_SUB.leftMaster.getMotorOutputPercent()*100.0)) +
+      " right: " + Robot.DRIVE_SUB.rightMaster.getClosedLoopError() + "|" + ((int)(Robot.DRIVE_SUB.rightMaster.getMotorOutputPercent()*100.0))
+    );
+    */
   }
 
-  // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
     return false;
-  }
-
-  // Called once after isFinished returns true
-  @Override
-  protected void end() {
-  }
-
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
   }
 }

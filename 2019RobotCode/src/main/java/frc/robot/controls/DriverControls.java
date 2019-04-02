@@ -3,6 +3,7 @@ package frc.robot.controls;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import frc.robot.RobotMap;
+import frc.robot.Other.Utility;
 
 public class DriverControls extends Controls implements ProportionalDrive, VelocityDrive {
   public DriverControls(XboxController controller) {
@@ -10,16 +11,16 @@ public class DriverControls extends Controls implements ProportionalDrive, Veloc
   }
 
   @Override
-  public double getTurnDegreesPerSecond() {
-    double input = controller.getX(Hand.kRight);
-    double turnRate = input * RobotMap.MAX_TURN_RATE_DEGREES_PER_SECOND;
+  public int getEncoderTurnDifferential() {
+    double input = Utility.deadband(controller.getX(Hand.kRight), RobotMap.DRIVE_STICK_DEADBAND);
+    int turnRate = (int)(input * RobotMap.DRIVER_ENCODER_TURN_RATE);
     return turnRate;
   }
 
   @Override
-  public double getSpeedInchesPerSecond() {
-    double input = controller.getY(Hand.kLeft);
-    double speed = -input * RobotMap.MAX_VELOCITY_INCHES_PER_SECOND;
+  public int getEncoderSpeed() {
+    double input = Utility.deadband(controller.getY(Hand.kLeft), RobotMap.DRIVE_STICK_DEADBAND);
+    int speed = (int)(-input * RobotMap.DRIVER_ENCODER_SPEED);
     return speed;
   }
 
