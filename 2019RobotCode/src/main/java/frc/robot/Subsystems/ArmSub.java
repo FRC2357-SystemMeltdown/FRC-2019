@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Solenoid;
 import frc.robot.RobotMap;
-import frc.robot.Commands.ArmStopCommand;
 import frc.robot.RobotMap.ArmPreset;
 
 /**
@@ -104,7 +103,7 @@ public class ArmSub extends SubsystemBase {
     }
   }
 
-  private Direction calculateCurrentDirection() {
+  public Direction calculateCurrentDirection() {
     if (isFailsafeActive()) {
       return manualDirection;
     }

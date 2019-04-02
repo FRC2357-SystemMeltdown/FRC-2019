@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.robot.Subsystems.CargoSub;
 import frc.robot.Subsystems.DriveSub;
+import frc.robot.Commands.AutoLaunchCommand;
 import frc.robot.Subsystems.ArmSub;
 import frc.robot.Subsystems.VisionSub;
 import frc.robot.Subsystems.VisionSub.PipelineIndex;
@@ -34,6 +35,7 @@ public class Robot extends TimedRobot {
 
   private ShuffleboardController shuffleboardController;
   private boolean failsafeActive;
+  private AutoLaunchCommand autoLaunchCommand = new AutoLaunchCommand();
 
   public Robot() {
     robotInstance = this;
@@ -98,6 +100,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     shuffleboardController.drive();
     ARM_SUB.compressor.setClosedLoopControl(true);
+    autoLaunchCommand.start();
   }
 
   @Override
