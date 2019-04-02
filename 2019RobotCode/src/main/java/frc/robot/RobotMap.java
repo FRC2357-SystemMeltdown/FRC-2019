@@ -132,10 +132,10 @@ public class RobotMap {
     Failsafe(        "FAILSAFE",     -1,                           0,   0),
     Start(           "START",        ARM_STARTING_ANGLE,           0,   5),
     CargoPickup(     "C FLOOR",      ARM_STARTING_ANGLE - 100,    55,  40),
-    CargoLow(        "LOW",          ARM_STARTING_ANGLE - 375,    40,  30),
+    Low(             "LOW",          ARM_STARTING_ANGLE - 375,    40,  30),
     CargoShip(       "C SHIP",       ARM_STARTING_ANGLE - 760,    40,  20),
-    CargoMid(        "MID",          ARM_STARTING_ANGLE - 1105,   55,  20),
-    HatchHigh(       "HIGH",         ARM_STARTING_ANGLE - 1980,   10,   0);
+    Mid(             "MID",          ARM_STARTING_ANGLE - 1105,   55,  20),
+    High(            "HIGH",         ARM_STARTING_ANGLE - 1980,   10,   0);
 
     public final int value;
     public final String name;

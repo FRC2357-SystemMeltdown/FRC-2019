@@ -6,13 +6,13 @@ import frc.robot.RobotMap.ArmPreset;
 
 public class ArmPresetCommand extends Command {
   // This is tracked amongst all preset commands to keep them them same.
-  private static ArmPreset lastPreset = ArmPreset.Start;
+  protected static ArmPreset lastPreset = ArmPreset.Start;
 
   public static ArmPreset getLastPreset() {
     return lastPreset;
   }
 
-  private ArmPreset preset = null;
+  protected ArmPreset preset = null;
 
   public ArmPresetCommand() {
     requires(Robot.ARM_SUB);
