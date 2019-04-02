@@ -99,9 +99,12 @@ public class RobotMap {
   // Output units: drive encoder clicks (-1700 to 1700)             P       I       D    feed forward  izone   peak
   public static final PIDValues PID_DRIVE_YAW   = new PIDValues( 14.0,  0.620,  400.0,            0.0,     0,   950);
   public static final PIDValues PID_VISION_YAW  = new PIDValues(  3.0,  2.000,   80.0,            0.0,     0,   950);
-  public static final PIDValues PID_ADJUST_YAW  = new PIDValues( 20.0,    0.0,    0.0,            0.0,     0,   950);
+  public static final PIDValues PID_ADJUST_YAW  = new PIDValues( 40.0,    0.0,    0.0,            0.0,     0,   950);
 
   public static final double VISION_DISTANCE_TO_HATCH_LOAD = 28.0;
+  public static final double VISION_DISTANCE_TO_HATCH_LOW = 24.0;
+  public static final double VISION_DISTANCE_TO_HATCH_MID = 25.0;
+  public static final double VISION_DISTANCE_TO_HATCH_HIGH = 23.0;
 
   public static final int PID_DRIVE_POSITION_ACCURACY = 50;
   public static final double PID_ROTATION_POSITION_ACCURACY = 1.0;
@@ -130,22 +133,22 @@ public class RobotMap {
   // Adjust this whenever we remove and reinstall the potentiometer.
 
   // Practice Robot
-  public static final int ARM_STARTING_ANGLE = 3015;
+  //public static final int ARM_STARTING_ANGLE = 3015;
 
   // Competition Robot
-  //public static final int ARM_STARTING_ANGLE = 3424;
+  public static final int ARM_STARTING_ANGLE = 3461;
 
   // The rest of these values are relative to the starting angle
   // They should only need to be tweaked, not when the potentiometer is changed.
   public enum ArmPreset {
     //               Name            Potentiometer value          up  down (overshoots)
     Failsafe(        "FAILSAFE",     -1,                           0,   0),
-    Start(           "START",        ARM_STARTING_ANGLE,           0,   5),
-    CargoPickup(     "C FLOOR",      ARM_STARTING_ANGLE - 100,    55,  40),
-    Low(             "LOW",          ARM_STARTING_ANGLE - 375,    40,  30),
-    CargoShip(       "C SHIP",       ARM_STARTING_ANGLE - 760,    40,  20),
-    Mid(             "MID",          ARM_STARTING_ANGLE - 1105,   55,  20),
-    High(            "HIGH",         ARM_STARTING_ANGLE - 1980,   10,   0);
+    Start(           "START",        ARM_STARTING_ANGLE,           0, 110),
+    CargoPickup(     "C FLOOR",      ARM_STARTING_ANGLE - 100,    99,  45),
+    Low(             "LOW",          ARM_STARTING_ANGLE - 375,   190,  75),
+    CargoShip(       "C SHIP",       ARM_STARTING_ANGLE - 760,   130,  85),
+    Mid(             "MID",          ARM_STARTING_ANGLE - 1105,  180, 120),
+    High(            "HIGH",         ARM_STARTING_ANGLE - 1980,  360,   0);
 
     public final int value;
     public final String name;
