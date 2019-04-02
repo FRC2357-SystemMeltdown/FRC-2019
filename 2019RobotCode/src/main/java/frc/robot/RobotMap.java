@@ -51,6 +51,9 @@ public class RobotMap {
   public static final int ENCODER_TICKS_PER_ROTATION = 1024;
   public static final double WHEEL_CIRCUMFERENCE_INCHES = 6.375 * Math.PI;
   public static final double MOTOR_MINIMUM_POWER = 0.05;
+  public static final double TIP_REFLEX_TIPPING = 15;
+  public static final double TIP_REFLEX_STABLE = 10;
+  public static final double TIP_REFLEX_SPEED = -0.3;
 
   // Drive Controls
   public static final double DRIVE_STICK_DEADBAND = 0.1;
