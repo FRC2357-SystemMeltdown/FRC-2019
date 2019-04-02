@@ -20,6 +20,7 @@ public class TestTab {
   private NetworkTableEntry visionTarget;
   private NetworkTableEntry visionTargetDistance;
   private NetworkTableEntry visionTargetRotation;
+  private NetworkTableEntry yaw;
 
   public TestTab() {
     tab = Shuffleboard.getTab(TITLE);
@@ -46,6 +47,8 @@ public class TestTab {
     visionTarget = tab.add("Target", "none").getEntry();
     visionTargetDistance = tab.add("T Distance", 0.0).getEntry();
     visionTargetRotation = tab.add("T Rotation", 0.0).getEntry();
+
+    yaw = tab.add("Yaw", 0.0).getEntry();
   }
 
   public void show() {
@@ -81,5 +84,7 @@ public class TestTab {
     visionTarget.setString(visionString);
     visionTargetDistance.setDouble(visionDistance);
     visionTargetRotation.setDouble(visionRotation);
+
+    yaw.setDouble(Robot.DRIVE_SUB.getYaw(false));
   }
 }

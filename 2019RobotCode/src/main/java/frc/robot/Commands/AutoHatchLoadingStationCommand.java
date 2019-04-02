@@ -6,7 +6,9 @@ public class AutoHatchLoadingStationCommand extends CommandGroup {
   public AutoHatchLoadingStationCommand() {
     setName("HATCH LOAD");
 
-    addSequential(new AutoMoveForwardCommand(100));
+    // TODO: Add code for a real sequence here instead of just test commands.
+    addSequential(new AutoMoveForwardCommand(24));
+    addSequential(new AutoRotateCommand(45));
     addSequential(new DriveStopCommand());
   }
 

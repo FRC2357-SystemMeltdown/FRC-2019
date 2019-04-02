@@ -11,6 +11,7 @@ import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.Commands.DriveProportional;
 import frc.robot.Commands.DriveWithEncoders;
+import frc.robot.Other.PIDValues;
 import frc.robot.Other.Utility;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -40,18 +41,12 @@ public class DriveSub extends SubsystemBase {
   private double[] yawPitchRoll = new double[RobotMap.GYRO_AXIS_TOTAL];
   private YawPIDSource yawPIDSource;
   private PIDController yawPID;
+  private int positionTarget;
 
   private class YawPIDSource implements PIDSource, PIDOutput {
-    public double output = 0;
-
-    @Override
-    public void pidWrite(double output) {
-      System.out.println("pidWrite: " + output);
-      this.output = output;
-    }
-
     @Override
     public void setPIDSourceType(PIDSourceType pidSource) {
+      System.err.println("YawPIDSource: Something tried to setPIDSourceType!");
     }
 
     @Override
@@ -61,8 +56,21 @@ public class DriveSub extends SubsystemBase {
 
     @Override
     public double pidGet() {
-      System.out.println("pidget: " + getYaw(false));
       return getYaw(false);
+    }
+
+    @Override
+    public void pidWrite(double output) {
+      int encoderDifferential = (int) output;
+
+      int leftVelocity = -encoderDifferential;
+      int rightVelocity = +encoderDifferential;
+
+      Utility.clamp(leftVelocity, -RobotMap.MAX_ENCODER_VELOCITY, RobotMap.MAX_ENCODER_VELOCITY);
+      Utility.clamp(rightVelocity, -RobotMap.MAX_ENCODER_VELOCITY, RobotMap.MAX_ENCODER_VELOCITY);
+
+      leftMaster.set(ControlMode.Velocity, leftVelocity);
+      rightMaster.set(ControlMode.Velocity, rightVelocity);
     }
   }
 
@@ -125,6 +133,7 @@ public class DriveSub extends SubsystemBase {
     Utility.configTalonPID(rightMaster, RobotMap.TALON_SLOT_VELOCITY, RobotMap.PID_DRIVE_SPEED);
 
     Utility.configTalonPID(rightMaster, RobotMap.TALON_SLOT_DISTANCE, RobotMap.PID_DRIVE_POS);
+    Utility.configTalonPID(leftMaster, RobotMap.TALON_SLOT_DISTANCE, RobotMap.PID_DRIVE_POS);
 
     /**
 		 * 1ms per loop.  PID loop can be slowed down if need be.
@@ -139,25 +148,35 @@ public class DriveSub extends SubsystemBase {
     rightMaster.configClosedLoopPeriod(RobotMap.TALON_SLOT_TURNING, closedLoopTimeMs, timeout);
     rightMaster.configClosedLoopPeriod(RobotMap.TALON_SLOT_VELOCITY, closedLoopTimeMs, timeout);
 
-    resetSensors();
-
-    /*yawPIDSource = new YawPIDSource();*/
-
-    /*
-    gyroPid = new PIDController(RobotMap.PID_GYRO.kp, RobotMap.PID_GYRO.ki, RobotMap.PID_GYRO.kd, gyroPidIntf,
-        gyroPidIntf, 0.01);
-    gyroPid.setOutputRange(-0.4, 0.4);
-    gyroPid.enable();
-    */
+    resetEncoders();
+    configureYawPID();
   }
 
-  public void resetSensors() {
-    rightMaster.getSensorCollection().setQuadraturePosition(0, 0);
-    leftMaster.getSensorCollection().setQuadraturePosition(0, 0);
-    /*
-    gyro.setYaw(0);
-    gyro.setAccumZAngle(0);
-    */
+  public void configureYawPID() {
+    resetYaw();
+
+    yawPIDSource = new YawPIDSource();
+
+    PIDValues yawPIDValues = RobotMap.PID_DRIVE_YAW;
+    yawPID = new PIDController(
+      yawPIDValues.kp,
+      yawPIDValues.ki,
+      yawPIDValues.kd,
+      yawPIDSource,
+      yawPIDSource,
+      0.05
+    );
+    yawPID.setOutputRange(-yawPIDValues.peak, yawPIDValues.peak);
+  }
+
+  public void resetEncoders() {
+    rightMaster.getSensorCollection().setQuadraturePosition(0, RobotMap.TALON_TIMEOUT_MS);
+    leftMaster.getSensorCollection().setQuadraturePosition(0, RobotMap.TALON_TIMEOUT_MS);
+  }
+
+  public void resetYaw() {
+    pidgey.setYaw(0);
+    pidgey.setAccumZAngle(0);
   }
 
   @Override
@@ -176,12 +195,13 @@ public class DriveSub extends SubsystemBase {
     }
   }
 
-  public int getForwardError() {
-    return rightMaster.getClosedLoopError();
+  public int getPositionError() {
+    int currentPosition = rightMaster.getSelectedSensorPosition();
+    return this.positionTarget - currentPosition;
   }
 
   public double getRotationError() {
-    return 180.0;
+    return yawPID.getError();
   }
 
   /**
@@ -191,11 +211,12 @@ public class DriveSub extends SubsystemBase {
    */
   public void PIDDrive(int speed, int turn) {
     if (Robot.getInstance().isFailsafeActive()) {
-      System.err.println("DriveSub: Cannot use PIDDrive while in failsafe");
       return;
     }
 
-    //System.out.println("PIDDrive: speed: " + speed + ", turn: " + turn);
+    if (yawPID.isEnabled()) {
+      yawPID.disable();
+    }
 
     leftMaster.selectProfileSlot(RobotMap.TALON_SLOT_VELOCITY, RobotMap.TALON_PID_PRIMARY);
     rightMaster.selectProfileSlot(RobotMap.TALON_SLOT_VELOCITY, RobotMap.TALON_PID_PRIMARY);
@@ -206,48 +227,44 @@ public class DriveSub extends SubsystemBase {
     Utility.clamp(leftVelocity, -RobotMap.MAX_ENCODER_VELOCITY, RobotMap.MAX_ENCODER_VELOCITY);
     Utility.clamp(rightVelocity, -RobotMap.MAX_ENCODER_VELOCITY, RobotMap.MAX_ENCODER_VELOCITY);
 
-    leftMaster.set(ControlMode.Velocity, leftVelocity);
     rightMaster.set(ControlMode.Velocity, rightVelocity);
-
-    /*
-    leftMaster.set(ControlMode.Velocity, 0, DemandType.ArbitraryFeedForward, -turnFeedback * 1023);
-    rightMaster.set(ControlMode.Velocity, 0, DemandType.ArbitraryFeedForward, turnFeedback * 1023);
-    */
+    leftMaster.set(ControlMode.Velocity, leftVelocity);
   }
 
   public void rotateDegrees(double degrees) {
     if (Robot.getInstance().isFailsafeActive()) {
-      System.err.println("DriveSub: Cannot use rotateToAngle while in failsafe");
       return;
     }
 
-    System.out.println("Rotating " + degrees + " degrees");
+    double currentYaw = getYaw(false);
+    double targetYaw = currentYaw + degrees;
 
-    resetSensors();
+    leftMaster.selectProfileSlot(RobotMap.TALON_SLOT_VELOCITY, RobotMap.TALON_PID_PRIMARY);
+    rightMaster.selectProfileSlot(RobotMap.TALON_SLOT_VELOCITY, RobotMap.TALON_PID_PRIMARY);
 
-    /*
-    leftMaster.selectProfileSlot(SPEED_PID_SLOT, 0);
-    rightMaster.selectProfileSlot(SPEED_PID_SLOT, 0);
-
-    gyroPid.setSetpoint(degrees);
-    double turnFeedback = gyroPidIntf.output;
-    leftMaster.set(ControlMode.Velocity, 0, DemandType.ArbitraryFeedForward, -turnFeedback * 1023);
-    rightMaster.set(ControlMode.Velocity, 0, DemandType.ArbitraryFeedForward, turnFeedback * 1023);
-    */
+    yawPID.reset();
+    yawPID.setSetpoint(targetYaw);
+    yawPID.enable();
   }
 
   public void moveForwardDistance(double inches) {
     if (Robot.getInstance().isFailsafeActive()) {
-      System.err.println("DriveSub: Cannot use moveForwardDistance while in failsafe");
       return;
     }
 
-    resetSensors();
+    if (yawPID.isEnabled()) {
+      yawPID.disable();
+    }
+    resetEncoders();
+
     leftMaster.selectProfileSlot(RobotMap.TALON_SLOT_DISTANCE, RobotMap.TALON_PID_PRIMARY);
     rightMaster.selectProfileSlot(RobotMap.TALON_SLOT_DISTANCE, RobotMap.TALON_PID_PRIMARY);
 
-    double targetPosition = inches * RobotMap.ENCODER_TICKS_PER_ROTATION / RobotMap.WHEEL_CIRCUMFERENCE_INCHES;
-    rightMaster.set(ControlMode.Position, targetPosition);
+    int currentPosition = rightMaster.getSensorCollection().getQuadraturePosition();
+    int distance = (int)(inches * RobotMap.ENCODER_TICKS_PER_ROTATION / RobotMap.WHEEL_CIRCUMFERENCE_INCHES);
+    this.positionTarget = currentPosition + distance;
+
+    rightMaster.set(ControlMode.Position, positionTarget);
     leftMaster.follow(rightMaster, FollowerType.AuxOutput1);
   }
 
@@ -270,6 +287,10 @@ public class DriveSub extends SubsystemBase {
   }
 
   public void tankDrive(double leftSpeed, double rightSpeed) {
+    if (yawPID.isEnabled()) {
+      yawPID.disable();
+    }
+
     leftMaster.set(ControlMode.PercentOutput, leftSpeed);
     rightMaster.set(ControlMode.PercentOutput, rightSpeed);
   }

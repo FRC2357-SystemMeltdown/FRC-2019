@@ -92,13 +92,15 @@ public class RobotMap {
   public static final int DRIVER_ENCODER_MAX_DIFF = 75;
 
   // PID Values
-  //                                                                P       I       D    feed forward  izone  peak
+  //  Output units: motor percent (-1.0 to +1.0)                    P       I       D    feed forward  izone   peak
   public static final PIDValues PID_DRIVE_SPEED = new PIDValues( 0.50,    0.0,   40.0,            0.0,     0,  1.00);
   public static final PIDValues PID_DRIVE_POS   = new PIDValues( 0.10, 0.0002,   10.0,            0.0,     0,  0.23);
-  public static final PIDValues PID_DRIVE_YAW   = new PIDValues( 0.10,    0.0,    0.0,            0.0,     0,  0.23);
+
+  // Output units: drive encoder clicks (-1700 to 1700)             P       I       D    feed forward  izone   peak
+  public static final PIDValues PID_DRIVE_YAW   = new PIDValues( 14.0,  0.620,  400.0,            0.0,     0,   950);
 
   public static final int PID_DRIVE_POSITION_ACCURACY = 50;
-  public static final double PID_ROTATION_POSITION_ACCURACY = 5.0;
+  public static final double PID_ROTATION_POSITION_ACCURACY = 1.0;
 
   public static final int TALON_TIMEOUT_MS = 30;
   public static final int TALON_PID_PRIMARY = 0;

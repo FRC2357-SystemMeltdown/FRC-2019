@@ -11,7 +11,7 @@ public class DriveStopCommand extends Command {
   @Override
   protected void initialize() {
     super.initialize();
-    Robot.DRIVE_SUB.resetSensors();
+    Robot.DRIVE_SUB.resetEncoders();
   }
 
   // Called repeatedly when this Command is scheduled to run

@@ -24,7 +24,7 @@ public class AutoMoveForwardCommand extends Command {
   }
 
   public boolean isInRange() {
-    int error = Robot.DRIVE_SUB.getForwardError();
+    int error = Robot.DRIVE_SUB.getPositionError();
     return error <= RobotMap.PID_DRIVE_POSITION_ACCURACY;
   }
 }
