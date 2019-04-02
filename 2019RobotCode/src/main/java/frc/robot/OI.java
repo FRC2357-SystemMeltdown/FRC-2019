@@ -10,6 +10,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Commands.ArmAdjustCommand;
 import frc.robot.Commands.ArmPresetCycleCommand;
 import frc.robot.Commands.AutoHatchLoadingStationCommand;
+import frc.robot.Commands.AutoHatchScoreLowCommand;
+import frc.robot.Commands.AutoHatchScoreMidCommand;
+import frc.robot.Commands.AutoHatchScoreHighCommand;
 import frc.robot.Commands.AutoModePreviewCommand;
 import frc.robot.Commands.CargoRollerCommand;
 import frc.robot.Other.Utility;
@@ -40,8 +43,8 @@ public class OI implements ProportionalDrive, VelocityDrive {
 
     gunnerControls.cargoRollerButton.whileHeld(new CargoRollerCommand(gunnerControls));
 
-    gunnerControls.armAdjustDownButton.whileHeld(new ArmAdjustCommand(Direction.DOWN));
-    gunnerControls.armAdjustUpButton.whileHeld(new ArmAdjustCommand(Direction.UP));
+    gunnerControls.armAdjustDownTrigger.whileActive(new ArmAdjustCommand(Direction.DOWN));
+    gunnerControls.armAdjustUpTrigger.whileActive(new ArmAdjustCommand(Direction.UP));
 
     gunnerControls.armCycleDownTrigger.whenActive(new ArmPresetCycleCommand(Direction.DOWN));
     gunnerControls.armCycleUpTrigger.whenActive(new ArmPresetCycleCommand(Direction.UP));
@@ -50,6 +53,9 @@ public class OI implements ProportionalDrive, VelocityDrive {
     gunnerControls.autoModeButton.whenReleased(new AutoModePreviewCommand(false));
 
     gunnerControls.autoHatchLoadingStationTrigger.whileActive(new AutoHatchLoadingStationCommand());
+    gunnerControls.autoHatchScoreLowTrigger.whileActive(new AutoHatchScoreLowCommand());
+    gunnerControls.autoHatchScoreMidTrigger.whileActive(new AutoHatchScoreMidCommand());
+    gunnerControls.autoHatchScoreHighTrigger.whileActive(new AutoHatchScoreHighCommand());
   }
 
   public boolean isAutoModePreview() {

@@ -5,6 +5,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
+import frc.robot.Subsystems.VisionSub.TargetType;
+import frc.robot.Subsystems.VisionSub.VisionTarget;
 
 public class TestTab {
   private static final String TITLE = "Test Mode";
@@ -73,12 +75,11 @@ public class TestTab {
     double visionDistance = 0.0;
     double visionRotation = 0.0;
 
-    if (0 < Robot.VISION_SUB.getTV()) {
-      double tx = Robot.VISION_SUB.getTX();
-      double ts = Robot.VISION_SUB.getTS();
-      visionString = "s=" + ts + " x=" + tx;
-      visionDistance = Robot.VISION_SUB.getInchesFromTarget(RobotMap.FIELD_HATCH_TARGET_TOP_FROM_FLOOR);
-      visionRotation = Robot.VISION_SUB.getTargetRotationDegrees();
+    VisionTarget target = Robot.VISION_SUB.getCurrentTarget();
+    if (target != null) {
+      visionString = "x=" + target.getX();
+      visionDistance = target.getInchesFromTarget();
+      visionRotation = target.getTargetRotationDegrees();
     }
 
     visionTarget.setString(visionString);

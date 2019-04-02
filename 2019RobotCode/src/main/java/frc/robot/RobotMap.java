@@ -81,17 +81,24 @@ public class RobotMap {
 
   The feed forward is 1023 / <maximum speed>
   */
-  public static final int DRIVE_MAX_RPMS = 900;
+
+  /*
+  209/170
+
+  Left 279, Right 322
+  */
+
+  public static final int DRIVE_MAX_RPMS = 1100;
   public static final double VEL_FEED_FWD = 1023.0 / DRIVE_MAX_RPMS;
 
   public static final int VELOCITY_UNITS_PER_MIN = MILLIS_PER_MINUTE / 100;
   public static final int MAX_ENCODER_VELOCITY = DRIVE_MAX_RPMS * ENCODER_TICKS_PER_ROTATION / VELOCITY_UNITS_PER_MIN;
 
-  public static final int DRIVER_ENCODER_TURN_RATE = (int)(MAX_ENCODER_VELOCITY * 0.75);
+  public static final int DRIVER_ENCODER_TURN_RATE = (int)(MAX_ENCODER_VELOCITY * 0.60);
   public static final int DRIVER_ENCODER_SPEED = MAX_ENCODER_VELOCITY;
   public static final int GUNNER_ENCODER_TURN_RATE = (int)(MAX_ENCODER_VELOCITY * 0.5);
   public static final int GUNNER_ENCODER_SPEED = (int)(MAX_ENCODER_VELOCITY * 0.5);
-  public static final double DRIVER_ENCODER_MAX_FORWARD_LIMIT_FACTOR = 1.1;
+  public static final double DRIVER_ENCODER_MAX_FORWARD_LIMIT_FACTOR = 1.07;
   public static final int DRIVER_ENCODER_MAX_DIFF = 75;
 
   // PID Values
@@ -101,9 +108,22 @@ public class RobotMap {
 
   // Output units: drive encoder clicks (-1700 to 1700)             P       I       D    feed forward  izone   peak
   public static final PIDValues PID_DRIVE_YAW   = new PIDValues( 14.0,  0.620,  400.0,            0.0,     0,   950);
+  public static final PIDValues PID_VISION_YAW  = new PIDValues(  3.0,  2.000,   80.0,            0.0,     0,   950);
+  public static final PIDValues PID_ADJUST_YAW  = new PIDValues( 45.0,    0.0,    0.0,            0.0,     0,   950);
+
+  public static final double VISION_DISTANCE_TO_HATCH_LOAD = 28.0;
+  public static final double VISION_DISTANCE_TO_HATCH_LOW = 23.0;
+  public static final double VISION_DISTANCE_TO_HATCH_MID = 25.0;
+  public static final double VISION_DISTANCE_TO_HATCH_HIGH = 23.0;
 
   public static final int PID_DRIVE_POSITION_ACCURACY = 50;
   public static final double PID_ROTATION_POSITION_ACCURACY = 1.0;
+  public static final double PID_VISION_CENTER_ACCURACY = 0.25;
+  public static final double PID_VISION_TARGET_ROTATION_ACCURACY = 5.0;
+  public static final double PID_VISION_TURN_ERR_ACCURACY = 1.0;
+  public static final double PID_VISION_TARGET_ROTATION_TO_X_OFFSET = 1.5;
+  public static final double PID_VISION_TARGET_DISTANCE_CENTERING_THRESHOLD_INCHES = 12;
+  public static final int PID_VISION_TARGET_ROTATION_SAMPLES = 20;
 
   public static final int TALON_TIMEOUT_MS = 30;
   public static final int TALON_PID_PRIMARY = 0;
@@ -123,22 +143,22 @@ public class RobotMap {
   // Adjust this whenever we remove and reinstall the potentiometer.
 
   // Practice Robot
-  public static final int ARM_STARTING_ANGLE = 3015;
+  //public static final int ARM_STARTING_ANGLE = 3015;
 
   // Competition Robot
-  //public static final int ARM_STARTING_ANGLE = 3424;
+  public static final int ARM_STARTING_ANGLE = 3461;
 
   // The rest of these values are relative to the starting angle
   // They should only need to be tweaked, not when the potentiometer is changed.
   public enum ArmPreset {
     //               Name            Potentiometer value          up  down (overshoots)
     Failsafe(        "FAILSAFE",     -1,                           0,   0),
-    Start(           "START",        ARM_STARTING_ANGLE,           0,   5),
-    CargoPickup(     "C FLOOR",      ARM_STARTING_ANGLE - 100,    55,  40),
-    CargoLow(        "LOW",          ARM_STARTING_ANGLE - 375,    40,  30),
-    CargoShip(       "C SHIP",       ARM_STARTING_ANGLE - 760,    40,  20),
-    CargoMid(        "MID",          ARM_STARTING_ANGLE - 1105,   55,  20),
-    HatchHigh(       "HIGH",         ARM_STARTING_ANGLE - 1980,   10,   0);
+    Start(           "START",        ARM_STARTING_ANGLE,           0, 110),
+    CargoPickup(     "C FLOOR",      ARM_STARTING_ANGLE - 100,    99,  45),
+    Low(             "LOW",          ARM_STARTING_ANGLE - 375,   190,  75),
+    CargoShip(       "C SHIP",       ARM_STARTING_ANGLE - 760,   130,  85),
+    Mid(             "MID",          ARM_STARTING_ANGLE - 1105,  180, 120),
+    High(            "HIGH",         ARM_STARTING_ANGLE - 1980,  360,   0);
 
     public final int value;
     public final String name;

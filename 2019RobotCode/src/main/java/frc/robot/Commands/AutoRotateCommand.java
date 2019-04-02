@@ -25,7 +25,6 @@ public class AutoRotateCommand extends Command {
 
   public boolean isInRange() {
     double error = Robot.DRIVE_SUB.getRotationError();
-    System.out.println("Rotate error:" + error);
     return error <= RobotMap.PID_ROTATION_POSITION_ACCURACY;
   }
 }
