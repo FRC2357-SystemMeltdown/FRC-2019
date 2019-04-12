@@ -22,7 +22,7 @@ public class AutoArmCommand extends ArmPresetCommand {
   @Override
   protected void initialize() {
     Robot.ARM_SUB.setTargetValue(preset.value + adjust);
-    lastPreset = this.preset;
+    Robot.ARM_SUB.setLastPreset(preset);
   }
 
   @Override

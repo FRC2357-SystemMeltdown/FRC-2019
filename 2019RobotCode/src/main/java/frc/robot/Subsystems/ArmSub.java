@@ -9,7 +9,9 @@ package frc.robot.Subsystems;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.RobotMap;
 import frc.robot.RobotMap.ArmPreset;
 
@@ -33,21 +35,53 @@ public class ArmSub extends SubsystemBase {
   public Solenoid upSolenoid = new Solenoid(
     RobotMap.CAN_ID_PCM,
     RobotMap.PCM_PORT_UP);
+  public DoubleSolenoid defenseSolenoid = new DoubleSolenoid(
+    RobotMap.CAN_ID_PCM,
+    RobotMap.PCM_PORT_DEFENSE_MODE_ON,
+    RobotMap.PCM_PORT_DEFENSE_MODE_OFF
+  );
 
   public AnalogInput potentiometer = new AnalogInput(RobotMap.ANALOG_PORT_ARM_POTENTIOMETER);
 
   private Direction lastDirection = Direction.STOP;
   private Direction manualDirection = Direction.STOP;
   private int targetValue = TARGET_VALUE_STOP;
+  private ArmPreset lastPreset = ArmPreset.Start;
 
   @Override
   protected void initDefaultCommand() {
     setFailsafeActive(isFailsafeActive());
+    deactivateDefense();
   }
 
   @Override
   public void setFailsafeActive(boolean failsafeActive) {
     super.setFailsafeActive(failsafeActive);
+
+    if (failsafeActive) {
+      setLastPreset(ArmPreset.Failsafe);
+    } else {
+      setLastPreset(ArmPreset.Start);
+      setTargetValue(ArmPreset.Start.value);
+    }
+  }
+
+  /**
+   * Gets the last preset set for the Arm
+   * @return ArmPreset The last preset used
+   */
+  public ArmPreset getLastPreset() {
+    return lastPreset;
+  }
+
+  /**
+   * Set the last arm preset.
+   * TODO: Move more preset code into the ArmSub so we set the
+   * actual preset instead of setting the last preset.
+   * @param armPreset The preset
+   */
+  public void setLastPreset(ArmPreset armPreset) {
+    this.lastPreset = armPreset;
   }
 
   /**
@@ -151,6 +185,22 @@ public class ArmSub extends SubsystemBase {
           break;
       }
     }
+  }
+
+  public void activateDefense() {
+    setLastPreset(ArmPreset.Defense);
+    upSolenoid.set(true);
+    downSolenoid.set(false);
+    defenseSolenoid.set(Value.kForward);
+    System.out.println("activateDefense");
+  }
+
+  public void deactivateDefense() {
+    setLastPreset(ArmPreset.Start);
+    defenseSolenoid.set(Value.kReverse);
+    upSolenoid.set(false);
+    downSolenoid.set(false);
+    System.out.println("deactivateDefense");
   }
 
   /**
