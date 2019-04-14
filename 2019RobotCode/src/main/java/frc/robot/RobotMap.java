@@ -64,6 +64,7 @@ public class RobotMap {
   public static final double GUNNER_TURN_PROPORTION = 0.5;
   public static final double FAILSAFE_TRIM_FORWARD_DEFAULT = 0.0;
   public static final double FAILSAFE_TRIM_REVERSE_DEFAULT = 0.0;
+  public static final double DRIVER_SLOW_TRIGGER_THRESHOLD = 0.25;
 
   //Drive PID Values
   /*
@@ -93,6 +94,8 @@ public class RobotMap {
 
   public static final int DRIVER_ENCODER_TURN_RATE = (int)(MAX_ENCODER_VELOCITY * 0.60);
   public static final int DRIVER_ENCODER_SPEED = MAX_ENCODER_VELOCITY;
+  public static final int DRIVER_ENCODER_SLOW_TURN_RATE = (int)(MAX_ENCODER_VELOCITY * 0.5);
+  public static final int DRIVER_ENCODER_SLOW_SPEED = (int)(MAX_ENCODER_VELOCITY * 0.5);
   public static final int GUNNER_ENCODER_TURN_RATE = (int)(MAX_ENCODER_VELOCITY * 0.5);
   public static final int GUNNER_ENCODER_SPEED = (int)(MAX_ENCODER_VELOCITY * 0.5);
   public static final double DRIVER_ENCODER_MAX_FORWARD_LIMIT_FACTOR = 1.07;

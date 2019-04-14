@@ -15,6 +15,7 @@ import frc.robot.Commands.AutoHatchScoreMidCommand;
 import frc.robot.Commands.AutoHatchScoreHighCommand;
 import frc.robot.Commands.AutoModePreviewCommand;
 import frc.robot.Commands.CargoRollerCommand;
+import frc.robot.Commands.DriverSlowCommand;
 import frc.robot.Other.Utility;
 import frc.robot.Subsystems.ArmSub.Direction;
 import frc.robot.Subsystems.VisionSub.PipelineIndex;
@@ -31,15 +32,20 @@ public class OI implements ProportionalDrive, VelocityDrive {
   public static final int CONTROLLER_ID_GUNNER = 1;
 
   private int lastEncoderSpeed;
+  private boolean driverSlow;
   private boolean autoModePreview;
   private DriverControls driverControls;
   private GunnerControls gunnerControls;
 
   public OI() {
     this.lastEncoderSpeed = 0;
+    this.driverSlow = false;
     this.autoModePreview = false;
     this.driverControls = new DriverControls(new XboxController(CONTROLLER_ID_DRIVER));
     this.gunnerControls = new GunnerControls(new XboxController(CONTROLLER_ID_GUNNER));
+
+    driverControls.slowTrigger.whenActive(new DriverSlowCommand(true));
+    driverControls.slowTrigger.whenInactive(new DriverSlowCommand(false));
 
     gunnerControls.cargoRollerButton.whileHeld(new CargoRollerCommand(gunnerControls));
 
@@ -56,6 +62,16 @@ public class OI implements ProportionalDrive, VelocityDrive {
     gunnerControls.autoHatchScoreLowTrigger.whileActive(new AutoHatchScoreLowCommand());
     gunnerControls.autoHatchScoreMidTrigger.whileActive(new AutoHatchScoreMidCommand());
     gunnerControls.autoHatchScoreHighTrigger.whileActive(new AutoHatchScoreHighCommand());
+  }
+
+  public boolean isDriverSlow() {
+    return driverSlow;
+  }
+
+  public void setDriverSlow(boolean driverSlow) {
+    if (this.driverSlow != driverSlow) {
+      this.driverSlow = driverSlow;
+    }
   }
 
   public boolean isAutoModePreview() {
