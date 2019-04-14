@@ -26,27 +26,23 @@ public class DriveTab {
   }
 
   public void show() {
-    if (failsafe == null) {
-      failsafe = tab.add("FAILSAFE", false)
-        .withWidget(BuiltInWidgets.kToggleButton)
-        .getEntry();
+    failsafe = tab.add("FAILSAFE", false)
+      .withWidget(BuiltInWidgets.kToggleButton)
+      .getEntry();
 
-      defenseMode = tab.add("Defense", false)
-        .withWidget(BuiltInWidgets.kToggleButton)
-        .getEntry();
+    defenseMode = tab.add("Defense", false)
+      .withWidget(BuiltInWidgets.kToggleButton)
+      .getEntry();
 
-      failsafeTrigger = new ToggleTrigger(failsafe);
-      failsafeTrigger.whenActive(new FailsafeSetCommand(true));
-      failsafeTrigger.whenInactive(new FailsafeSetCommand(false));
+    failsafeTrigger = new ToggleTrigger(failsafe);
+    failsafeTrigger.whenActive(new FailsafeSetCommand(true));
+    failsafeTrigger.whenInactive(new FailsafeSetCommand(false));
 
-      defenseModeTrigger = new ToggleTrigger(defenseMode);
-      defenseModeTrigger.whenActive(new DefenseModeSetCommand(true));
-      defenseModeTrigger.whenInactive(new DefenseModeSetCommand(false));
-    }
+    defenseModeTrigger = new ToggleTrigger(defenseMode);
+    defenseModeTrigger.whenActive(new DefenseModeSetCommand(true));
+    defenseModeTrigger.whenInactive(new DefenseModeSetCommand(false));
 
-    if (armHeight == null) {
-      armHeight = tab.add("Arm", "").getEntry();
-    }
+    armHeight = tab.add("Arm", "").getEntry();
 
     failsafe.setBoolean(Robot.getInstance().isFailsafeActive());
 
