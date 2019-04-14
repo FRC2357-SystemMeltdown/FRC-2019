@@ -7,6 +7,9 @@
 
 package frc.robot.Subsystems;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -19,12 +22,20 @@ import frc.robot.RobotMap.ArmPreset;
  * Add your docs here.
  */
 public class ArmSub extends SubsystemBase {
+  private static long DEFENSE_SOLENOID_OFF_DELAY = 100;
   private static int TARGET_VALUE_STOP = -1;
 
   public enum Direction {
     STOP,
     DOWN,
     UP,
+  }
+
+  private class DefenseSolenoidOffTask extends TimerTask {
+    @Override
+    public void run() {
+      defenseSolenoid.set(Value.kOff);
+    }
   }
 
   // TODO: Move Compressor to its own subsystem.
@@ -47,6 +58,7 @@ public class ArmSub extends SubsystemBase {
   private Direction manualDirection = Direction.STOP;
   private int targetValue = TARGET_VALUE_STOP;
   private ArmPreset lastPreset = ArmPreset.Start;
+  private Timer timer = new Timer();
 
   @Override
   protected void initDefaultCommand() {
@@ -192,7 +204,8 @@ public class ArmSub extends SubsystemBase {
     upSolenoid.set(true);
     downSolenoid.set(false);
     defenseSolenoid.set(Value.kForward);
-    System.out.println("activateDefense");
+
+    timer.schedule(new DefenseSolenoidOffTask(), DEFENSE_SOLENOID_OFF_DELAY );
   }
 
   public void deactivateDefense() {
@@ -200,7 +213,8 @@ public class ArmSub extends SubsystemBase {
     defenseSolenoid.set(Value.kReverse);
     upSolenoid.set(false);
     downSolenoid.set(false);
-    System.out.println("deactivateDefense");
+
+    timer.schedule(new DefenseSolenoidOffTask(), DEFENSE_SOLENOID_OFF_DELAY );
   }
 
   /**
