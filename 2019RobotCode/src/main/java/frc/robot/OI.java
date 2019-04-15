@@ -7,6 +7,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.buttons.Trigger;
 import frc.robot.Commands.ArmAdjustCommand;
 import frc.robot.Commands.ArmPresetCycleCommand;
 import frc.robot.Commands.AutoHatchLoadingStationCommand;
@@ -14,6 +15,7 @@ import frc.robot.Commands.AutoHatchScoreLowCommand;
 import frc.robot.Commands.AutoHatchScoreMidCommand;
 import frc.robot.Commands.AutoHatchScoreHighCommand;
 import frc.robot.Commands.AutoModePreviewCommand;
+import frc.robot.Commands.CancelAutoCommand;
 import frc.robot.Commands.CargoRollerCommand;
 import frc.robot.Commands.DriverSlowCommand;
 import frc.robot.Other.Utility;
@@ -31,11 +33,21 @@ public class OI implements ProportionalDrive, VelocityDrive {
   public static final int CONTROLLER_ID_DRIVER = 0;
   public static final int CONTROLLER_ID_GUNNER = 1;
 
+  private class FullAutoCancelTrigger extends Trigger {
+    @Override
+    public boolean get() {
+      return Robot.getInstance().isFullAuto() &&
+         driverControls.isStickActive() &&
+         gunnerControls.isStickActive();
+    }
+  }
+
   private int lastEncoderSpeed;
   private boolean driverSlow;
   private boolean autoModePreview;
   private DriverControls driverControls;
   private GunnerControls gunnerControls;
+  private FullAutoCancelTrigger fullAutoCancelTrigger;
 
   public OI() {
     this.lastEncoderSpeed = 0;
@@ -43,6 +55,7 @@ public class OI implements ProportionalDrive, VelocityDrive {
     this.autoModePreview = false;
     this.driverControls = new DriverControls(new XboxController(CONTROLLER_ID_DRIVER));
     this.gunnerControls = new GunnerControls(new XboxController(CONTROLLER_ID_GUNNER));
+    this.fullAutoCancelTrigger = new FullAutoCancelTrigger();
 
     driverControls.slowTrigger.whenActive(new DriverSlowCommand(true));
     driverControls.slowTrigger.whenInactive(new DriverSlowCommand(false));
@@ -62,6 +75,8 @@ public class OI implements ProportionalDrive, VelocityDrive {
     gunnerControls.autoHatchScoreLowTrigger.whileActive(new AutoHatchScoreLowCommand());
     gunnerControls.autoHatchScoreMidTrigger.whileActive(new AutoHatchScoreMidCommand());
     gunnerControls.autoHatchScoreHighTrigger.whileActive(new AutoHatchScoreHighCommand());
+
+    fullAutoCancelTrigger.whenActive(new CancelAutoCommand());
   }
 
   public boolean isDriverSlow() {
@@ -112,10 +127,6 @@ public class OI implements ProportionalDrive, VelocityDrive {
     speed = Utility.clamp(speed, -1.0, 1.0);
 
     return speed;
-  }
-
-  public boolean isAnyStickActive() {
-    return driverControls.isStickActive() || gunnerControls.isStickActive();
   }
 
   public boolean isGunnerDriving() {

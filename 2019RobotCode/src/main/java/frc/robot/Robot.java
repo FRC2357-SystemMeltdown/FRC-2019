@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.robot.Subsystems.CargoSub;
 import frc.robot.Subsystems.DriveSub;
 import frc.robot.Commands.AutoModes;
+import frc.robot.Commands.FullAutoCommandGroup;
 import frc.robot.Subsystems.ArmSub;
 import frc.robot.Subsystems.VisionSub;
 import frc.robot.Subsystems.VisionSub.PipelineIndex;
@@ -37,10 +38,12 @@ public class Robot extends TimedRobot {
 
   private ShuffleboardController shuffleboardController;
   private boolean failsafeActive;
+  private Command currentAutoCommand;
 
   public Robot() {
     robotInstance = this;
     failsafeActive = false;
+    currentAutoCommand = null;
   }
 
   /**
@@ -67,6 +70,30 @@ public class Robot extends TimedRobot {
     VISION_SUB.setFailsafeActive(failsafeActive);
   }
 
+  public boolean isFullAuto() {
+    return currentAutoCommand != null && currentAutoCommand instanceof FullAutoCommandGroup;
+  }
+
+  public String getCurrentAutoCommandName() {
+    return (currentAutoCommand == null ? "" : currentAutoCommand.getName());
+  }
+
+  public void startAutoCommand(Command autoCommand) {
+    if (currentAutoCommand != null) {
+      System.err.println("Starting new auto command while current auto command is running. Cancelling current auto command first.");
+      cancelAutoCommand();
+    }
+
+    currentAutoCommand = autoCommand;
+    currentAutoCommand.start();
+  }
+
+  public void cancelAutoCommand() {
+    if (currentAutoCommand != null) {
+      currentAutoCommand.cancel();
+    }
+  }
+
   @Override
   public void robotInit() {
     setFailsafeActive(failsafeActive);
@@ -84,6 +111,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    // Clear away auto command after finished.
+    if (currentAutoCommand != null && !currentAutoCommand.isRunning()) {
+      currentAutoCommand = null;
+    }
   }
 
   /**
@@ -104,7 +135,7 @@ public class Robot extends TimedRobot {
 
     Command autoCommand = autoModes.getAutoCommand();
     if (autoCommand != null) {
-      autoCommand.start();
+      startAutoCommand(autoCommand);
     }
   }
 
