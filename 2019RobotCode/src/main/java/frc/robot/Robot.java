@@ -8,10 +8,11 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.robot.Subsystems.CargoSub;
 import frc.robot.Subsystems.DriveSub;
-import frc.robot.Commands.AutoLaunchCommand;
+import frc.robot.Commands.AutoModes;
 import frc.robot.Subsystems.ArmSub;
 import frc.robot.Subsystems.VisionSub;
 import frc.robot.Subsystems.VisionSub.PipelineIndex;
@@ -30,12 +31,12 @@ public class Robot extends TimedRobot {
   public static final CargoSub CARGO_SUB = new CargoSub();
   public static final VisionSub VISION_SUB = new VisionSub();
   public static final OI OI = new OI();
+  public static final AutoModes autoModes = new AutoModes();
 
   private static Robot robotInstance;
 
   private ShuffleboardController shuffleboardController;
   private boolean failsafeActive;
-  private AutoLaunchCommand autoLaunchCommand = new AutoLaunchCommand();
 
   public Robot() {
     robotInstance = this;
@@ -100,7 +101,11 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     shuffleboardController.drive();
     ARM_SUB.compressor.setClosedLoopControl(true);
-    autoLaunchCommand.start();
+
+    Command autoCommand = autoModes.getAutoCommand();
+    if (autoCommand != null) {
+      autoCommand.start();
+    }
   }
 
   @Override

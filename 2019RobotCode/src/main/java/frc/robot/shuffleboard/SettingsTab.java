@@ -3,6 +3,7 @@ package frc.robot.shuffleboard;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import frc.robot.Robot;
 import frc.robot.RobotMap;
 
 public class SettingsTab {
@@ -35,6 +36,9 @@ public class SettingsTab {
       "Failsafe Trim Reverse",
       RobotMap.FAILSAFE_TRIM_REVERSE_DEFAULT
     ).getEntry();
+
+    tab.add(Robot.autoModes.positionChooser);
+    tab.add(Robot.autoModes.taskChooser);
   }
 
   public void show() {

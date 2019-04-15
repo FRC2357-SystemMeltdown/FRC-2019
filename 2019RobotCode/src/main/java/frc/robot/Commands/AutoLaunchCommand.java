@@ -11,13 +11,6 @@ public class AutoLaunchCommand extends CommandGroup {
     addSequential(new AutoArmCommand(ArmPreset.Low, 0));
     addSequential(new AutoVelocityMoveCommand((int)(RobotMap.MAX_ENCODER_VELOCITY * 0.80), 0, 1.25));
     addSequential(new AutoVelocityMoveCommand((int)(RobotMap.MAX_ENCODER_VELOCITY * 0.25), 0, 0.50));
-    addSequential(new AutoVelocityMoveCommand((int)(RobotMap.MAX_ENCODER_VELOCITY * 0.25), 0, 0.25));
     addSequential(new AutoVelocityMoveCommand(0, 0, 0));
-  }
-
-  @Override
-  protected boolean isFinished() {
-    boolean finished = super.isFinished();
-    return finished;
   }
 }
