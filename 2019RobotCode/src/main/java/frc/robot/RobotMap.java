@@ -41,6 +41,8 @@ public class RobotMap {
   //PCM IDs
   public static final int PCM_PORT_DOWN = 0;
   public static final int PCM_PORT_UP = 1;
+  public static final int PCM_PORT_DEFENSE_MODE_ON = 2;
+  public static final int PCM_PORT_DEFENSE_MODE_OFF = 3;
 
   // Drive System
   public static final int GYRO_UNITS_PER_ROTATION = 8192; // Pigeon IMU
@@ -153,6 +155,7 @@ public class RobotMap {
   public enum ArmPreset {
     //               Name            Potentiometer value          up  down (overshoots)
     Failsafe(        "FAILSAFE",     -1,                           0,   0),
+    Defense(         "DEFENSE",      ARM_STARTING_ANGLE,           0,  20),
     Start(           "START",        ARM_STARTING_ANGLE,           0, 110),
     CargoPickup(     "C FLOOR",      ARM_STARTING_ANGLE - 100,    99,  45),
     Low(             "LOW",          ARM_STARTING_ANGLE - 375,   190,  75),
@@ -177,7 +180,8 @@ public class RobotMap {
       int nearestDiff = Integer.MAX_VALUE;
 
       for (ArmPreset preset : ArmPreset.values()) {
-        if (preset == ArmPreset.Failsafe) {
+        if (preset == ArmPreset.Failsafe ||
+            preset == ArmPreset.Defense) {
           continue;
         }
 
@@ -216,7 +220,7 @@ public class RobotMap {
 
     public static ArmPreset getPrevious(ArmPreset preset) {
       int index = preset.ordinal();
-      if (index > Failsafe.ordinal() + 1) {
+      if (index > Defense.ordinal() + 1) {
         return values()[index - 1];
       }
       return preset;

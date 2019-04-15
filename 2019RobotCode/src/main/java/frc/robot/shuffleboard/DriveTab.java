@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
-import frc.robot.Commands.ArmPresetCommand;
+import frc.robot.Commands.DefenseModeSetCommand;
 import frc.robot.Commands.FailsafeSetCommand;
 import frc.robot.RobotMap.ArmPreset;
 
@@ -15,8 +15,10 @@ public class DriveTab {
 
   private ShuffleboardTab tab = null;
   private NetworkTableEntry failsafe;
+  private NetworkTableEntry defenseMode;
   private NetworkTableEntry armHeight;
   private ToggleTrigger failsafeTrigger;
+  private ToggleTrigger defenseModeTrigger;
 
   public DriveTab() {
     tab = Shuffleboard.getTab(TITLE);
@@ -33,6 +35,16 @@ public class DriveTab {
       failsafeTrigger.whenInactive(new FailsafeSetCommand(false));
     }
 
+    if (defenseMode == null) {
+      defenseMode = tab.add("Defense", false)
+        .withWidget(BuiltInWidgets.kToggleButton)
+        .getEntry();
+
+      defenseModeTrigger = new ToggleTrigger(defenseMode);
+      defenseModeTrigger.whenActive(new DefenseModeSetCommand(true));
+      defenseModeTrigger.whenInactive(new DefenseModeSetCommand(false));
+    }
+
     if (armHeight == null) {
       armHeight = tab.add("Arm", "").getEntry();
     }
@@ -44,7 +56,7 @@ public class DriveTab {
 
   public void periodic() {
     if (armHeight != null) {
-      ArmPreset preset = ArmPresetCommand.getLastPreset();
+      ArmPreset preset = Robot.ARM_SUB.getLastPreset();
       int armValue = Robot.ARM_SUB.getValue();
       armHeight.setString(RobotMap.ArmPreset.getPresetString(preset, armValue));
     }

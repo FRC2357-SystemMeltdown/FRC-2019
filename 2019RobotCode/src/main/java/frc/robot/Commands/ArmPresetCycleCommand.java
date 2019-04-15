@@ -1,5 +1,6 @@
 package frc.robot.Commands;
 
+import frc.robot.Robot;
 import frc.robot.RobotMap.ArmPreset;
 import frc.robot.Subsystems.ArmSub;
 
@@ -14,9 +15,9 @@ public class ArmPresetCycleCommand extends ArmPresetCommand {
   protected ArmPreset getNextPreset(ArmSub.Direction direction) {
     switch (direction) {
       case UP:
-        return ArmPreset.getNext(getLastPreset());
+        return ArmPreset.getNext(Robot.ARM_SUB.getLastPreset());
       case DOWN:
-        return ArmPreset.getPrevious(getLastPreset());
+        return ArmPreset.getPrevious(Robot.ARM_SUB.getLastPreset());
       default:
         return ArmPreset.Start;
     }
