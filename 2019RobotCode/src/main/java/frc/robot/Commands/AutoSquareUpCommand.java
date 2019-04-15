@@ -37,7 +37,14 @@ public class AutoSquareUpCommand extends Command {
     public void pidWrite(double output) {
       int encoderDifferential = (int) output;
 
-      int speed = Robot.OI.getEncoderSpeed();
+      int speed;
+      int driverSpeed = Robot.OI.getEncoderSpeed();
+
+      if (driverSpeed != 0) {
+        speed = driverSpeed;
+      } else {
+        speed = approachSpeed;
+      }
 
       int leftVelocity = speed - encoderDifferential;
       int rightVelocity = speed + encoderDifferential;
@@ -58,8 +65,14 @@ public class AutoSquareUpCommand extends Command {
   private int targetRotationArrayIndex;
   private double targetDistance;
   private double desiredDistance;
+  private int approachSpeed;
 
   public AutoSquareUpCommand(TargetType targetType, double desiredDistance) {
+    // Let the driver set the approach speed.
+    this(targetType, desiredDistance, 0);
+  }
+
+  public AutoSquareUpCommand(TargetType targetType, double desiredDistance, int approachSpeed) {
     requires(Robot.DRIVE_SUB);
     requires(Robot.VISION_SUB);
     setName("SQUARE UP");
@@ -70,6 +83,7 @@ public class AutoSquareUpCommand extends Command {
     this.targetRotationArray = new double[RobotMap.PID_VISION_TARGET_ROTATION_SAMPLES];
     this.targetRotationArrayIndex = 0;
     this.targetDistance = Double.MAX_VALUE;
+    this.approachSpeed = approachSpeed;
 
     PIDValues yawPIDValues = RobotMap.PID_ADJUST_YAW;
 

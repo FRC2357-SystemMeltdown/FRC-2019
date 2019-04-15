@@ -23,7 +23,9 @@ public class VisionSub extends SubsystemBase {
   public enum PipelineIndex {
     UNKNOWN(-1),
     VISION_TARGET(0),
-    HUMAN_VIEW(1);
+    HUMAN_VIEW(1),
+    VISION_TARGET_LEFT(2),
+    VISION_TARGET_RIGHT(3);
 
     public final int index;
 

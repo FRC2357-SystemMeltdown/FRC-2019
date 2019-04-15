@@ -114,6 +114,10 @@ public class OI implements ProportionalDrive, VelocityDrive {
     return speed;
   }
 
+  public boolean isAnyStickActive() {
+    return driverControls.isStickActive() || gunnerControls.isStickActive();
+  }
+
   public boolean isGunnerDriving() {
     return gunnerControls.getEncoderTurnDifferential() != 0 || gunnerControls.getEncoderSpeed() != 0;
   }
@@ -165,7 +169,6 @@ public class OI implements ProportionalDrive, VelocityDrive {
       }
 
       if (speed > max) {
-        System.out.println("limit: " + speed + " to " + max + " (lastEncoderSpeed=" + lastEncoderSpeed + ")");
         speed = max;
       }
     }
