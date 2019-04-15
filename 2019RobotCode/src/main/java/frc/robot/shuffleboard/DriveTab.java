@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
-import frc.robot.Commands.ArmPresetCommand;
 import frc.robot.Commands.DefenseModeSetCommand;
 import frc.robot.Commands.FailsafeSetCommand;
 import frc.robot.RobotMap.ArmPreset;
@@ -26,23 +25,29 @@ public class DriveTab {
   }
 
   public void show() {
-    failsafe = tab.add("FAILSAFE", false)
-      .withWidget(BuiltInWidgets.kToggleButton)
-      .getEntry();
+    if (failsafe == null) {
+      failsafe = tab.add("FAILSAFE", false)
+        .withWidget(BuiltInWidgets.kToggleButton)
+        .getEntry();
 
-    defenseMode = tab.add("Defense", false)
-      .withWidget(BuiltInWidgets.kToggleButton)
-      .getEntry();
+      failsafeTrigger = new ToggleTrigger(failsafe);
+      failsafeTrigger.whenActive(new FailsafeSetCommand(true));
+      failsafeTrigger.whenInactive(new FailsafeSetCommand(false));
+    }
 
-    failsafeTrigger = new ToggleTrigger(failsafe);
-    failsafeTrigger.whenActive(new FailsafeSetCommand(true));
-    failsafeTrigger.whenInactive(new FailsafeSetCommand(false));
+    if (defenseMode == null) {
+      defenseMode = tab.add("Defense", false)
+        .withWidget(BuiltInWidgets.kToggleButton)
+        .getEntry();
 
-    defenseModeTrigger = new ToggleTrigger(defenseMode);
-    defenseModeTrigger.whenActive(new DefenseModeSetCommand(true));
-    defenseModeTrigger.whenInactive(new DefenseModeSetCommand(false));
+      defenseModeTrigger = new ToggleTrigger(defenseMode);
+      defenseModeTrigger.whenActive(new DefenseModeSetCommand(true));
+      defenseModeTrigger.whenInactive(new DefenseModeSetCommand(false));
+    }
 
-    armHeight = tab.add("Arm", "").getEntry();
+    if (armHeight == null) {
+      armHeight = tab.add("Arm", "").getEntry();
+    }
 
     failsafe.setBoolean(Robot.getInstance().isFailsafeActive());
 
