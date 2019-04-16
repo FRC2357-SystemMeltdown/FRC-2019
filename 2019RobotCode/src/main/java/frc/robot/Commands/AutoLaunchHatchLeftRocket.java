@@ -4,9 +4,9 @@ import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.Subsystems.VisionSub.PipelineIndex;
 
-public class AutoLaunchHatchCargoShipLeftCommand extends FullAutoCommandGroup {
-  public AutoLaunchHatchCargoShipLeftCommand(AutoModes.StartPosition position) {
-    setName("CSHIP_LEFT");
+public class AutoLaunchHatchLeftRocket extends FullAutoCommandGroup {
+  public AutoLaunchHatchLeftRocket(AutoModes.StartPosition position) {
+    setName("L_ROCKET");
 
     launch();
 
@@ -22,20 +22,11 @@ public class AutoLaunchHatchCargoShipLeftCommand extends FullAutoCommandGroup {
         return;
     }
 
-    // Score hatch on left cargo ship
-    addSequential(new VisionSetPipelineCommand(PipelineIndex.VISION_TARGET_LEFT));
-    addSequential(new AutoHatchScoreLowCommand((int)(RobotMap.MAX_ENCODER_VELOCITY * 0.25)));
+    // Score hatch on rocket
+    addSequential(new VisionSetPipelineCommand(PipelineIndex.VISION_TARGET));
+    addSequential(new AutoHatchScoreLowCommand((int)(RobotMap.MAX_ENCODER_VELOCITY * 0.33)));
     addSequential(new VisionSetPipelineCommand(PipelineIndex.HUMAN_VIEW));
 
-    backUpToLeft();
-    stop(0);
-    //addSequential(new AutoArmCommand(ArmPreset.Low, 0, true));
-    //driveToLoadingStation();
-
-    //addSequential(new VisionSetPipelineCommand(PipelineIndex.VISION_TARGET));
-    //addSequential(new AutoHatchLoadingStationCommand((int)(RobotMap.MAX_ENCODER_VELOCITY * 0.30)));
-
-    addSequential(new VisionSetPipelineCommand(PipelineIndex.HUMAN_VIEW));
     stop(0);
   }
 
@@ -44,17 +35,11 @@ public class AutoLaunchHatchCargoShipLeftCommand extends FullAutoCommandGroup {
   }
 
   private void moveFromHab1Left() {
-    // Arc right
-    addSequential(new AutoVelocityMoveCommand(
-      (int)(RobotMap.MAX_ENCODER_VELOCITY * 0.40),
-      (int)(RobotMap.MAX_ENCODER_VELOCITY * 0.60),
-      0.7
-    ));
     // Arc left
     addSequential(new AutoVelocityMoveCommand(
       (int)(RobotMap.MAX_ENCODER_VELOCITY * 0.40),
-      (int)(RobotMap.MAX_ENCODER_VELOCITY * -0.60),
-      0.7
+      (int)(RobotMap.MAX_ENCODER_VELOCITY * -0.40),
+      0.6
     ));
   }
 
@@ -92,7 +77,7 @@ public class AutoLaunchHatchCargoShipLeftCommand extends FullAutoCommandGroup {
     addSequential(new AutoVelocityMoveCommand(
       (int)(RobotMap.MAX_ENCODER_VELOCITY * 0.40),
       (int)(RobotMap.MAX_ENCODER_VELOCITY * -0.20),
-      1.25
+      1.5
     ));
     // Drive straight
     addSequential(new AutoVelocityMoveCommand(
@@ -109,8 +94,8 @@ public class AutoLaunchHatchCargoShipLeftCommand extends FullAutoCommandGroup {
   }
 
   @Override
-  protected void interrupted() {
-    super.interrupted();
+  protected void end() {
+    super.end();
     Robot.VISION_SUB.setPipeline(PipelineIndex.HUMAN_VIEW);
   }
 }

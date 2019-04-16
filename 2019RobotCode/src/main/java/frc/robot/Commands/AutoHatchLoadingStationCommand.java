@@ -7,10 +7,18 @@ import frc.robot.Subsystems.VisionSub.TargetType;
 
 public class AutoHatchLoadingStationCommand extends CommandGroup {
   public AutoHatchLoadingStationCommand() {
+    // Let the driver set the approach speed.
+    this(0);
+
+    // Hold the stop until this command is cancelled
+    addSequential(new DriveStopCommand());
+  }
+
+  public AutoHatchLoadingStationCommand(int approachSpeed) {
     setName("HATCH LOAD");
 
     addSequential(new AutoArmCommand(ArmPreset.Low, 0));
-    addSequential(new AutoSquareUpCommand(TargetType.HATCH, RobotMap.VISION_DISTANCE_TO_HATCH_LOAD));
+    addSequential(new AutoSquareUpCommand(TargetType.HATCH, RobotMap.VISION_DISTANCE_TO_HATCH_LOAD, approachSpeed));
 
     // Push forward and lift.
     addSequential(new AutoMoveProportionalCommand(0.20, 0.20, 0.50));
