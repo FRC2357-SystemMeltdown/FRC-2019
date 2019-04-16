@@ -1,10 +1,9 @@
 package frc.robot.Commands;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
 import frc.robot.RobotMap;
 import frc.robot.RobotMap.ArmPreset;
 
-public class AutoLaunchCommand extends CommandGroup {
+public class AutoLaunchCommand extends FullAutoCommandGroup {
   public AutoLaunchCommand() {
     setName("LAUNCH");
 

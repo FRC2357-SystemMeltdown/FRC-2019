@@ -66,6 +66,9 @@ public class DriveTab {
       armHeight.setString(RobotMap.ArmPreset.getPresetString(preset, armValue));
     }
 
-    autoCommandName.setString(Robot.getInstance().getCurrentAutoCommandName());
+    Robot robot = Robot.getInstance();
+    if (robot != null && autoCommandName != null) {
+      autoCommandName.setString(robot.getCurrentAutoCommandName());
+    }
   }
 }

@@ -36,9 +36,8 @@ public class OI implements ProportionalDrive, VelocityDrive {
   private class FullAutoCancelTrigger extends Trigger {
     @Override
     public boolean get() {
-      return Robot.getInstance().isFullAuto() &&
-         driverControls.isStickActive() &&
-         gunnerControls.isStickActive();
+      boolean isRobotAuto = Robot.getInstance() != null && Robot.getInstance().isFullAuto();
+      return isRobotAuto && (driverControls.isActive() || gunnerControls.isActive());
     }
   }
 

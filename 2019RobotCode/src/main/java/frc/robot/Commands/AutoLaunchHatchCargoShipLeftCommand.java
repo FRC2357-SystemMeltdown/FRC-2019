@@ -1,5 +1,6 @@
 package frc.robot.Commands;
 
+import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.RobotMap.ArmPreset;
 import frc.robot.Subsystems.VisionSub.PipelineIndex;
@@ -30,7 +31,6 @@ public class AutoLaunchHatchCargoShipLeftCommand extends FullAutoCommandGroup {
 
     // Stop
     addSequential(new AutoVelocityMoveCommand(0, 0, 0));
-    addSequential(new VisionSetPipelineCommand(PipelineIndex.HUMAN_VIEW));
   }
 
   private void moveFromHab1Left() {
@@ -75,5 +75,11 @@ public class AutoLaunchHatchCargoShipLeftCommand extends FullAutoCommandGroup {
   protected boolean isFinished() {
     boolean finished = super.isFinished();
     return finished;
+  }
+
+  @Override
+  protected void end() {
+    super.end();
+    Robot.VISION_SUB.setPipeline(PipelineIndex.HUMAN_VIEW);
   }
 }

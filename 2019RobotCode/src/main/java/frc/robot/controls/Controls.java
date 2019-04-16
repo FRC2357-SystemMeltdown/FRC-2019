@@ -12,7 +12,7 @@ public class Controls {
     this.controller = controller;
   }
 
-  public boolean isStickActive() {
+  public boolean isActive() {
     double speed = Utility.deadband(controller.getY(Hand.kLeft), RobotMap.DRIVE_STICK_DEADBAND);
     double turn = Utility.deadband(controller.getX(Hand.kRight), RobotMap.DRIVE_STICK_DEADBAND);
     return (speed != 0 || turn != 0);
