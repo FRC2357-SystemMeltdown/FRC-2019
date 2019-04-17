@@ -50,7 +50,7 @@ public class AutoModes {
       case CARGO_SHIP_RIGHT:
         return new AutoNothingCommand();
       case LEFT_ROCKET_LOW:
-        return new AutoNothingCommand();
+        return new AutoLaunchHatchLeftRocket(position);
       case RIGHT_ROCKET_LOW:
         return new AutoNothingCommand();
       case LAUNCH:
