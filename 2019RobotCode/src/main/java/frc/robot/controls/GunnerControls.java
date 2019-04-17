@@ -83,6 +83,25 @@ public class GunnerControls extends Controls
   }
 
   @Override
+  public boolean isActive() {
+    return super.isActive() ||
+      cargoRollerButton.get() ||
+      armAdjustUpButton.get() ||
+      armAdjustDownButton.get() ||
+      autoModeButton.get() ||
+      autoHatchModeButton.get() ||
+      autoCargoModeButton.get() ||
+      autoScoreLowButton.get() ||
+      autoScoreMidButton.get() ||
+      autoScoreHighButton.get() ||
+      autoLoadingStationButton.get() ||
+      armAdjustUpTrigger.get() ||
+      armAdjustDownTrigger.get() ||
+      armCycleUpTrigger.get() ||
+      armCycleDownTrigger.get();
+  }
+
+  @Override
   public double getProportionalTurn() {
     return controller.getX(Hand.kRight) * TURN_FACTOR;
   }

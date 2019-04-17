@@ -17,6 +17,7 @@ public class DriveTab {
   private NetworkTableEntry failsafe;
   private NetworkTableEntry defenseMode;
   private NetworkTableEntry armHeight;
+  private NetworkTableEntry autoCommandName;
   private ToggleTrigger failsafeTrigger;
   private ToggleTrigger defenseModeTrigger;
 
@@ -49,6 +50,10 @@ public class DriveTab {
       armHeight = tab.add("Arm", "").getEntry();
     }
 
+    if (autoCommandName == null) {
+      autoCommandName = tab.add("Auto", "").getEntry();
+    }
+
     failsafe.setBoolean(Robot.getInstance().isFailsafeActive());
 
     Shuffleboard.selectTab(TITLE);
@@ -59,6 +64,11 @@ public class DriveTab {
       ArmPreset preset = Robot.ARM_SUB.getLastPreset();
       int armValue = Robot.ARM_SUB.getValue();
       armHeight.setString(RobotMap.ArmPreset.getPresetString(preset, armValue));
+    }
+
+    Robot robot = Robot.getInstance();
+    if (robot != null && autoCommandName != null) {
+      autoCommandName.setString(robot.getCurrentAutoCommandName());
     }
   }
 }
