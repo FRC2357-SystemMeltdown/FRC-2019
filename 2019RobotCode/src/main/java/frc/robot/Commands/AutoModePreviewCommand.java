@@ -7,7 +7,6 @@ public class AutoModePreviewCommand extends Command {
   private boolean active;
 
   public AutoModePreviewCommand(boolean active) {
-    requires(Robot.VISION_SUB);
     this.active = active;
   }
 

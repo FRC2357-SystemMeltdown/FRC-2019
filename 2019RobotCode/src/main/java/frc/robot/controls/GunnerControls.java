@@ -16,8 +16,8 @@ public class GunnerControls extends Controls
 
   public final JoystickButton cargoRollerButton;
   public final JoystickButton autoModeButton;
-  public final JoystickButton autoHatchModeButton;
-  public final JoystickButton autoCargoModeButton;
+  public final JoystickButton autoTargetLeftButton;
+  public final JoystickButton autoTargetRightButton;
   public final JoystickButton autoScoreLowButton;
   public final JoystickButton autoScoreMidButton;
   public final JoystickButton autoScoreHighButton;
@@ -30,10 +30,6 @@ public class GunnerControls extends Controls
   public final ButtonChordTrigger autoHatchScoreLowTrigger;
   public final ButtonChordTrigger autoHatchScoreMidTrigger;
   public final ButtonChordTrigger autoHatchScoreHighTrigger;
-  public final ButtonChordTrigger autoCargoLoadingStationTrigger;
-  public final ButtonChordTrigger autoCargoScoreLowTrigger;
-  public final ButtonChordTrigger autoCargoScoreMidTrigger;
-  public final ButtonChordTrigger autoCargoScoreHighTrigger;
 
   public GunnerControls(XboxController controller) {
     super(controller);
@@ -42,8 +38,8 @@ public class GunnerControls extends Controls
     armAdjustUpButton = new JoystickButton(controller, XboxRaw.BumperRight.value);
     armAdjustDownButton = new JoystickButton(controller, XboxRaw.BumperLeft.value);
     autoModeButton = new JoystickButton(controller, XboxRaw.Back.value);
-    autoHatchModeButton = new JoystickButton(controller, XboxRaw.BumperLeft.value);
-    autoCargoModeButton = new JoystickButton(controller, XboxRaw.BumperRight.value);
+    autoTargetLeftButton = new JoystickButton(controller, XboxRaw.BumperLeft.value);
+    autoTargetRightButton = new JoystickButton(controller, XboxRaw.BumperRight.value);
     autoScoreLowButton = new JoystickButton(controller, XboxRaw.A.value);
     autoScoreMidButton = new JoystickButton(controller, XboxRaw.X.value);
     autoScoreHighButton = new JoystickButton(controller, XboxRaw.Y.value);
@@ -56,29 +52,16 @@ public class GunnerControls extends Controls
     armCycleDownTrigger = new DPadTrigger(controller, DPadValue.Down);
 
     autoHatchLoadingStationTrigger = new ButtonChordTrigger(
-      new JoystickButton[] {autoModeButton, autoHatchModeButton, autoLoadingStationButton}
+      new JoystickButton[] {autoModeButton, autoLoadingStationButton}
     );
     autoHatchScoreLowTrigger = new ButtonChordTrigger(
-      new JoystickButton[] {autoModeButton, autoHatchModeButton, autoScoreLowButton}
+      new JoystickButton[] {autoModeButton, autoScoreLowButton}
     );
     autoHatchScoreMidTrigger = new ButtonChordTrigger(
-      new JoystickButton[] {autoModeButton, autoHatchModeButton, autoScoreMidButton}
+      new JoystickButton[] {autoModeButton, autoScoreMidButton}
     );
     autoHatchScoreHighTrigger = new ButtonChordTrigger(
-      new JoystickButton[] {autoModeButton, autoHatchModeButton, autoScoreHighButton}
-    );
-
-    autoCargoLoadingStationTrigger = new ButtonChordTrigger(
-      new JoystickButton[] {autoModeButton, autoCargoModeButton, autoLoadingStationButton}
-    );
-    autoCargoScoreLowTrigger = new ButtonChordTrigger(
-      new JoystickButton[] {autoModeButton, autoCargoModeButton, autoScoreLowButton}
-    );
-    autoCargoScoreMidTrigger = new ButtonChordTrigger(
-      new JoystickButton[] {autoModeButton, autoCargoModeButton, autoScoreMidButton}
-    );
-    autoCargoScoreHighTrigger = new ButtonChordTrigger(
-      new JoystickButton[] {autoModeButton, autoCargoModeButton, autoScoreHighButton}
+      new JoystickButton[] {autoModeButton, autoScoreHighButton}
     );
   }
 
@@ -89,8 +72,8 @@ public class GunnerControls extends Controls
       armAdjustUpButton.get() ||
       armAdjustDownButton.get() ||
       autoModeButton.get() ||
-      autoHatchModeButton.get() ||
-      autoCargoModeButton.get() ||
+      autoTargetLeftButton.get() ||
+      autoTargetRightButton.get() ||
       autoScoreLowButton.get() ||
       autoScoreMidButton.get() ||
       autoScoreHighButton.get() ||
