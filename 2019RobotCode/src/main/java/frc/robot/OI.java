@@ -44,6 +44,7 @@ public class OI implements ProportionalDrive, VelocityDrive {
   private int lastEncoderSpeed;
   private boolean driverSlow;
   private boolean autoModePreview;
+  private PipelineIndex visionPipelineIndex;
   private DriverControls driverControls;
   private GunnerControls gunnerControls;
   private FullAutoCancelTrigger fullAutoCancelTrigger;
@@ -67,7 +68,7 @@ public class OI implements ProportionalDrive, VelocityDrive {
     gunnerControls.armCycleDownTrigger.whenActive(new ArmPresetCycleCommand(Direction.DOWN));
     gunnerControls.armCycleUpTrigger.whenActive(new ArmPresetCycleCommand(Direction.UP));
 
-    gunnerControls.autoModeButton.whenPressed(new AutoModePreviewCommand(true));
+    gunnerControls.autoModeButton.whileActive(new AutoModePreviewCommand(true));
     gunnerControls.autoModeButton.whenReleased(new AutoModePreviewCommand(false));
 
     gunnerControls.autoHatchLoadingStationTrigger.whileActive(new AutoHatchLoadingStationCommand());
@@ -93,15 +94,24 @@ public class OI implements ProportionalDrive, VelocityDrive {
   }
 
   public void setAutoModePreview(boolean autoModePreview) {
-    if (this.autoModePreview != autoModePreview) {
-      this.autoModePreview = autoModePreview;
+    PipelineIndex index = PipelineIndex.HUMAN_VIEW;
 
-      if (autoModePreview) {
-        Robot.VISION_SUB.setPipeline(PipelineIndex.VISION_TARGET);
+    if (autoModePreview) {
+      if (gunnerControls.autoTargetLeftButton.get()) {
+        index = PipelineIndex.VISION_TARGET_LEFT;
+      } else if (gunnerControls.autoTargetRightButton.get()) {
+        index = PipelineIndex.VISION_TARGET_RIGHT;
       } else {
-        Robot.VISION_SUB.setPipeline(PipelineIndex.HUMAN_VIEW);
+        index = PipelineIndex.VISION_TARGET;
       }
     }
+
+    if (this.visionPipelineIndex != index) {
+      Robot.VISION_SUB.setPipeline(index);
+      this.visionPipelineIndex = index;
+    }
+
+    this.autoModePreview = autoModePreview;
   }
 
   @Override
