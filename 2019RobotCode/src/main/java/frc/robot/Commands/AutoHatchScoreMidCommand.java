@@ -14,10 +14,10 @@ public class AutoHatchScoreMidCommand extends CommandGroup {
 
     // Back up and get into scoring position.
     addSequential(new AutoVelocityMoveCommand(-250, 0, 0.5));
-    addSequential(new AutoArmCommand(ArmPreset.Mid, -160));
+    addSequential(new AutoArmCommand(ArmPreset.Mid, -130));
 
     // Push forward and drop.
-    addSequential(new AutoVelocityMoveCommand(450, 50, 0.6));
+    addSequential(new AutoVelocityMoveCommand(450, 50, 0.5));
     addSequential(new AutoArmCommand(ArmPreset.Mid, +150));
 
     // Back up and go
