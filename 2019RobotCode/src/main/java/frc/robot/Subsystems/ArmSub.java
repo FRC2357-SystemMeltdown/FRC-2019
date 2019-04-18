@@ -22,7 +22,7 @@ import frc.robot.RobotMap.ArmPreset;
  * Add your docs here.
  */
 public class ArmSub extends SubsystemBase {
-  private static long DEFENSE_SOLENOID_OFF_DELAY = 100;
+  private static long DEFENSE_SOLENOID_OFF_DELAY = 1000;
   private static int TARGET_VALUE_STOP = -1;
 
   public enum Direction {
