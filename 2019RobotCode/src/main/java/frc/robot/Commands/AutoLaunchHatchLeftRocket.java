@@ -38,8 +38,14 @@ public class AutoLaunchHatchLeftRocket extends FullAutoCommandGroup {
     // Arc left
     addSequential(new AutoVelocityMoveCommand(
       (int)(RobotMap.MAX_ENCODER_VELOCITY * 0.40),
-      (int)(RobotMap.MAX_ENCODER_VELOCITY * -0.40),
-      0.6
+      (int)(RobotMap.MAX_ENCODER_VELOCITY * -0.50),
+      0.4
+    ));
+    // Arc right
+    addSequential(new AutoVelocityMoveCommand(
+      (int)(RobotMap.MAX_ENCODER_VELOCITY * 0.40),
+      (int)(RobotMap.MAX_ENCODER_VELOCITY * 0.50),
+      0.4
     ));
   }
 

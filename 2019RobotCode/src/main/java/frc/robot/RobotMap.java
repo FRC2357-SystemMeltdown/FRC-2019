@@ -113,7 +113,7 @@ public class RobotMap {
   public static final PIDValues PID_VISION_YAW  = new PIDValues(  3.0,  2.000,   80.0,            0.0,     0,   950);
   public static final PIDValues PID_ADJUST_YAW  = new PIDValues( 45.0,    0.0,    0.0,            0.0,     0,   950);
 
-  public static final double VISION_DISTANCE_TO_HATCH_LOAD = 28.0;
+  public static final double VISION_DISTANCE_TO_HATCH_LOAD = 27.0;
   public static final double VISION_DISTANCE_TO_HATCH_LOW = 23.0;
   public static final double VISION_DISTANCE_TO_HATCH_MID = 25.0;
   public static final double VISION_DISTANCE_TO_HATCH_HIGH = 23.0;

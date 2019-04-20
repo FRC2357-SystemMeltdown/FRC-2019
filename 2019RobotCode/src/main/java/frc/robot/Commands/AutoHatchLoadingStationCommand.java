@@ -21,9 +21,8 @@ public class AutoHatchLoadingStationCommand extends CommandGroup {
     addSequential(new AutoSquareUpCommand(TargetType.HATCH, RobotMap.VISION_DISTANCE_TO_HATCH_LOAD, approachSpeed));
 
     // Push forward and lift.
-    addSequential(new AutoMoveProportionalCommand(0.20, 0.20, 0.50));
+    addSequential(new AutoMoveProportionalCommand(0.20, 0.20, 0.60));
     addSequential(new AutoArmCommand(ArmPreset.Low, -300, false));
     addSequential(new AutoMoveProportionalCommand(-0.30, -0.30, 0.75));
-    //addSequential(new AutoVelocityMoveCommand(-1500, 0, 0.25));
   }
 }
