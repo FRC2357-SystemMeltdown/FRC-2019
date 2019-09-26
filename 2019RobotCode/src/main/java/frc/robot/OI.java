@@ -80,7 +80,8 @@ public class OI implements ProportionalDrive, VelocityDrive {
   }
 
   public boolean isDriverSlow() {
-    return driverSlow;
+    //Normally driverSlow, it is janky jank
+    return true;
   }
 
   public void setDriverSlow(boolean driverSlow) {
