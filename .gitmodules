@@ -1,0 +1,3 @@
+[submodule "common2"]
+	path = common2
+	url = https://github.com/Stick-2357/common2.git
