@@ -59,6 +59,18 @@ public class AutoLaunchHatchCargoShipLeftCommand extends FullAutoCommandGroup {
   }
 
   private void moveFromHab1Center() {
+    // Arc left
+    addSequential(new AutoVelocityMoveCommand(
+      (int)(RobotMap.MAX_ENCODER_VELOCITY * 0.40),
+      (int)(RobotMap.MAX_ENCODER_VELOCITY * -0.30),
+      0.7
+    ));
+    // Arc right
+    addSequential(new AutoVelocityMoveCommand(
+      (int)(RobotMap.MAX_ENCODER_VELOCITY * 0.40),
+      (int)(RobotMap.MAX_ENCODER_VELOCITY * 0.30),
+      0.7
+    ));
   }
 
   private void backUpToLeft() {
